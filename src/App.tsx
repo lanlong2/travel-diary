@@ -19,6 +19,9 @@ const AddRecordPage = lazy(() =>
 const TripsPage = lazy(() =>
   import('./pages/TripsPage').then((m) => ({ default: m.TripsPage }))
 )
+const TimelinePage = lazy(() =>
+  import('./pages/TimelinePage').then((m) => ({ default: m.TimelinePage }))
+)
 
 function PageLoader() {
   return (
@@ -58,6 +61,7 @@ function AppContent() {
     <Suspense fallback={<PageLoader />}>
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/timeline" element={<TimelinePage />} />
         <Route path="/trip/:id" element={<TripDetailPage />} />
         <Route path="/add" element={<AddRecordPage />} />
         <Route path="/trips" element={<TripsPage />} />
