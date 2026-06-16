@@ -169,7 +169,7 @@ function PhotoThumb({ photo, index, onClick }: { photo: Photo; index: number; on
       <div className="polaroid !p-2 !pb-5 w-[100px]">
         <div className="w-full aspect-square rounded-sm overflow-hidden bg-warm-100">
           <img
-            src={photo.image_url}
+            src={photo.image_url ?? ''}
             alt={photo.note || photo.city_name}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             loading="lazy"

@@ -65,7 +65,7 @@ export function CityPopup({ city, photos, x, y }: CityTooltipProps) {
                 >
                   <div className="aspect-[4/3] rounded-xl overflow-hidden bg-warm-100 border border-warm-200/40 shadow-sm">
                     <img
-                      src={p.image_url}
+                      src={p.image_url ?? ''}
                       alt={p.note || city.city_name}
                       className="w-full h-full object-cover"
                       loading="lazy"

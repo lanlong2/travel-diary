@@ -49,7 +49,7 @@ export function PhotoModal({ photo, onClose, onDelete }: PhotoModalProps) {
         {/* 照片 */}
         <div className="flex-1 flex items-center justify-center p-8" onClick={(e) => e.stopPropagation()}>
           <img
-            src={photo.image_url}
+            src={photo.image_url ?? ''}
             alt={photo.note || photo.city_name}
             className="max-w-full max-h-full object-contain rounded-sm"
           />

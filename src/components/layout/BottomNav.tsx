@@ -2,12 +2,13 @@ import { useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Map, PlusCircle, Compass, ScrollText } from 'lucide-react'
 
-const TABS = [
+type TabItem = { path: string; icon: typeof Map; label: string; isFab?: boolean }
+const TABS: TabItem[] = [
   { path: '/', icon: Map, label: '足迹' },
   { path: '/timeline', icon: ScrollText, label: '时光' },
   { path: '/add', icon: PlusCircle, label: '记录', isFab: true },
   { path: '/trips', icon: Compass, label: '我们' },
-] as const
+]
 
 export function BottomNav() {
   const location = useLocation()
