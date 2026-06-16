@@ -36,6 +36,10 @@ export default {
         'float': 'float 6s ease-in-out infinite',
         'shimmer': 'shimmer 3s ease-in-out infinite',
         'glow': 'glow 2s ease-in-out infinite',
+        'ripple-expand': 'rippleExpand 0.6s ease-out forwards',
+        'page-enter': 'pageEnter 0.2s ease-out both',
+        'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
+        'tab-bounce': 'tabBounce 0.15s ease-out',
       },
       keyframes: {
         heartbeat: {
@@ -70,6 +74,24 @@ export default {
         glow: {
           '0%, 100%': { boxShadow: '0 0 5px rgba(232,117,90,0.2)' },
           '50%': { boxShadow: '0 0 20px rgba(232,117,90,0.4)' },
+        },
+        rippleExpand: {
+          '0%': { transform: 'scale(0)', opacity: '0.4' },
+          '100%': { transform: 'scale(12)', opacity: '0' },
+        },
+        pageEnter: {
+          from: { opacity: '0', transform: 'translateY(12px)' },
+          to: { opacity: '1', transform: 'translateY(0)' },
+        },
+        pulseGlow: {
+          '0%, 100%': { boxShadow: '0 4px 16px rgba(196,77,52,0.25)' },
+          '50%': { boxShadow: '0 4px 28px rgba(196,77,52,0.45)' },
+        },
+        tabBounce: {
+          '0%': { transform: 'scale(1)' },
+          '30%': { transform: 'scale(0.85)' },
+          '60%': { transform: 'scale(1.05)' },
+          '100%': { transform: 'scale(1)' },
         },
       },
     },
