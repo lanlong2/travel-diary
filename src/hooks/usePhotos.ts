@@ -36,16 +36,22 @@ export function usePhotos(tripId?: string) {
     let imageUrl: string | null = null
 
     if (file) {
-      const fileName = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.一-龥_-]/g, '_')}`
+      // 提取扩展名
+      const ext = file.name.split('.').pop() || 'jpg'
+      // 用 timestamp + 随机数 做文件名，避免中文/特殊字符问题
+      const safeName = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`
       const { error: uploadError } = await supabase.storage
         .from('photos')
-        .upload(fileName, file)
+        .upload(safeName, file)
 
-      if (uploadError) throw uploadError
+      if (uploadError) {
+        console.error('Storage upload error:', uploadError)
+        throw new Error(uploadError.message)
+      }
 
       const { data: urlData } = supabase.storage
         .from('photos')
-        .getPublicUrl(fileName)
+        .getPublicUrl(safeName)
 
       if (!urlData?.publicUrl) throw new Error('获取公开 URL 失败')
       imageUrl = urlData.publicUrl
