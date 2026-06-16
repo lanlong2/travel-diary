@@ -16,7 +16,7 @@ export function TimelineCard({ record, index, onClick }: TimelineCardProps) {
     <button
       onClick={onClick}
       className="w-full text-left mx-6 mb-4 active:scale-[0.98] transition-transform duration-150 animate-fade-in-up relative overflow-hidden rounded-2xl"
-      style={{ opacity: 0 }}
+      style={{ opacity: 0, animationDelay: `${index * 0.06}s` }}
     >
       {record.image_url ? (
         /* 照片卡片 — 拍立得 */
