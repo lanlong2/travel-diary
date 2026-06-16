@@ -1,9 +1,10 @@
 interface NoteInputProps {
   value: string
   onChange: (value: string) => void
+  rows?: number
 }
 
-export function NoteInput({ value, onChange }: NoteInputProps) {
+export function NoteInput({ value, onChange, rows = 5 }: NoteInputProps) {
   return (
     <div className="mx-6">
       <label className="block text-sm font-semibold text-warm-700 mb-3">💬 想说的话</label>
@@ -19,7 +20,7 @@ export function NoteInput({ value, onChange }: NoteInputProps) {
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder="写下这一刻的感受..."
-          rows={5}
+          rows={rows}
           maxLength={500}
           className="w-full bg-white/90 border border-warm-300/70 rounded-2xl p-5 text-base text-warm-900 placeholder:text-warm-300/80 focus:outline-none focus:ring-2 focus:ring-warm-500/20 focus:border-warm-400 transition-all resize-none relative z-10"
           style={{ lineHeight: '32px', background: 'transparent' }}

@@ -31,15 +31,27 @@ export function AddRecordPage() {
   const [tripId, setTripId] = useState<string | null>(preSelectedTripId)
   const [note, setNote] = useState('')
   const [author, setAuthor] = useState<'我' | '她'>('我')
+  const [entryType, setEntryType] = useState<'photo' | 'note'>('photo')
   const [submitting, setSubmitting] = useState(false)
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null)
 
   const handleSubmit = async () => {
-    if (!file || !city || !tripId) return
+    if (entryType === 'photo') {
+      if (!file || !city || !tripId) return
+    } else {
+      if (!city || !tripId || !note.trim()) return
+    }
 
     setSubmitting(true)
     try {
-      await uploadPhoto(file, tripId, city.name, note, author)
+      await uploadPhoto(
+        entryType === 'photo' ? file : null,
+        tripId,
+        city.name,
+        note,
+        author,
+        entryType
+      )
 
       const trip = trips.find((t) => t.id === tripId)
       if (trip && !trip.cities.some((c) => c.city_name === city.name)) {
@@ -80,7 +92,9 @@ export function AddRecordPage() {
     }
   }
 
-  const isComplete = file && city && tripId
+  const isComplete = entryType === 'photo'
+    ? !!(file && city && tripId)
+    : !!(city && tripId && note.trim())
 
   return (
     <PageShell hideNav>
@@ -97,7 +111,32 @@ export function AddRecordPage() {
 
       {/* 表单内容 */}
       <div className="space-y-7 pb-10">
-        <PhotoUploader onFileSelect={setFile} />
+        {/* 记录类型切换 */}
+        <div className="mx-6">
+          <label className="block text-sm font-semibold text-warm-700 mb-3">📋 记录类型</label>
+          <div className="flex gap-2.5">
+            {([
+              { type: 'photo' as const, icon: '📸', label: '照片记录' },
+              { type: 'note' as const, icon: '📝', label: '纯文字' },
+            ]).map(({ type, icon, label }) => (
+              <button
+                key={type}
+                onClick={() => { setEntryType(type); if (type === 'note') setFile(null) }}
+                className={`flex-1 py-3 rounded-2xl text-sm font-semibold transition-all duration-200 border-2 ${
+                  entryType === type
+                    ? 'bg-warm-100 border-warm-400 text-warm-700 shadow-sm'
+                    : 'bg-white border-warm-200/60 text-warm-400 hover:border-warm-300'
+                }`}
+              >
+                {icon} {label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {entryType === 'photo' && (
+          <PhotoUploader onFileSelect={setFile} />
+        )}
         <CitySelector onCitySelect={setCity} selectedCity={city} />
         <TripSelect
           trips={trips}
@@ -131,7 +170,11 @@ export function AddRecordPage() {
           </div>
         </div>
 
-        <NoteInput value={note} onChange={setNote} />
+        <NoteInput
+          value={note}
+          onChange={setNote}
+          rows={entryType === 'note' ? 8 : 5}
+        />
 
         {/* 保存按钮 */}
         <div className="mx-6 pt-3">
@@ -155,9 +198,10 @@ export function AddRecordPage() {
           </Button>
           {!isComplete && (
             <p className="text-center text-[11px] text-warm-300 mt-2.5">
-              {!file ? '请先选择照片 · ' : ''}
+              {(!file && entryType === 'photo') ? '请先选择照片 · ' : ''}
               {!city ? '请选择城市 · ' : ''}
-              {!tripId ? '请选择旅行' : ''}
+              {!tripId ? '请选择旅行 · ' : ''}
+              {(entryType === 'note' && !note.trim()) ? '请写下想说的话' : ''}
             </p>
           )}
         </div>
