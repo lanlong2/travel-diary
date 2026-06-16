@@ -21,9 +21,11 @@ export function TripDetailPage() {
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null)
 
   const authorStats = useMemo(() => {
-    const me = photos.filter(p => p.author === '我').length
-    const her = photos.filter(p => p.author === '她').length
-    return { me, her }
+    const mePhotos = photos.filter(p => p.author === '我' && p.entry_type === 'photo').length
+    const herPhotos = photos.filter(p => p.author === '她' && p.entry_type === 'photo').length
+    const meNotes = photos.filter(p => p.author === '我' && p.entry_type === 'note').length
+    const herNotes = photos.filter(p => p.author === '她' && p.entry_type === 'note').length
+    return { me: mePhotos + meNotes, her: herPhotos + herNotes }
   }, [photos])
 
   if (loading) {
@@ -59,7 +61,7 @@ export function TripDetailPage() {
         <div className="mx-6 mt-6">
           <div className="flex items-center gap-3 text-xs text-warm-500 bg-warm-50/80 rounded-2xl px-5 py-3 border border-warm-200/50">
             <Camera className="w-4 h-4" />
-            <span>共 {photos.length} 张照片</span>
+            <span>共 {photos.length} 条记录</span>
             {authorStats.me > 0 && (
               <span className="flex items-center gap-1">
                 <span className="w-2 h-2 rounded-full bg-blue-400" />

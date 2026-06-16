@@ -27,7 +27,7 @@ export function PhotoGrid({ photos, onPhotoClick, onDeletePhoto }: PhotoGridProp
         <div className="w-20 h-20 mx-auto mb-5 rounded-2xl bg-warm-100 flex items-center justify-center">
           <Camera className="w-10 h-10 text-warm-300" />
         </div>
-        <p className="text-base text-warm-400 font-medium">还没有照片</p>
+        <p className="text-base text-warm-400 font-medium">还没有记录</p>
         <p className="text-sm text-warm-300 mt-2">记录属于我们的每一刻</p>
       </div>
     )
@@ -44,7 +44,48 @@ export function PhotoGrid({ photos, onPhotoClick, onDeletePhoto }: PhotoGridProp
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          {photos.map((photo, i) => (
+          {photos.map((photo, i) => {
+              // 纯文字卡片分支
+              if (photo.entry_type === 'note' || !photo.image_url) {
+                return (
+                  <div
+                    key={photo.id}
+                    className="animate-fade-in-up relative rounded-2xl overflow-hidden"
+                    style={{ animationDelay: `${i * 0.06}s`, opacity: 0 }}
+                  >
+                    <div
+                      className="bg-[#fff9f0] border border-warm-200/60 rounded-2xl p-4 shadow-sm cursor-pointer active:scale-[0.98] transition-transform duration-150 h-full"
+                      onClick={() => onPhotoClick(photo)}
+                      style={{
+                        backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(180,150,120,0.06) 27px, rgba(180,150,120,0.06) 28px)',
+                        backgroundPosition: '0 8px',
+                      }}
+                    >
+                      <p className="text-sm text-warm-700 leading-relaxed whitespace-pre-wrap line-clamp-8">
+                        {photo.note}
+                      </p>
+                      <div className="flex items-center justify-between mt-3 pt-3 border-t border-warm-200/40">
+                        <span className={`text-[10px] px-2 py-0.5 rounded-full ${
+                          photo.author === '我' ? 'bg-blue-50 text-blue-400' : 'bg-pink-50 text-pink-400'
+                        }`}>
+                          {photo.author === '我' ? '💙' : '💗'}
+                        </span>
+                      </div>
+                    </div>
+                    {/* 删除按钮 */}
+                    {onDeletePhoto && (
+                      <button
+                        onClick={(e) => { e.stopPropagation(); setDeleteTarget(photo) }}
+                        className="absolute top-2 right-2 w-8 h-8 rounded-xl bg-black/30 backdrop-blur-sm flex items-center justify-center opacity-0 hover:opacity-100 transition-all duration-200 hover:bg-red-500/80"
+                      >
+                        <Trash2 className="w-4 h-4 text-white" />
+                      </button>
+                    )}
+                  </div>
+                )
+              }
+
+              return (
             <div
               key={photo.id}
               className="polaroid cursor-pointer group animate-fade-in-up relative"
@@ -92,7 +133,7 @@ export function PhotoGrid({ photos, onPhotoClick, onDeletePhoto }: PhotoGridProp
                 </span>
               </div>
             </div>
-          ))}
+          )})}
         </div>
       </div>
 
