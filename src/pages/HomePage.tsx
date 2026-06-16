@@ -44,6 +44,7 @@ export function HomePage() {
 
   const recentPhotos = useMemo(() => {
     return [...photos]
+      .filter((p) => p.entry_type !== 'note' && p.image_url)
       .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
       .slice(0, 12)
   }, [photos])

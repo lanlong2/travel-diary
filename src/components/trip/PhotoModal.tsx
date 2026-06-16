@@ -46,13 +46,27 @@ export function PhotoModal({ photo, onClose, onDelete }: PhotoModalProps) {
           )}
         </div>
 
-        {/* 照片 */}
+        {/* 照片 / 文字卡片 */}
         <div className="flex-1 flex items-center justify-center p-8" onClick={(e) => e.stopPropagation()}>
-          <img
-            src={photo.image_url ?? ''}
-            alt={photo.note || photo.city_name}
-            className="max-w-full max-h-full object-contain rounded-sm"
-          />
+          {photo.image_url ? (
+            <img
+              src={photo.image_url}
+              alt={photo.note || photo.city_name}
+              className="max-w-full max-h-full object-contain rounded-sm"
+            />
+          ) : (
+            <div
+              className="max-w-md w-full bg-[#fff9f0] border border-warm-300/40 rounded-2xl p-8 shadow-lg"
+              style={{
+                backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 31px, rgba(180,150,120,0.08) 31px, rgba(180,150,120,0.08) 32px)',
+                backgroundPosition: '0 10px',
+              }}
+            >
+              <p className="text-xl text-warm-800 leading-relaxed whitespace-pre-wrap" style={{ lineHeight: '32px' }}>
+                {photo.note}
+              </p>
+            </div>
+          )}
         </div>
 
         {/* 底部信息卡片 */}
