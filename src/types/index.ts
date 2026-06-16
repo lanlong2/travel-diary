@@ -21,9 +21,10 @@ export interface Photo {
   id: string
   trip_id: string
   city_name: string
-  image_url: string
+  image_url: string | null
   note: string
   author: '我' | '她'
+  entry_type: 'photo' | 'note'
   created_at: string
 }
 

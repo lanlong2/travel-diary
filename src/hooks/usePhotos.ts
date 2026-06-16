@@ -29,28 +29,36 @@ export function usePhotos(tripId?: string) {
   useEffect(() => { fetchPhotos() }, [fetchPhotos])
 
   const uploadPhoto = async (
-    file: File, tripId: string, cityName: string,
-    note: string, author: '我' | '她'
+    file: File | null, tripId: string, cityName: string,
+    note: string, author: '我' | '她',
+    entryType: 'photo' | 'note' = 'photo'
   ) => {
-    const fileName = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.\\u4e00-\\u9fa5_-]/g, '_')}`
-    const { error: uploadError } = await supabase.storage
-      .from('photos')
-      .upload(fileName, file)
+    let imageUrl: string | null = null
 
-    if (uploadError) throw uploadError
+    if (file) {
+      const fileName = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.一-龥_-]/g, '_')}`
+      const { error: uploadError } = await supabase.storage
+        .from('photos')
+        .upload(fileName, file)
 
-    const { data: urlData } = supabase.storage
-      .from('photos')
-      .getPublicUrl(fileName)
+      if (uploadError) throw uploadError
+
+      const { data: urlData } = supabase.storage
+        .from('photos')
+        .getPublicUrl(fileName)
+
+      imageUrl = urlData.publicUrl
+    }
 
     const { data, error } = await supabase
       .from('photos')
       .insert({
         trip_id: tripId,
         city_name: cityName,
-        image_url: urlData.publicUrl,
+        image_url: imageUrl,
         note,
         author,
+        entry_type: entryType,
       })
       .select()
       .single()
