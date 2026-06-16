@@ -47,6 +47,7 @@ export function usePhotos(tripId?: string) {
         .from('photos')
         .getPublicUrl(fileName)
 
+      if (!urlData?.publicUrl) throw new Error('获取公开 URL 失败')
       imageUrl = urlData.publicUrl
     }
 
