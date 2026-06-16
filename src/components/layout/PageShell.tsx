@@ -11,7 +11,7 @@ export function PageShell({ children, hideNav = false }: PageShellProps) {
   return (
     <div className="min-h-screen bg-cream paper-texture relative">
       <Particles />
-      <div className="max-w-2xl mx-auto pb-28 relative z-10 animate-fade-in-up">
+      <div className="max-w-2xl mx-auto pb-28 relative z-10 animate-page-enter">
         {children}
       </div>
       {!hideNav && <BottomNav />}

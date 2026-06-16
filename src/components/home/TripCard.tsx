@@ -37,7 +37,7 @@ export function TripCard({ trip, cityCount, onClick, onDelete, index = 0 }: Trip
     <>
       <div
         onClick={onClick}
-        className={`min-w-[190px] bg-white/90 rounded-2xl overflow-hidden border border-warm-200/60 shadow-sm hover:shadow-lg active:scale-[0.97] cursor-pointer flex-shrink-0 transition-all duration-300 relative group ${staggerClass}`}
+        className={`min-w-[190px] bg-white/90 rounded-2xl overflow-hidden border border-warm-200/60 shadow-sm hover:shadow-lg active:scale-[0.97] transition-transform duration-150 cursor-pointer flex-shrink-0 transition-all duration-300 relative group ${staggerClass}`}
         style={{ opacity: 0 }}
       >
         {/* 封面区 */}

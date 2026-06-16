@@ -51,6 +51,13 @@
     font-size: 16px !important;
     border-radius: 0;
   }
+
+  /* 最小触控区域 */
+  @media (pointer: coarse) {
+    button, a, [role="button"] {
+      min-height: 44px;
+    }
+  }
 }
 
 @layer components {
@@ -134,5 +141,24 @@
     opacity: 0.25;
     pointer-events: none;
     animation: rippleExpand 0.6s ease-out forwards;
+  }
+
+  .hover-lift {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  @media (hover: hover) {
+    .hover-lift:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+  }
+
+  .safe-top {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 }
