@@ -66,8 +66,10 @@ export function AddRecordPage() {
 
       setToast({ message: '回忆已保存！', type: 'success' })
       setTimeout(() => navigate(`/trip/${tripId}`), 1200)
-    } catch {
-      setToast({ message: '保存失败，请重试', type: 'error' })
+    } catch (err) {
+      console.error('保存失败:', err)
+      const msg = err instanceof Error ? err.message : '未知错误'
+      setToast({ message: `保存失败：${msg}`, type: 'error' })
     } finally {
       setSubmitting(false)
     }
@@ -87,8 +89,10 @@ export function AddRecordPage() {
       )
       setTripId(newTrip.id)
       setToast({ message: '新旅行已创建！', type: 'success' })
-    } catch {
-      setToast({ message: '创建旅行失败', type: 'error' })
+    } catch (err) {
+      console.error('创建旅行失败:', err)
+      const msg = err instanceof Error ? err.message : '未知错误'
+      setToast({ message: `创建旅行失败：${msg}`, type: 'error' })
     }
   }
 
