@@ -31,7 +31,8 @@ export function usePhotos(tripId?: string) {
   const uploadPhoto = async (
     file: File | null, tripId: string, cityName: string,
     note: string, author: '我' | '她',
-    entryType: 'photo' | 'note' = 'photo'
+    entryType: 'photo' | 'note' = 'photo',
+    recordDate?: string
   ) => {
     let imageUrl: string | null = null
 
@@ -66,6 +67,7 @@ export function usePhotos(tripId?: string) {
         note,
         author,
         entry_type: entryType,
+        record_date: recordDate || null,
       })
       .select()
       .single()
@@ -75,11 +77,17 @@ export function usePhotos(tripId?: string) {
     return data
   }
 
+  const updatePhoto = async (id: string, updates: { note?: string; city_name?: string; record_date?: string | null; author?: '我' | '她' }) => {
+    const { error } = await supabase.from('photos').update(updates).eq('id', id)
+    if (error) throw error
+    await fetchPhotos()
+  }
+
   const deletePhoto = async (id: string) => {
     const { error } = await supabase.from('photos').delete().eq('id', id)
     if (error) throw error
     await fetchPhotos()
   }
 
-  return { photos, loading, error, uploadPhoto, deletePhoto, refresh: fetchPhotos }
+  return { photos, loading, error, uploadPhoto, updatePhoto, deletePhoto, refresh: fetchPhotos }
 }

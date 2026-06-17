@@ -43,28 +43,38 @@ export function ChinaMap({ cities, photos, onCityClick }: ChinaMapProps) {
           offset: new (AMap as any).Pixel(-9, -9),
         })
 
-        // Hover → 显示 tooltip
-        marker.on('mouseover', () => {
+        const showTooltip = () => {
           if (hoverTimerRef.current) {
             clearTimeout(hoverTimerRef.current)
             hoverTimerRef.current = null
           }
-          // 标记点放大
           const dot = el.querySelector('.map-marker-dot') as HTMLElement | null
           if (dot) dot.style.transform = 'scale(1.35)'
-
           const pixel = mapRef.current.lngLatToContainer([city.lng, city.lat])
           setHoveredCity({ city, x: pixel.x, y: pixel.y })
-        })
+        }
 
-        marker.on('mouseout', () => {
+        const hideTooltip = () => {
           const dot = el.querySelector('.map-marker-dot') as HTMLElement | null
           if (dot) dot.style.transform = 'scale(1)'
-          // 延迟隐藏，给用户时间移到下一个标记
           hoverTimerRef.current = setTimeout(() => setHoveredCity(null), 150)
+        }
+
+        marker.on('mouseover', showTooltip)
+        marker.on('mouseout', hideTooltip)
+        marker.on('touchstart', (e: Event) => {
+          e.preventDefault()
+          showTooltip()
+        })
+        marker.on('touchend', () => {
+          if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current)
+          hoverTimerRef.current = setTimeout(() => {
+            const dot = el.querySelector('.map-marker-dot') as HTMLElement | null
+            if (dot) dot.style.transform = 'scale(1)'
+            setHoveredCity(null)
+          }, 2000)
         })
 
-        // Click → 导航到旅行详情
         marker.on('click', () => {
           onCityClick(city)
         })

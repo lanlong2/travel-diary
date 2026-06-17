@@ -19,7 +19,7 @@ export function TimelinePage() {
     const monthMap = new Map<string, Photo[]>()
 
     photos.forEach((p) => {
-      const d = new Date(p.created_at)
+      const d = new Date(p.record_date || p.created_at)
       const key = `${d.getFullYear()}年${d.getMonth() + 1}月`
       const arr = monthMap.get(key)
       if (arr) arr.push(p)
@@ -50,7 +50,7 @@ export function TimelinePage() {
   return (
     <PageShell>
       {/* 页面标题 */}
-      <div className="px-6 pt-6 pb-2">
+      <div className="px-3 sm:px-6 pt-6 pb-2">
         <h1 className="text-2xl font-bold text-warm-900 flex items-center gap-2">
           <ScrollText className="w-7 h-7 text-caramel" />
           时光日记
@@ -61,7 +61,7 @@ export function TimelinePage() {
       </div>
 
       {photos.length === 0 ? (
-        <div className="mx-6 mt-8 py-20 text-center border-2 border-dashed border-warm-300/60 rounded-2xl">
+        <div className="mx-3 sm:mx-6 mt-8 py-20 text-center border-2 border-dashed border-warm-300/60 rounded-2xl">
           <div className="text-5xl mb-4">📜</div>
           <p className="text-warm-500 font-medium">还没有记录</p>
           <p className="text-sm text-warm-400 mt-2">

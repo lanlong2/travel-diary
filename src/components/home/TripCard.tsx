@@ -26,6 +26,10 @@ export function TripCard({ trip, cityCount, onClick, onDelete, index = 0 }: Trip
   const [showDelete, setShowDelete] = useState(false)
   const [deleting, setDeleting] = useState(false)
 
+  const duration = Math.ceil(
+    (new Date(trip.end_date).getTime() - new Date(trip.start_date).getTime()) / (1000 * 60 * 60 * 24)
+  ) + 1
+
   const handleDelete = async () => {
     setDeleting(true)
     await onDelete(trip.id)
@@ -41,20 +45,28 @@ export function TripCard({ trip, cityCount, onClick, onDelete, index = 0 }: Trip
         style={{ opacity: 0 }}
       >
         {/* 封面区 */}
-        <div className={`relative h-32 bg-gradient-to-br ${palette.bg} flex items-center justify-center`}>
+        <div className={`relative h-32 bg-gradient-to-br ${palette.bg} flex items-center justify-center overflow-hidden`}>
           {/* 纸胶带 */}
-          <div className="absolute -top-1 left-7 w-14 h-5 bg-warm-300/40 rounded-sm -rotate-3 blur-[0.5px]" />
-          <div className="absolute top-3 right-5 w-10 h-4 bg-warm-200/50 rounded-sm rotate-6 blur-[0.5px]" />
+          <div className="absolute -top-1 left-7 w-14 h-5 bg-warm-300/40 rounded-sm -rotate-3 blur-[0.5px] z-10" />
+          <div className="absolute top-3 right-5 w-10 h-4 bg-warm-200/50 rounded-sm rotate-6 blur-[0.5px] z-10" />
 
-          <span className="text-5xl drop-shadow-sm">{palette.icon}</span>
+          {trip.cover_photo ? (
+            <img
+              src={trip.cover_photo}
+              alt={trip.title}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          ) : (
+            <span className="text-5xl drop-shadow-sm">{palette.icon}</span>
+          )}
 
-          {/* 删除按钮 */}
+          {/* 删除按钮 — 移动端常显，桌面端 hover 显示 */}
           <button
             onClick={(e) => { e.stopPropagation(); setShowDelete(true) }}
-            className="absolute top-2 right-2 w-8 h-8 rounded-xl bg-white/70 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 hover:bg-red-50 hover:text-red-400 z-10"
+            className="absolute top-2 right-2 w-8 h-8 rounded-xl bg-white/70 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-red-50 hover:text-red-400 z-10 transition-all duration-200 sm:opacity-0 sm:group-hover:opacity-100 max-sm:opacity-100 max-sm:bg-white/60"
             title="删除旅行"
           >
-            <Trash2 className="w-4 h-4 text-warm-400 hover:text-red-400" />
+            <Trash2 className="w-4 h-4 text-warm-400" />
           </button>
 
           {/* 日期标签 */}
@@ -68,6 +80,8 @@ export function TripCard({ trip, cityCount, onClick, onDelete, index = 0 }: Trip
           <h4 className="font-bold text-base text-warm-900 truncate leading-snug">{trip.title}</h4>
           <div className="flex items-center gap-2 mt-2">
             <span className="text-xs text-wood/60">{cityCount} 座城市</span>
+            <span className="w-1 h-1 rounded-full bg-warm-300" />
+            <span className="text-xs text-wood/60">{duration} 天</span>
             <span className="w-1 h-1 rounded-full bg-warm-300" />
             <span className="text-xs text-wood/60">
               {new Date(trip.start_date).toLocaleDateString('zh-CN', { month: 'numeric', day: 'numeric' })}

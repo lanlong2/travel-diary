@@ -7,16 +7,18 @@ interface TripSelectProps {
   trips: (Trip & { cities: TripCity[] })[]
   selectedTripId: string | null
   onSelectTrip: (id: string) => void
-  onCreateTrip: (title: string) => void
+  onCreateTrip: (title: string, startDate: string, endDate: string) => void
 }
 
 export function TripSelect({ trips, selectedTripId, onSelectTrip, onCreateTrip }: TripSelectProps) {
   const [showNew, setShowNew] = useState(false)
   const [newTitle, setNewTitle] = useState('')
+  const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0])
+  const [endDate, setEndDate] = useState(new Date().toISOString().split('T')[0])
 
   const handleCreate = () => {
     if (newTitle.trim()) {
-      onCreateTrip(newTitle.trim())
+      onCreateTrip(newTitle.trim(), startDate, endDate)
       setNewTitle('')
       setShowNew(false)
     }
@@ -78,6 +80,28 @@ export function TripSelect({ trips, selectedTripId, onSelectTrip, onCreateTrip }
                 onKeyDown={(e) => e.key === 'Enter' && handleCreate()}
               />
             </div>
+          </div>
+          <div className="flex gap-2.5 mt-2.5">
+            <div className="flex-1">
+              <label className="block text-xs font-medium text-warm-500 mb-1">开始日期</label>
+              <input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="w-full px-4 py-3 bg-white border border-warm-200 rounded-2xl text-sm text-warm-700 focus:outline-none focus:border-caramel/50 focus:ring-2 focus:ring-caramel/10 transition-all"
+              />
+            </div>
+            <div className="flex-1">
+              <label className="block text-xs font-medium text-warm-500 mb-1">结束日期</label>
+              <input
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                className="w-full px-4 py-3 bg-white border border-warm-200 rounded-2xl text-sm text-warm-700 focus:outline-none focus:border-caramel/50 focus:ring-2 focus:ring-caramel/10 transition-all"
+              />
+            </div>
+          </div>
+          <div className="flex gap-2.5 mt-2.5">
             <button
               onClick={handleCreate}
               disabled={!newTitle.trim()}

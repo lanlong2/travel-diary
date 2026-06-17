@@ -32,6 +32,7 @@ export function AddRecordPage() {
   const [note, setNote] = useState('')
   const [author, setAuthor] = useState<'我' | '她'>('我')
   const [entryType, setEntryType] = useState<'photo' | 'note'>('photo')
+  const [recordDate, setRecordDate] = useState(new Date().toISOString().split('T')[0])
   const [submitting, setSubmitting] = useState(false)
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null)
 
@@ -44,16 +45,22 @@ export function AddRecordPage() {
 
     setSubmitting(true)
     try {
-      await uploadPhoto(
+      const savedPhoto = await uploadPhoto(
         entryType === 'photo' ? file : null,
         tripId,
         city.name,
         note,
         author,
-        entryType
+        entryType,
+        recordDate
       )
 
+      // 自动设置封面：如果旅行还没有封面且上传的是照片，用第一张照片做封面
       const trip = trips.find((t) => t.id === tripId)
+      if (trip && !trip.cover_photo && entryType === 'photo' && savedPhoto?.image_url) {
+        await supabase.from('trips').update({ cover_photo: savedPhoto.image_url }).eq('id', tripId)
+      }
+
       if (trip && !trip.cities.some((c) => c.city_name === city.name)) {
         await supabase.from('trip_cities').insert({
           trip_id: tripId,
@@ -75,14 +82,14 @@ export function AddRecordPage() {
     }
   }
 
-  const handleCreateTrip = async (title: string) => {
+  const handleCreateTrip = async (title: string, startDate: string, endDate: string) => {
     try {
       const newTrip = await createTrip(
         {
           title,
           cover_photo: null,
-          start_date: new Date().toISOString().split('T')[0],
-          end_date: new Date().toISOString().split('T')[0],
+          start_date: startDate,
+          end_date: endDate,
           created_by: author,
         },
         city ? [{ city_name: city.name, lat: city.lat, lng: city.lng, sort_order: 0 }] : []
@@ -179,6 +186,17 @@ export function AddRecordPage() {
           onChange={setNote}
           rows={entryType === 'note' ? 8 : 5}
         />
+
+        {/* 记录日期 */}
+        <div className="mx-6">
+          <label className="block text-sm font-semibold text-warm-700 mb-3">📅 记录日期</label>
+          <input
+            type="date"
+            value={recordDate}
+            onChange={(e) => setRecordDate(e.target.value)}
+            className="w-full px-4 py-3.5 rounded-2xl bg-white/80 border-2 border-warm-200/50 focus:outline-none focus:border-warm-400 focus:bg-white transition-all text-warm-700 text-sm"
+          />
+        </div>
 
         {/* 保存按钮 */}
         <div className="mx-6 pt-3">

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ArrowLeft, Calendar, Trash2 } from 'lucide-react'
+import { ArrowLeft, Calendar, Pencil, Trash2 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import type { Trip } from '../../types'
 import { ConfirmDialog } from '../ui/ConfirmDialog'
@@ -7,9 +7,10 @@ import { ConfirmDialog } from '../ui/ConfirmDialog'
 interface TripHeaderProps {
   trip: Trip
   onDelete?: () => Promise<void>
+  onEdit?: () => void
 }
 
-export function TripHeader({ trip, onDelete }: TripHeaderProps) {
+export function TripHeader({ trip, onDelete, onEdit }: TripHeaderProps) {
   const navigate = useNavigate()
   const [showDelete, setShowDelete] = useState(false)
   const [deleting, setDeleting] = useState(false)
@@ -49,14 +50,24 @@ export function TripHeader({ trip, onDelete }: TripHeaderProps) {
           >
             <ArrowLeft className="w-6 h-6 text-warm-600" />
           </button>
-          {onDelete && (
-            <button
-              onClick={() => setShowDelete(true)}
-              className="w-11 h-11 bg-white/70 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm border border-warm-200/50 hover:bg-red-50 hover:border-red-200 transition-colors"
-            >
-              <Trash2 className="w-5 h-5 text-warm-400 hover:text-red-400" />
-            </button>
-          )}
+          <div className="flex gap-2">
+            {onEdit && (
+              <button
+                onClick={onEdit}
+                className="w-11 h-11 bg-white/70 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm border border-warm-200/50 hover:bg-warm-50 hover:border-warm-300 transition-colors"
+              >
+                <Pencil className="w-5 h-5 text-warm-400" />
+              </button>
+            )}
+            {onDelete && (
+              <button
+                onClick={() => setShowDelete(true)}
+                className="w-11 h-11 bg-white/70 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm border border-warm-200/50 hover:bg-red-50 hover:border-red-200 transition-colors"
+              >
+                <Trash2 className="w-5 h-5 text-warm-400 hover:text-red-400" />
+              </button>
+            )}
+          </div>
         </div>
 
         {/* 内容 */}

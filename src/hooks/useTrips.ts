@@ -82,35 +82,57 @@ export function useTrips() {
     await fetchTrips()
   }
 
-  return { trips, loading, error, createTrip, deleteTrip, refresh: fetchTrips }
+  const updateTrip = async (id: string, updates: { title?: string; start_date?: string; end_date?: string; cover_photo?: string | null; created_by?: '我' | '她' }) => {
+    const { error } = await supabase.from('trips').update(updates).eq('id', id)
+    if (error) throw error
+    await fetchTrips()
+  }
+
+  const addCity = async (tripId: string, city: { city_name: string; lat: number; lng: number; sort_order: number }) => {
+    const { error } = await supabase
+      .from('trip_cities')
+      .insert({ ...city, trip_id: tripId })
+    if (error) throw error
+    await fetchTrips()
+  }
+
+  const removeCity = async (cityId: string) => {
+    const { error } = await supabase
+      .from('trip_cities')
+      .delete()
+      .eq('id', cityId)
+    if (error) throw error
+    await fetchTrips()
+  }
+
+  return { trips, loading, error, createTrip, updateTrip, deleteTrip, addCity, removeCity, refresh: fetchTrips }
 }
 
 export function useTrip(id: string) {
   const [trip, setTrip] = useState<(Trip & { cities: TripCity[] }) | null>(null)
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
+  const fetchTrip = useCallback(async () => {
     if (!id) return
-    const fetchTrip = async () => {
-      const { data, error } = await supabase
-        .from('trips')
-        .select('*')
-        .eq('id', id)
-        .single()
+    const { data, error } = await supabase
+      .from('trips')
+      .select('*')
+      .eq('id', id)
+      .single()
 
-      if (error) { setLoading(false); return }
+    if (error) { setLoading(false); return }
 
-      const { data: cities } = await supabase
-        .from('trip_cities')
-        .select('*')
-        .eq('trip_id', id)
-        .order('sort_order', { ascending: true })
+    const { data: cities } = await supabase
+      .from('trip_cities')
+      .select('*')
+      .eq('trip_id', id)
+      .order('sort_order', { ascending: true })
 
-      setTrip({ ...data, cities: cities || [] })
-      setLoading(false)
-    }
-    fetchTrip()
+    setTrip({ ...data, cities: cities || [] })
+    setLoading(false)
   }, [id])
 
-  return { trip, loading }
+  useEffect(() => { fetchTrip() }, [fetchTrip])
+
+  return { trip, loading, refresh: fetchTrip }
 }

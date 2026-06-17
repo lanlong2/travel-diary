@@ -25,7 +25,16 @@ export interface Photo {
   note: string
   author: '我' | '她'
   entry_type: 'photo' | 'note'
+  record_date: string | null
   created_at: string
+}
+
+export interface TripUpdate {
+  title?: string
+  cover_photo?: string | null
+  start_date?: string
+  end_date?: string
+  created_by?: '我' | '她'
 }
 
 export interface CitySummary {

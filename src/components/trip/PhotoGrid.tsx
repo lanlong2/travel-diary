@@ -72,11 +72,11 @@ export function PhotoGrid({ photos, onPhotoClick, onDeletePhoto }: PhotoGridProp
                         </span>
                       </div>
                     </div>
-                    {/* 删除按钮 */}
+                    {/* 删除按钮 — 移动端常显 */}
                     {onDeletePhoto && (
                       <button
                         onClick={(e) => { e.stopPropagation(); setDeleteTarget(photo) }}
-                        className="absolute top-2 right-2 w-8 h-8 rounded-xl bg-black/30 backdrop-blur-sm flex items-center justify-center opacity-0 hover:opacity-100 transition-all duration-200 hover:bg-red-500/80"
+                        className="absolute top-2 right-2 w-8 h-8 rounded-xl bg-black/30 backdrop-blur-sm flex items-center justify-center transition-all duration-200 sm:opacity-0 sm:hover:opacity-100 max-sm:opacity-100 hover:bg-red-500/80"
                       >
                         <Trash2 className="w-4 h-4 text-white" />
                       </button>
@@ -102,11 +102,11 @@ export function PhotoGrid({ photos, onPhotoClick, onDeletePhoto }: PhotoGridProp
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   loading="lazy"
                 />
-                {/* 删除按钮 */}
+                {/* 删除按钮 — 移动端常显 */}
                 {onDeletePhoto && (
                   <button
                     onClick={(e) => { e.stopPropagation(); setDeleteTarget(photo) }}
-                    className="absolute top-2 right-2 w-8 h-8 rounded-xl bg-black/30 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 hover:bg-red-500/80"
+                    className="absolute top-2 right-2 w-8 h-8 rounded-xl bg-black/30 backdrop-blur-sm flex items-center justify-center transition-all duration-200 sm:opacity-0 sm:group-hover:opacity-100 max-sm:opacity-100 hover:bg-red-500/80"
                   >
                     <Trash2 className="w-4 h-4 text-white" />
                   </button>

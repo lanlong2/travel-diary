@@ -12,6 +12,7 @@ const photoRecord: Photo = {
   note: '洱海真美',
   author: '我',
   entry_type: 'photo',
+  record_date: null,
   created_at: '2026-06-15T10:00:00Z',
 }
 
@@ -23,6 +24,7 @@ const noteRecord: Photo = {
   note: '今天在古城吃到了超好吃的烤乳扇，外酥里嫩，玫瑰酱很香。',
   author: '她',
   entry_type: 'note',
+  record_date: null,
   created_at: '2026-06-14T14:00:00Z',
 }
 
