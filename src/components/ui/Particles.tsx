@@ -24,6 +24,8 @@ export function Particles() {
     const canvas = canvasRef.current
     if (!canvas) return
 
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
     const ctx = canvas.getContext('2d')!
     let animId: number
     let particles: Particle[] = []
@@ -35,8 +37,7 @@ export function Particles() {
     resize()
     window.addEventListener('resize', resize)
 
-    // 创建粒子 — 数量更多、更大、更明显
-    const PARTICLE_COUNT = 55
+    const PARTICLE_COUNT = 38
     for (let i = 0; i < PARTICLE_COUNT; i++) {
       particles.push(createParticle(true))
     }
@@ -47,19 +48,19 @@ export function Particles() {
       return {
         x: Math.random() * canvas!.width,
         y: randomY ? Math.random() * canvas!.height : canvas!.height + 20,
-        size: type === 'heart' ? 8 + Math.random() * 12
-          : type === 'sparkle' ? 3 + Math.random() * 5
-          : 1.5 + Math.random() * 3,
-        speed: 0.1 + Math.random() * 0.35,
-        opacity: 0.25 + Math.random() * 0.35,
+        size: type === 'heart' ? 6 + Math.random() * 10
+          : type === 'sparkle' ? 2 + Math.random() * 4
+          : 1 + Math.random() * 2,
+        speed: 0.08 + Math.random() * 0.25,
+        opacity: 0.12 + Math.random() * 0.25,
         rotation: Math.random() * 360,
-        rotationSpeed: (Math.random() - 0.5) * 0.5,
+        rotationSpeed: (Math.random() - 0.5) * 0.4,
         type,
-        hue: type === 'heart' ? 340 + Math.random() * 30
-          : type === 'sparkle' ? 25 + Math.random() * 20
-          : 20 + Math.random() * 30,
+        hue: type === 'heart' ? 28 + Math.random() * 15
+          : type === 'sparkle' ? 35 + Math.random() * 15
+          : 30 + Math.random() * 20,
         wobble: 0,
-        wobbleSpeed: 0.01 + Math.random() * 0.03,
+        wobbleSpeed: 0.008 + Math.random() * 0.02,
       }
     }
 

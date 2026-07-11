@@ -33,14 +33,14 @@ export function ChinaMap({ cities, photos, onCityClick }: ChinaMapProps) {
 
       const markers = cities.map((city: CitySummary) => {
         const el = document.createElement('div')
-        el.innerHTML = `<div style="position:relative;cursor:pointer"><div class="map-marker-dot" style="width:18px;height:18px;background:linear-gradient(135deg,#e8755a,#c44d34);border:2.5px solid #fff;border-radius:50%;box-shadow:0 2px 12px rgba(196,77,52,0.4);transition:transform 0.2s"></div><div style="position:absolute;top:-24px;left:50%;transform:translateX(-50%);background:rgba(254,250,245,0.96);padding:2px 10px;border-radius:10px;font-size:11px;color:#5c3d2e;white-space:nowrap;font-weight:600;pointer-events:none">${city.city_name}</div></div>`
+        el.innerHTML = `<div style="position:relative;cursor:pointer"><div class="map-marker-dot" style="width:16px;height:16px;background:linear-gradient(135deg,oklch(68% 0.17 40),oklch(55% 0.15 35));border:2px solid oklch(96% 0.02 70);border-radius:50%;box-shadow:0 0 16px oklch(68% 0.17 40 / 0.6),0 2px 8px rgba(0,0,0,0.3);transition:transform 0.2s"></div><div style="position:absolute;top:-22px;left:50%;transform:translateX(-50%);background:oklch(28% 0.04 300 / 0.85);backdrop-filter:blur(12px);padding:2px 10px;border-radius:10px;font-size:11px;color:oklch(96% 0.02 70);white-space:nowrap;font-weight:600;pointer-events:none;letter-spacing:0.05em">${city.city_name}</div></div>`
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const marker = new (AMap as any).Marker({
           position: [city.lng, city.lat],
           content: el,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          offset: new (AMap as any).Pixel(-9, -9),
+          offset: new (AMap as any).Pixel(-8, -8),
         })
 
         const showTooltip = () => {
@@ -102,7 +102,7 @@ export function ChinaMap({ cities, photos, onCityClick }: ChinaMapProps) {
           const map = new (AMap as any).Map(containerRef.current, {
             zoom: 4.5,
             center: [104.0, 35.0],
-            mapStyle: 'amap://styles/whitesmoke',
+            mapStyle: 'amap://styles/dark',
             resizeEnable: true,
             dragEnable: true,
             zoomEnable: true,
@@ -115,7 +115,7 @@ export function ChinaMap({ cities, photos, onCityClick }: ChinaMapProps) {
           setStatus('error')
         }
       })
-      .catch((err) => {
+      .catch(() => {
         if (cancelled) return
         setErrorMsg('地图 JS 加载失败，请检查高德 API Key 是否正确')
         setStatus('error')
@@ -135,32 +135,28 @@ export function ChinaMap({ cities, photos, onCityClick }: ChinaMapProps) {
     if (status === 'loaded') updateMarkers()
   }, [cities, status, updateMarkers])
 
-  const mapHeight = '58vh'
+  const mapHeight = '56vh'
 
   if (status === 'error') {
     return (
-      <div className="mx-6 mt-4 rounded-2xl border-2 border-red-200 flex flex-col items-center justify-center bg-red-50 px-6 text-center" style={{ height: mapHeight }}>
-        <p className="text-5xl mb-4">🗺️</p>
-        <p className="text-base font-medium text-red-600 mb-2">地图加载失败</p>
-        <p className="text-sm text-red-400 mb-3">{errorMsg}</p>
-        <p className="text-xs text-red-300">
-          请确认高德 Key 已开通「Web端 JS API」服务，且安全密钥正确
+      <div className="mx-6 mt-4 glass-card flex flex-col items-center justify-center px-6 text-center" style={{ height: mapHeight }}>
+        <p className="text-sm text-amber font-medium tracking-wider mb-2">地图加载失败</p>
+        <p className="text-xs text-dusk-100/50 mb-3">{errorMsg}</p>
+        <p className="text-[11px] text-dusk-100/40">
+          请确认高德 Key 已开通「Web端 JS API」服务
         </p>
       </div>
     )
   }
 
   return (
-    <div className="mx-6 mt-4 rounded-2xl overflow-hidden border-2 border-warm-200/70 shadow-md shadow-warm-900/5 relative" style={{ height: mapHeight }}>
+    <div className="mx-6 mt-4 rounded-[20px] overflow-hidden border border-dusk-300/30 shadow-lg shadow-black/20 relative" style={{ height: mapHeight }}>
       <div ref={containerRef} className="w-full h-full" />
 
-      <div className="absolute top-0 left-8 w-16 h-5 bg-warm-400/25 -rotate-3 rounded-sm blur-[0.5px] z-20 pointer-events-none" />
-      <div className="absolute top-0 right-12 w-12 h-4 bg-warm-300/20 rotate-6 rounded-sm blur-[0.5px] z-20 pointer-events-none" />
-
       {status === 'loading' && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-warm-50/95 backdrop-blur-sm z-10 pointer-events-none">
-          <div className="w-12 h-12 border-[3px] border-warm-200 border-t-caramel rounded-full animate-spin mb-4" />
-          <span className="text-base text-warm-500 font-medium">正在绘制足迹地图...</span>
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-dusk-800/95 backdrop-blur-sm z-10 pointer-events-none">
+          <div className="w-10 h-10 border-[2px] border-dusk-400 border-t-amber rounded-full animate-spin mb-4" />
+          <span className="text-xs text-dusk-100/60 tracking-wider">正在绘制足迹地图</span>
         </div>
       )}
 

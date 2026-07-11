@@ -9,7 +9,7 @@ interface PageShellProps {
 
 export function PageShell({ children, hideNav = false }: PageShellProps) {
   return (
-    <div className="min-h-screen bg-cream paper-texture relative">
+    <div className="min-h-screen bg-dusk-700 relative overflow-hidden">
       <Particles />
       <div className="max-w-2xl mx-auto pb-28 relative z-10 animate-page-enter">
         {children}

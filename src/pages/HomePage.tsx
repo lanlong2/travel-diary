@@ -6,8 +6,6 @@ import { ChinaMap } from '../components/home/ChinaMap'
 import { TripCard } from '../components/home/TripCard'
 import { useTrips } from '../hooks/useTrips'
 import { usePhotos } from '../hooks/usePhotos'
-import { Spinner } from '../components/ui/Spinner'
-import { Compass, ImageIcon } from 'lucide-react'
 import type { CitySummary, Photo } from '../types'
 
 export function HomePage() {
@@ -52,12 +50,10 @@ export function HomePage() {
   if (tripsError) {
     return (
       <PageShell>
-        <div className="flex flex-col items-center justify-center min-h-[60vh] px-8 animate-fade-in-up">
-          <div className="w-20 h-20 rounded-[2rem] bg-red-50 border-2 border-red-200 flex items-center justify-center text-3xl mb-5">
-            😵
-          </div>
-          <p className="font-semibold text-warm-700 mb-1">数据加载失败</p>
-          <p className="text-sm text-wood/60">{tripsError}</p>
+        <DayCounter />
+        <div className="mx-6 mt-4 glass-card p-10 text-center animate-fade-in-up">
+          <p className="font-serif text-lg text-amber tracking-wide mb-2">数据加载失败</p>
+          <p className="text-sm text-dusk-100/60">{tripsError}</p>
         </div>
       </PageShell>
     )
@@ -67,10 +63,10 @@ export function HomePage() {
     return (
       <PageShell>
         <DayCounter />
-        <div className="mx-6 mt-4 rounded-2xl border-2 border-warm-200/60 flex items-center justify-center bg-warm-50/50" style={{ height: '55vh' }}>
+        <div className="mx-6 mt-4 glass-card flex items-center justify-center" style={{ height: '55vh' }}>
           <div className="text-center animate-scale-in">
-            <div className="w-12 h-12 mx-auto mb-5 rounded-full border-[3px] border-warm-200 border-t-caramel animate-spin" />
-            <p className="text-base text-wood/60 font-medium">加载旅途回忆...</p>
+            <div className="w-10 h-10 mx-auto mb-4 rounded-full border-[2px] border-dusk-400 border-t-amber animate-spin" />
+            <p className="text-xs text-dusk-100/60 tracking-wider">加载旅途回忆</p>
           </div>
         </div>
       </PageShell>
@@ -90,15 +86,15 @@ export function HomePage() {
         }}
       />
 
-      {/* 最近照片 */}
       {recentPhotos.length > 0 && (
-        <div className="mt-6">
+        <div className="mt-7">
           <div className="flex items-center justify-between mx-6 mb-3">
-            <h3 className="text-base font-bold text-warm-700 flex items-center gap-2">
-              <ImageIcon className="w-5 h-5 text-warm-400" />
+            <h3 className="font-serif text-[15px] font-semibold text-dusk-50 tracking-[0.15em]">
               最近照片
             </h3>
-            <span className="text-xs text-warm-400 bg-warm-100 px-2.5 py-1 rounded-full font-medium">{photos.length} 张</span>
+            <span className="text-[11px] text-dusk-100/60 font-mono tracking-wider">
+              {photos.length} 张
+            </span>
           </div>
           <div className="flex gap-3 overflow-x-auto px-6 pb-3 scrollbar-hide">
             {recentPhotos.map((photo, i) => (
@@ -116,15 +112,15 @@ export function HomePage() {
         </div>
       )}
 
-      {/* 旅行列表 */}
       {trips.length > 0 ? (
-        <div className="mt-6 mb-2">
+        <div className="mt-7 mb-2">
           <div className="flex items-center justify-between mx-6 mb-4">
-            <h3 className="text-base font-bold text-warm-700 flex items-center gap-2">
-              <Compass className="w-5 h-5 text-warm-400" />
+            <h3 className="font-serif text-[15px] font-semibold text-dusk-50 tracking-[0.15em]">
               最近旅行
             </h3>
-            <span className="text-xs text-warm-400 bg-warm-100 px-2.5 py-1 rounded-full font-medium">{trips.length} 次</span>
+            <span className="text-[11px] text-dusk-100/60 font-mono tracking-wider">
+              {trips.length} 次
+            </span>
           </div>
           <div className="flex gap-4 overflow-x-auto px-6 pb-3 scrollbar-hide">
             {trips.slice(0, 8).map((trip, i) => (
@@ -140,14 +136,13 @@ export function HomePage() {
           </div>
         </div>
       ) : (
-        <div className="mx-6 mt-5 mb-8 animate-fade-in-up">
-          <div className="border-2 border-dashed border-warm-300/60 rounded-2xl p-10 text-center bg-warm-50/30">
-            <div className="w-20 h-20 mx-auto mb-5 rounded-2xl bg-warm-100 flex items-center justify-center text-3xl">
-              🗺️
-            </div>
-            <p className="text-base text-warm-500 font-medium">还没有旅行记录</p>
-            <p className="text-sm text-warm-400/70 mt-2 max-w-[280px] mx-auto leading-relaxed">
-              点击下方 <span className="text-caramel font-bold">+ 记录</span> 按钮
+        <div className="mx-6 mt-6 mb-8 animate-fade-in-up">
+          <div className="glass-card p-12 text-center">
+            <p className="font-serif text-base text-dusk-50 tracking-wide mb-2">
+              还没有旅行记录
+            </p>
+            <p className="text-xs text-dusk-100/55 mt-3 max-w-[280px] mx-auto leading-relaxed tracking-wide">
+              点击下方 <span className="text-amber font-semibold">记录</span> 按钮
               <br />
               添加第一次旅行和照片
             </p>
@@ -167,8 +162,8 @@ function PhotoThumb({ photo, index, onClick }: { photo: Photo; index: number; on
       className={`flex-shrink-0 group ${staggerClass}`}
       style={{ opacity: 0 }}
     >
-      <div className="polaroid !p-2 !pb-5 w-[100px]">
-        <div className="w-full aspect-square rounded-sm overflow-hidden bg-warm-100">
+      <div className="w-[100px]">
+        <div className="w-full aspect-square rounded-xl overflow-hidden bg-dusk-600 border border-dusk-300/20 shadow-md shadow-black/20">
           <img
             src={photo.image_url ?? ''}
             alt={photo.note || photo.city_name}
@@ -176,11 +171,11 @@ function PhotoThumb({ photo, index, onClick }: { photo: Photo; index: number; on
             loading="lazy"
           />
         </div>
-        <p className="text-center text-[11px] text-wood/60 mt-2 italic truncate px-0.5">
+        <p className="text-center text-[11px] text-dusk-100/70 mt-2 font-medium tracking-wide truncate">
           {photo.city_name}
         </p>
         {photo.note && (
-          <p className="text-center text-[10px] text-wood/40 truncate px-0.5 leading-tight mt-0.5">
+          <p className="text-center text-[10px] text-dusk-100/40 truncate leading-tight mt-0.5 tracking-wide">
             {photo.note}
           </p>
         )}

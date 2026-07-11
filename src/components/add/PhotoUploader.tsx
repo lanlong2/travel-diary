@@ -18,7 +18,7 @@ export function PhotoUploader({ onFileSelect }: PhotoUploaderProps) {
 
   return (
     <div className="mx-6">
-      <label className="block text-sm font-semibold text-warm-700 mb-3">📸 照片</label>
+      <label className="block text-sm font-medium text-dusk-100/80 mb-3 tracking-wide">照片</label>
 
       <input
         ref={inputRef}
@@ -33,14 +33,13 @@ export function PhotoUploader({ onFileSelect }: PhotoUploaderProps) {
 
       {preview ? (
         <div className="relative animate-scale-in">
-          <div className="bg-white p-4 pb-10 rounded-sm shadow-md rotate-[0.5deg]">
-            <img src={preview} alt="预览" className="w-full aspect-[4/3] object-cover rounded-sm" />
-            <p className="text-center text-[11px] text-wood/50 mt-2 italic">预览</p>
+          <div className="glass-card p-3 overflow-hidden">
+            <img src={preview} alt="预览" className="w-full aspect-[4/3] object-cover rounded-lg" />
+            <p className="text-center text-[11px] text-dusk-100/50 mt-2 italic tracking-wider">预览</p>
           </div>
-          <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-20 h-6 bg-warm-400/25 -rotate-2 rounded-sm blur-[0.5px]" />
           <button
             onClick={(e) => { e.stopPropagation(); setPreview(null); inputRef.current?.click() }}
-            className="absolute -bottom-1 right-6 flex items-center gap-1.5 px-4 py-2.5 bg-white border border-warm-200 rounded-xl text-sm text-warm-600 shadow-sm hover:bg-warm-50 transition-colors"
+            className="absolute -bottom-2 right-4 flex items-center gap-1.5 px-4 py-2.5 glass-nav rounded-xl text-sm text-amber hover:bg-white/10 transition-colors"
           >
             <RefreshCw className="w-4 h-4" />
             重拍
@@ -49,13 +48,13 @@ export function PhotoUploader({ onFileSelect }: PhotoUploaderProps) {
       ) : (
         <button
           onClick={() => inputRef.current?.click()}
-          className="w-full border-2 border-dashed border-warm-300/70 rounded-2xl p-12 text-center hover:border-warm-500/70 hover:bg-warm-50/50 transition-all group"
+          className="w-full border-2 border-dashed border-dusk-300/40 rounded-2xl p-12 text-center hover:border-amber/50 hover:bg-amber/5 transition-all group"
         >
-          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-warm-100 flex items-center justify-center group-hover:scale-110 transition-transform">
-            <Camera className="w-8 h-8 text-warm-500" />
+          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-amber/12 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <Camera className="w-8 h-8 text-amber" />
           </div>
-          <p className="text-base text-warm-500 font-medium">点击拍照或选择照片</p>
-          <p className="text-xs text-warm-300/70 mt-2">JPG / PNG / HEIC</p>
+          <p className="text-sm text-dusk-50 font-medium tracking-wide">点击拍照或选择照片</p>
+          <p className="text-xs text-dusk-100/40 mt-2 tracking-wider">JPG / PNG / HEIC</p>
         </button>
       )}
     </div>

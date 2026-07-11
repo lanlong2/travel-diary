@@ -13,12 +13,12 @@ export function Button({
   children,
   ...props
 }: ButtonProps) {
-  const base = 'inline-flex items-center justify-center gap-2 font-bold rounded-2xl transition-all duration-200 active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100'
+  const base = 'inline-flex items-center justify-center gap-2 font-semibold rounded-2xl transition-all duration-200 active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100 tracking-wide'
 
   const variants = {
-    primary: 'bg-gradient-to-br from-warm-500 to-caramel text-white shadow-lg shadow-warm-500/20 hover:shadow-xl hover:shadow-warm-500/25 hover:from-warm-600 hover:to-warm-700',
-    secondary: 'bg-white text-warm-700 border-2 border-warm-200 hover:border-warm-300 hover:bg-warm-50',
-    ghost: 'text-warm-600 hover:bg-warm-100/80',
+    primary: 'bg-gradient-to-br from-amber to-caramel-700 text-white shadow-lg shadow-caramel/30 hover:shadow-xl hover:shadow-caramel/45 hover:brightness-110',
+    secondary: 'glass-nav text-dusk-50 hover:bg-white/10',
+    ghost: 'text-dusk-100/70 hover:bg-white/8',
   }
 
   const sizes = {

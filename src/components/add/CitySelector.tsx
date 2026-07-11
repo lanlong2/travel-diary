@@ -69,28 +69,27 @@ export function CitySelector({ onCitySelect, selectedCity }: CitySelectorProps) 
 
   return (
     <div className="mx-6">
-      <label className="block text-sm font-semibold text-warm-700 mb-3">
-        🗺️ 城市
+      <label className="block text-sm font-medium text-dusk-100/80 mb-3 tracking-wide">
+        城市
         {selectedCity && (
-          <span className="ml-2 text-xs font-normal text-warm-400">（点击更改）</span>
+          <span className="ml-2 text-xs font-normal text-dusk-100/45">点击更改</span>
         )}
       </label>
 
       {selectedCity ? (
-        <div className="relative p-5 bg-white rounded-2xl border-2 border-warm-500/30 shadow-sm overflow-hidden">
-          <div className="absolute top-0 left-10 w-14 h-5 bg-warm-400/20 -rotate-6 rounded-sm blur-[0.5px]" />
+        <div className="relative p-5 glass-card border-amber/40 overflow-hidden">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl bg-warm-100 flex items-center justify-center">
-                <MapPin className="w-6 h-6 text-caramel" />
+              <div className="w-12 h-12 rounded-xl bg-amber/15 flex items-center justify-center">
+                <MapPin className="w-6 h-6 text-amber" />
               </div>
-              <span className="font-bold text-base text-warm-900">{selectedCity.name}</span>
+              <span className="font-serif font-semibold text-base text-dusk-50 tracking-wide">{selectedCity.name}</span>
             </div>
             <button
               onClick={() => onCitySelect(null)}
-              className="w-9 h-9 rounded-full bg-warm-100 flex items-center justify-center hover:bg-warm-200 transition-colors"
+              className="w-9 h-9 rounded-full bg-white/8 flex items-center justify-center hover:bg-white/15 transition-colors"
             >
-              <X className="w-5 h-5 text-warm-400" />
+              <X className="w-5 h-5 text-dusk-100/70" />
             </button>
           </div>
         </div>
@@ -98,40 +97,37 @@ export function CitySelector({ onCitySelect, selectedCity }: CitySelectorProps) 
         <>
           <div className="flex gap-2.5">
             <div className="flex-1">
-              <Input icon={Search} placeholder="搜索城市名..." value={query} onChange={(e) => setQuery(e.target.value)} />
+              <Input icon={Search} placeholder="搜索城市名" value={query} onChange={(e) => setQuery(e.target.value)} />
             </div>
             <button
               onClick={locateMe}
               disabled={locating}
-              className="relative px-5 bg-white border border-warm-300 rounded-2xl text-warm-500 hover:bg-warm-50 hover:border-warm-400 transition-all disabled:opacity-60 flex-shrink-0 group"
+              className="relative glass-nav rounded-2xl text-amber hover:bg-white/10 transition-all disabled:opacity-60 flex-shrink-0 group px-5"
               title="自动定位"
             >
               <Navigation className={`w-6 h-6 ${locating ? 'animate-pulse' : 'group-hover:scale-110 transition-transform'}`} />
-              {locating && (
-                <span className="absolute -bottom-5 left-1/2 -translate-x-1/2 text-[10px] text-warm-400 whitespace-nowrap">定位中...</span>
-              )}
             </button>
           </div>
 
           {suggestions.length > 0 && (
-            <div className="mt-2 bg-white rounded-2xl border border-warm-200/80 overflow-hidden shadow-lg shadow-warm-900/5 max-h-56 overflow-y-auto animate-scale-in">
+            <div className="mt-2 glass-card overflow-hidden max-h-56 overflow-y-auto animate-scale-in">
               {suggestions.map((s, i) => (
                 <button
                   key={i}
                   onClick={() => { onCitySelect(s); setQuery(''); setSuggestions([]) }}
-                  className="w-full px-5 py-3.5 flex items-center gap-3 text-left hover:bg-warm-50 transition-colors border-b border-warm-50 last:border-0"
+                  className="w-full px-5 py-3.5 flex items-center gap-3 text-left hover:bg-white/8 transition-colors border-b border-dusk-300/15 last:border-0"
                 >
-                  <span className="w-8 h-8 rounded-lg bg-warm-100 flex items-center justify-center flex-shrink-0">
-                    <MapPin className="w-4 h-4 text-warm-500" />
+                  <span className="w-8 h-8 rounded-lg bg-amber/12 flex items-center justify-center flex-shrink-0">
+                    <MapPin className="w-4 h-4 text-amber" />
                   </span>
-                  <span className="text-sm text-warm-800 font-medium">{s.name}</span>
+                  <span className="text-sm text-dusk-50 font-medium tracking-wide">{s.name}</span>
                 </button>
               ))}
             </div>
           )}
 
           {query && suggestions.length === 0 && (
-            <p className="mt-2 text-center text-xs text-warm-300 py-3">未找到匹配的城市</p>
+            <p className="mt-2 text-center text-xs text-dusk-100/40 py-3 tracking-wide">未找到匹配的城市</p>
           )}
         </>
       )}

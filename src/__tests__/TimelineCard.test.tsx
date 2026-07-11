@@ -10,7 +10,6 @@ const photoRecord: Photo = {
   city_name: '大理',
   image_url: 'https://example.com/photo.jpg',
   note: '洱海真美',
-  author: '我',
   entry_type: 'photo',
   record_date: null,
   created_at: '2026-06-15T10:00:00Z',
@@ -22,7 +21,6 @@ const noteRecord: Photo = {
   city_name: '丽江',
   image_url: null,
   note: '今天在古城吃到了超好吃的烤乳扇，外酥里嫩，玫瑰酱很香。',
-  author: '她',
   entry_type: 'note',
   record_date: null,
   created_at: '2026-06-14T14:00:00Z',
@@ -57,19 +55,6 @@ describe('TimelineCard', () => {
 
     fireEvent.click(screen.getByRole('button'))
     expect(onClick).toHaveBeenCalledTimes(1)
-  })
-
-  it('显示作者标记', () => {
-    const onClick = vi.fn()
-    const { rerender } = render(
-      <TimelineCard record={photoRecord} index={0} onClick={onClick} />
-    )
-    expect(screen.getByText('💙')).toBeTruthy()
-
-    rerender(
-      <TimelineCard record={noteRecord} index={0} onClick={onClick} />
-    )
-    expect(screen.getByText('💗')).toBeTruthy()
   })
 
   it('显示日期', () => {

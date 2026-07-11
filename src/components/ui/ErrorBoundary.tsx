@@ -16,19 +16,20 @@ export class ErrorBoundary extends Component<Props, State> {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-cream flex flex-col items-center justify-center p-8 text-center">
-          <div className="text-4xl mb-4">😵</div>
-          <h2 className="text-lg font-semibold text-warm-900 mb-2">出了点问题</h2>
-          <p className="text-sm text-warm-400 mb-4">{this.state.error?.message}</p>
-          <button
-            onClick={() => {
-              this.setState({ hasError: false, error: null })
-              window.location.href = '/'
-            }}
-            className="px-6 py-3 bg-warm-500 text-white rounded-2xl shadow-lg"
-          >
-            重新加载
-          </button>
+        <div className="min-h-screen bg-dusk-700 flex flex-col items-center justify-center p-8 text-center">
+          <div className="glass-card p-10 max-w-sm">
+            <h2 className="text-lg font-serif font-semibold text-amber tracking-wide mb-2">出了点问题</h2>
+            <p className="text-sm text-dusk-100/60 mb-6">{this.state.error?.message}</p>
+            <button
+              onClick={() => {
+                this.setState({ hasError: false, error: null })
+                window.location.href = '/'
+              }}
+              className="px-6 py-3 bg-gradient-to-br from-amber to-caramel-700 text-white rounded-2xl shadow-lg shadow-caramel/30 font-medium tracking-wide active:scale-95 transition-transform"
+            >
+              重新加载
+            </button>
+          </div>
         </div>
       )
     }

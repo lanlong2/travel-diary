@@ -15,13 +15,12 @@ export function TimelineCard({ record, index, onClick }: TimelineCardProps) {
   return (
     <button
       onClick={onClick}
-      className="block text-left mx-3 sm:mx-6 mb-3 sm:mb-4 active:scale-[0.98] transition-transform duration-150 animate-fade-in-up relative overflow-hidden rounded-2xl"
+      className="block text-left mx-3 sm:mx-6 mb-3 sm:mb-4 active:scale-[0.98] transition-transform duration-150 animate-fade-in-up relative"
       style={{ opacity: 0, animationDelay: `${index * 0.06}s` }}
     >
       {record.image_url ? (
-        /* 照片卡片 — 拍立得 */
-        <div className="polaroid !p-2 sm:!p-3 !pb-5 sm:!pb-6 rounded-xl">
-          <div className="aspect-[4/3] rounded-sm overflow-hidden bg-warm-100 mb-2 sm:mb-3">
+        <div className="glass-card overflow-hidden">
+          <div className="aspect-[4/3] overflow-hidden bg-dusk-600">
             <img
               src={record.image_url}
               alt={record.note || record.city_name}
@@ -30,39 +29,32 @@ export function TimelineCard({ record, index, onClick }: TimelineCardProps) {
             />
           </div>
           {record.note && (
-            <p className="text-xs sm:text-sm text-wood/70 text-center leading-relaxed font-medium italic px-1 sm:px-2 line-clamp-2">
-              「{record.note}」
-            </p>
+            <div className="px-4 py-3">
+              <p className="text-sm text-dusk-50/90 leading-relaxed font-medium italic line-clamp-2 text-balance">
+                「{record.note}」
+              </p>
+            </div>
           )}
         </div>
       ) : (
-        /* 文字卡片 — 便签风格 */
-        <div className="bg-[#fff9f0] border border-warm-200/60 rounded-2xl p-4 sm:p-5 shadow-sm"
-          style={{
-            backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(180,150,120,0.06) 27px, rgba(180,150,120,0.06) 28px)',
-            backgroundPosition: '0 8px',
-          }}
-        >
-          <p className="text-sm sm:text-base text-warm-800 leading-relaxed whitespace-pre-wrap">
-            {record.note}
-          </p>
+        <div className="glass-card p-4 sm:p-5">
+          <div className="flex items-start gap-2 mb-2">
+            <span className="font-serif text-2xl text-amber/60 leading-none">"</span>
+            <p className="text-sm sm:text-base text-dusk-50/90 leading-relaxed whitespace-pre-wrap flex-1 pt-1">
+              {record.note}
+            </p>
+          </div>
         </div>
       )}
 
-      {/* 底部信息条 — 移动端自适应折行 */}
       <div className="flex items-center justify-between gap-2 mt-2 px-1">
-        <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
-          <span className="text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 bg-warm-100 rounded-lg text-warm-500 font-medium flex items-center gap-1 shrink-0">
+        <div className="flex items-center gap-1.5 min-w-0">
+          <span className="text-[10px] sm:text-xs px-2 py-0.5 bg-white/8 rounded-lg text-amber font-medium flex items-center gap-1 shrink-0 tracking-wide">
             <MapPin className="w-3 h-3" />
             <span className="truncate max-w-[5em]">{record.city_name}</span>
           </span>
-          <span className={`text-[10px] px-1.5 sm:px-2 py-0.5 rounded-full shrink-0 ${
-            record.author === '我' ? 'bg-blue-50 text-blue-400' : 'bg-pink-50 text-pink-400'
-          }`}>
-            {record.author === '我' ? '💙' : '💗'}
-          </span>
         </div>
-        <span className="text-[10px] sm:text-xs text-warm-300 italic shrink-0">{dateStr}</span>
+        <span className="text-[10px] sm:text-xs text-dusk-100/40 font-mono shrink-0">{dateStr}</span>
       </div>
     </button>
   )

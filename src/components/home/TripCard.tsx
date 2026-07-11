@@ -11,17 +11,7 @@ interface TripCardProps {
   index?: number
 }
 
-const PALETTES = [
-  { bg: 'from-amber-100 to-orange-100', badge: 'bg-amber-50 text-amber-700', icon: '🏔️' },
-  { bg: 'from-rose-100 to-pink-100', badge: 'bg-rose-50 text-rose-700', icon: '🌸' },
-  { bg: 'from-sky-100 to-blue-100', badge: 'bg-sky-50 text-sky-700', icon: '🌊' },
-  { bg: 'from-emerald-100 to-teal-100', badge: 'bg-emerald-50 text-emerald-700', icon: '🌿' },
-  { bg: 'from-violet-100 to-purple-100', badge: 'bg-violet-50 text-violet-700', icon: '🌙' },
-  { bg: 'from-yellow-50 to-amber-50', badge: 'bg-yellow-50 text-amber-700', icon: '☀️' },
-]
-
 export function TripCard({ trip, cityCount, onClick, onDelete, index = 0 }: TripCardProps) {
-  const palette = PALETTES[Math.abs(trip.title.charCodeAt(0)) % PALETTES.length]
   const staggerClass = index < 5 ? `animate-fade-in-up stagger-${index + 1}` : ''
   const [showDelete, setShowDelete] = useState(false)
   const [deleting, setDeleting] = useState(false)
@@ -41,52 +31,57 @@ export function TripCard({ trip, cityCount, onClick, onDelete, index = 0 }: Trip
     <>
       <div
         onClick={onClick}
-        className={`min-w-[190px] bg-white/90 rounded-2xl overflow-hidden border border-warm-200/60 shadow-sm hover:shadow-lg active:scale-[0.97] transition-transform duration-150 cursor-pointer flex-shrink-0 transition-all duration-300 relative group ${staggerClass}`}
+        className={`min-w-[200px] glass-card overflow-hidden hover-lift active:scale-[0.97] transition-transform duration-150 cursor-pointer flex-shrink-0 relative group ${staggerClass}`}
         style={{ opacity: 0 }}
       >
-        {/* 封面区 */}
-        <div className={`relative h-32 bg-gradient-to-br ${palette.bg} flex items-center justify-center overflow-hidden`}>
-          {/* 纸胶带 */}
-          <div className="absolute -top-1 left-7 w-14 h-5 bg-warm-300/40 rounded-sm -rotate-3 blur-[0.5px] z-10" />
-          <div className="absolute top-3 right-5 w-10 h-4 bg-warm-200/50 rounded-sm rotate-6 blur-[0.5px] z-10" />
-
+        <div className="relative h-36 overflow-hidden">
           {trip.cover_photo ? (
             <img
               src={trip.cover_photo}
               alt={trip.title}
-              className="absolute inset-0 w-full h-full object-cover"
+              className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
             />
           ) : (
-            <span className="text-5xl drop-shadow-sm">{palette.icon}</span>
+            <div className="absolute inset-0 bg-gradient-to-br from-dusk-500 to-dusk-700 flex items-center justify-center">
+              <span className="font-serif font-semibold text-2xl text-amber/80 tracking-[0.15em]">
+                {trip.title.slice(0, 2)}
+              </span>
+            </div>
           )}
 
-          {/* 删除按钮 — 移动端常显，桌面端 hover 显示 */}
+          <div className="absolute inset-0 bg-gradient-to-t from-dusk-900/70 via-dusk-900/10 to-transparent" />
+
           <button
             onClick={(e) => { e.stopPropagation(); setShowDelete(true) }}
-            className="absolute top-2 right-2 w-8 h-8 rounded-xl bg-white/70 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-red-50 hover:text-red-400 z-10 transition-all duration-200 sm:opacity-0 sm:group-hover:opacity-100 max-sm:opacity-100 max-sm:bg-white/60"
+            className="absolute top-2.5 right-2.5 w-8 h-8 rounded-xl bg-black/30 backdrop-blur-md flex items-center justify-center hover:bg-red-500/40 hover:text-white text-dusk-50/80 z-10 transition-all duration-200 max-sm:opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
             title="删除旅行"
           >
-            <Trash2 className="w-4 h-4 text-warm-400" />
+            <Trash2 className="w-4 h-4" />
           </button>
 
-          {/* 日期标签 */}
-          <div className={`absolute bottom-3 left-3 px-2.5 py-1 ${palette.badge} rounded-lg text-xs font-medium tracking-wide backdrop-blur-sm`}>
-            {new Date(trip.start_date).getFullYear()} · {new Date(trip.start_date).toLocaleDateString('zh-CN', { month: 'short' })}
+          <div className="absolute bottom-3 left-3.5 right-3.5 flex items-end justify-between">
+            <h4 className="font-serif font-semibold text-[17px] text-dusk-50 leading-tight tracking-wide text-balance">
+              {trip.title}
+            </h4>
+          </div>
+
+          <div className="absolute top-3 left-3.5">
+            <span className="font-mono text-[11px] text-dusk-50/90 px-2.5 py-1 rounded-full bg-black/30 backdrop-blur-md tracking-wider">
+              {new Date(trip.start_date).getFullYear()}
+              .
+              {String(new Date(trip.start_date).getMonth() + 1).padStart(2, '0')}
+            </span>
           </div>
         </div>
 
-        {/* 信息区 */}
-        <div className="px-4 py-3.5">
-          <h4 className="font-bold text-base text-warm-900 truncate leading-snug">{trip.title}</h4>
-          <div className="flex items-center gap-2 mt-2">
-            <span className="text-xs text-wood/60">{cityCount} 座城市</span>
-            <span className="w-1 h-1 rounded-full bg-warm-300" />
-            <span className="text-xs text-wood/60">{duration} 天</span>
-            <span className="w-1 h-1 rounded-full bg-warm-300" />
-            <span className="text-xs text-wood/60">
-              {new Date(trip.start_date).toLocaleDateString('zh-CN', { month: 'numeric', day: 'numeric' })}
-            </span>
-          </div>
+        <div className="px-4 py-3 flex items-center gap-3 text-[11px] text-dusk-100/60 tracking-wide">
+          <span>{cityCount} 城</span>
+          <span className="w-1 h-1 rounded-full bg-amber/50" />
+          <span>{duration} 天</span>
+          <span className="w-1 h-1 rounded-full bg-amber/50" />
+          <span className="font-mono">
+            {new Date(trip.start_date).toLocaleDateString('zh-CN', { month: 'numeric', day: 'numeric' })}
+          </span>
         </div>
       </div>
 

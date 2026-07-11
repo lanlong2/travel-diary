@@ -82,7 +82,7 @@ export function useTrips() {
     await fetchTrips()
   }
 
-  const updateTrip = async (id: string, updates: { title?: string; start_date?: string; end_date?: string; cover_photo?: string | null; created_by?: '我' | '她' }) => {
+  const updateTrip = async (id: string, updates: { title?: string; start_date?: string; end_date?: string; cover_photo?: string | null }) => {
     const { error } = await supabase.from('trips').update(updates).eq('id', id)
     if (error) throw error
     await fetchTrips()

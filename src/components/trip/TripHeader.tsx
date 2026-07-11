@@ -35,59 +35,59 @@ export function TripHeader({ trip, onDelete, onEdit }: TripHeaderProps) {
 
   return (
     <>
-      <div className="relative pt-5 pb-12 overflow-hidden">
-        {/* 背景 */}
-        <div className="absolute inset-0 bg-gradient-to-b from-warm-100/60 via-warm-50/40 to-cream" />
-        <div className="absolute top-0 right-0 w-56 h-56 rounded-full bg-warm-200/20 -translate-y-1/2 translate-x-1/4" />
-        <div className="absolute bottom-5 left-10 w-3 h-3 rounded-full bg-warm-400/30" />
-        <div className="absolute bottom-10 left-20 w-2 h-2 rounded-full bg-warm-300/40" />
-
-        {/* 返回和删除按钮 */}
+      <div className="relative pt-5 pb-10">
         <div className="absolute top-6 left-5 right-5 flex justify-between z-10">
           <button
             onClick={() => navigate(-1)}
-            className="w-11 h-11 bg-white/70 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm border border-warm-200/50 hover:bg-white transition-colors"
+            className="w-11 h-11 glass-nav rounded-full flex items-center justify-center hover:bg-white/10 transition-colors active:scale-90"
           >
-            <ArrowLeft className="w-6 h-6 text-warm-600" />
+            <ArrowLeft className="w-5 h-5 text-dusk-50" />
           </button>
           <div className="flex gap-2">
             {onEdit && (
               <button
                 onClick={onEdit}
-                className="w-11 h-11 bg-white/70 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm border border-warm-200/50 hover:bg-warm-50 hover:border-warm-300 transition-colors"
+                className="w-11 h-11 glass-nav rounded-full flex items-center justify-center hover:bg-white/10 transition-colors active:scale-90"
               >
-                <Pencil className="w-5 h-5 text-warm-400" />
+                <Pencil className="w-4 h-4 text-dusk-100" />
               </button>
             )}
             {onDelete && (
               <button
                 onClick={() => setShowDelete(true)}
-                className="w-11 h-11 bg-white/70 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm border border-warm-200/50 hover:bg-red-50 hover:border-red-200 transition-colors"
+                className="w-11 h-11 glass-nav rounded-full flex items-center justify-center hover:bg-red-500/30 transition-colors active:scale-90"
               >
-                <Trash2 className="w-5 h-5 text-warm-400 hover:text-red-400" />
+                <Trash2 className="w-4 h-4 text-dusk-100" />
               </button>
             )}
           </div>
         </div>
 
-        {/* 内容 */}
-        <div className="relative flex flex-col items-center px-8 pt-8">
-          <div className="absolute -top-0 left-1/2 -translate-x-1/2 w-24 h-7 bg-warm-400/25 rotate-2 rounded-sm blur-[0.5px]" />
+        <div className="relative flex flex-col items-center px-8 pt-12 text-center">
+          {trip.cover_photo ? (
+            <div className="w-20 h-20 rounded-2xl overflow-hidden border border-dusk-300/30 shadow-lg mb-5">
+              <img src={trip.cover_photo} alt={trip.title} className="w-full h-full object-cover" />
+            </div>
+          ) : (
+            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-amber/20 to-caramel/20 border border-amber/30 flex items-center justify-center mb-5">
+              <span className="font-serif font-bold text-2xl text-amber tracking-wider">
+                {trip.title.slice(0, 1)}
+              </span>
+            </div>
+          )}
 
-          <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-warm-100 to-warm-200 border-2 border-warm-300/50 flex items-center justify-center text-3xl shadow-sm mb-5 rotate-3">
-            🗺️
-          </div>
+          <h1 className="font-serif text-3xl font-bold text-dusk-50 mb-4 tracking-[0.1em]">
+            {trip.title}
+          </h1>
 
-          <h1 className="text-3xl font-bold text-warm-900 mb-3 tracking-wide">{trip.title}</h1>
-
-          <div className="flex items-center gap-2 text-sm text-wood/60 bg-white/60 backdrop-blur-sm px-4 py-2 rounded-full border border-warm-200/40">
-            <Calendar className="w-4 h-4" />
-            <span>{startStr} — {endStr}</span>
-            <span className="text-warm-300">|</span>
+          <div className="flex items-center gap-2.5 text-xs text-dusk-100/60 glass-nav px-4 py-2 rounded-full tracking-wide">
+            <Calendar className="w-3.5 h-3.5 text-amber" />
+            <span className="font-mono">{startStr}</span>
+            <span className="text-amber/50">—</span>
+            <span className="font-mono">{endStr}</span>
+            <span className="w-1 h-1 rounded-full bg-amber/50" />
             <span>{duration} 天</span>
           </div>
-
-          <p className="text-xs text-warm-400/70 mt-2.5">{trip.created_by} 的旅行</p>
         </div>
       </div>
 

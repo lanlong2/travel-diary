@@ -49,23 +49,21 @@ export function TimelinePage() {
 
   return (
     <PageShell>
-      {/* 页面标题 */}
-      <div className="px-3 sm:px-6 pt-6 pb-2">
-        <h1 className="text-2xl font-bold text-warm-900 flex items-center gap-2">
-          <ScrollText className="w-7 h-7 text-caramel" />
+      <div className="px-6 pt-8 pb-2">
+        <h1 className="flex items-center gap-2.5 font-serif text-2xl font-bold text-dusk-50 tracking-[0.15em]">
+          <ScrollText className="w-6 h-6 text-amber" />
           时光日记
         </h1>
-        <p className="text-sm text-warm-400 mt-1">
+        <p className="text-xs text-dusk-100/50 mt-2 tracking-wider font-mono">
           {photos.length} 条记录
         </p>
       </div>
 
       {photos.length === 0 ? (
-        <div className="mx-3 sm:mx-6 mt-8 py-20 text-center border-2 border-dashed border-warm-300/60 rounded-2xl">
-          <div className="text-5xl mb-4">📜</div>
-          <p className="text-warm-500 font-medium">还没有记录</p>
-          <p className="text-sm text-warm-400 mt-2">
-            点击底部「记录」按钮写下第一条吧
+        <div className="mx-6 mt-8 glass-card p-12 text-center">
+          <p className="font-serif text-base text-dusk-50 tracking-wide mb-2">还没有记录</p>
+          <p className="text-xs text-dusk-100/55 mt-3">
+            点击底部「记录」按钮写下第一条
           </p>
         </div>
       ) : (
@@ -86,7 +84,6 @@ export function TimelinePage() {
               ))}
             </div>
           ))}
-          {/* 底部留白 */}
           <div className="h-8" />
         </div>
       )}

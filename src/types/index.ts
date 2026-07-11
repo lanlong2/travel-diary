@@ -4,7 +4,6 @@ export interface Trip {
   cover_photo: string | null
   start_date: string
   end_date: string
-  created_by: '我' | '她'
   created_at: string
 }
 
@@ -23,7 +22,6 @@ export interface Photo {
   city_name: string
   image_url: string | null
   note: string
-  author: '我' | '她'
   entry_type: 'photo' | 'note'
   record_date: string | null
   created_at: string
@@ -34,7 +32,6 @@ export interface TripUpdate {
   cover_photo?: string | null
   start_date?: string
   end_date?: string
-  created_by?: '我' | '她'
 }
 
 export interface CitySummary {

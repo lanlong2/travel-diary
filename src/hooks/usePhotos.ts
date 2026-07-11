@@ -30,7 +30,7 @@ export function usePhotos(tripId?: string) {
 
   const uploadPhoto = async (
     file: File | null, tripId: string, cityName: string,
-    note: string, author: '我' | '她',
+    note: string,
     entryType: 'photo' | 'note' = 'photo',
     recordDate?: string
   ) => {
@@ -65,7 +65,6 @@ export function usePhotos(tripId?: string) {
         city_name: cityName,
         image_url: imageUrl,
         note,
-        author,
         entry_type: entryType,
         record_date: recordDate || null,
       })
@@ -77,7 +76,7 @@ export function usePhotos(tripId?: string) {
     return data
   }
 
-  const updatePhoto = async (id: string, updates: { note?: string; city_name?: string; record_date?: string | null; author?: '我' | '她' }) => {
+  const updatePhoto = async (id: string, updates: { note?: string; city_name?: string; record_date?: string | null }) => {
     const { error } = await supabase.from('photos').update(updates).eq('id', id)
     if (error) throw error
     await fetchPhotos()

@@ -24,7 +24,7 @@ export function RouteMap({ cities }: RouteMapProps) {
       const map = new AMap.Map(containerRef.current, {
         zoom: 8,
         center: [cities[0].lng, cities[0].lat],
-        mapStyle: 'amap://styles/whitesmoke',
+        mapStyle: 'amap://styles/dark',
         resizeEnable: true,
         dragEnable: true,
         zoomEnable: true,
@@ -62,7 +62,7 @@ export function RouteMap({ cities }: RouteMapProps) {
           strokeWeight: 3,
           strokeStyle: 'dashed',
           lineJoin: 'round',
-          strokeOpacity: 0.8,
+          strokeOpacity: 0.85,
           showDir: true,
         })
         map.add(polyline)
@@ -72,7 +72,7 @@ export function RouteMap({ cities }: RouteMapProps) {
         const marker = new AMap.Marker({
           position: [city.lng, city.lat],
           label: {
-            content: `<div style="background:#e8755a;color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:bold;box-shadow:0 2px 8px rgba(0,0,0,0.2);font-family:system-ui">${i + 1}</div>`,
+            content: `<div style="background:linear-gradient(135deg,#e8755a,#c44d34);color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:bold;box-shadow:0 0 12px rgba(232,117,90,0.5),0 2px 8px rgba(0,0,0,0.3);font-family:system-ui;border:2px solid rgba(255,255,255,0.2)">${i + 1}</div>`,
             offset: new AMap.Pixel(-14, -14),
           },
         })
@@ -87,24 +87,24 @@ export function RouteMap({ cities }: RouteMapProps) {
 
   if (cities.length === 0) {
     return (
-      <div className="mx-6 p-6 bg-warm-50/80 rounded-2xl text-center text-sm text-warm-400 border border-warm-200/60">
-        <span className="text-lg mr-1">🗺️</span> 暂无路线信息
+      <div className="mx-6 p-6 glass-card text-center text-sm text-dusk-100/50 tracking-wide">
+        暂无路线信息
       </div>
     )
   }
 
   return (
     <div className="mx-6">
-      <h3 className="text-base font-bold text-warm-700 mb-3">🗺️ 旅行路线</h3>
+      <h3 className="font-serif text-[15px] font-semibold text-dusk-50 mb-3 tracking-[0.15em]">旅行路线</h3>
       <div className="flex flex-wrap gap-2 mb-3">
         {cities.map((city, i) => (
-          <span key={city.id} className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1.5 bg-white/80 border border-warm-200/40 rounded-lg text-warm-600 font-medium">
-            <span className="w-4 h-4 rounded-full bg-warm-500 text-white text-[10px] flex items-center justify-center font-bold">{i + 1}</span>
+          <span key={city.id} className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1.5 bg-white/8 border border-dusk-300/20 rounded-lg text-dusk-100/80 font-medium tracking-wide">
+            <span className="w-4 h-4 rounded-full bg-gradient-to-br from-amber to-caramel-700 text-white text-[10px] flex items-center justify-center font-bold">{i + 1}</span>
             {city.city_name}
           </span>
         ))}
       </div>
-      <div ref={containerRef} className="w-full h-56 rounded-2xl overflow-hidden border border-warm-200/60 shadow-sm" />
+      <div ref={containerRef} className="w-full h-56 rounded-[20px] overflow-hidden border border-dusk-300/30 shadow-lg shadow-black/20" />
     </div>
   )
 }

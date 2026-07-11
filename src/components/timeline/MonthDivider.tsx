@@ -4,12 +4,12 @@ interface MonthDividerProps {
 
 export function MonthDivider({ label }: MonthDividerProps) {
   return (
-    <div className="flex items-center gap-3 mx-3 sm:mx-6 my-4 sm:my-5">
-      <div className="flex-1 h-px bg-gradient-to-r from-transparent via-warm-300/50 to-warm-300/50" />
-      <span className="text-xs text-warm-400 font-medium italic tracking-wider whitespace-nowrap">
+    <div className="flex items-center gap-3 mx-3 sm:mx-6 my-5">
+      <div className="flex-1 h-px bg-gradient-to-r from-transparent to-dusk-300/30" />
+      <span className="text-[11px] text-dusk-100/50 font-mono tracking-[0.2em] whitespace-nowrap uppercase">
         {label}
       </span>
-      <div className="flex-1 h-px bg-gradient-to-l from-transparent via-warm-300/50 to-warm-300/50" />
+      <div className="flex-1 h-px bg-gradient-to-l from-transparent to-dusk-300/30" />
     </div>
   )
 }
