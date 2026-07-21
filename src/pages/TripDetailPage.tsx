@@ -35,7 +35,7 @@ export function TripDetailPage() {
       <PageShell>
         <div className="flex flex-col items-center justify-center min-h-[60vh] p-8 animate-fade-in-up">
           <div className="glass-card p-10 text-center">
-            <p className="font-serif text-lg text-amber tracking-wide mb-2">找不到这次旅行</p>
+            <p className="font-serif text-[17px] text-terracotta tracking-[0.02em] mb-2">找不到这次旅行</p>
             <Button variant="ghost" onClick={() => navigate('/')}>返回首页</Button>
           </div>
         </div>
@@ -83,7 +83,7 @@ export function TripDetailPage() {
             </div>
 
             <div className="border-t border-dusk-300/20 pt-4 mt-4">
-              <h4 className="text-xs font-medium text-dusk-100/70 mb-3 tracking-[0.2em] uppercase">城市管理</h4>
+              <h4 className="text-[13px] font-medium text-dusk-100/70 mb-3 tracking-[0.02em]">城市</h4>
 
               {trip.cities.length > 0 && (
                 <div className="flex flex-wrap gap-2 mb-4">
@@ -131,7 +131,7 @@ export function TripDetailPage() {
                 setEditing(false)
               }}
               disabled={!editTitle.trim()}
-              className="px-6 py-3 bg-gradient-to-br from-amber to-caramel-700 text-white rounded-2xl text-sm font-semibold disabled:opacity-40 transition-opacity tracking-wide active:scale-95"
+              className="px-6 py-3 bg-gradient-to-br from-terracotta to-amber text-white rounded-[14px] text-[13px] font-semibold disabled:opacity-40 transition-opacity tracking-[0.02em] active:brightness-95"
             >
               保存
             </button>
@@ -152,7 +152,7 @@ export function TripDetailPage() {
       {photos.length > 0 && (
         <div className="mx-6 mt-6">
           <div className="flex items-center gap-2.5 text-xs text-dusk-100/60 glass-card rounded-2xl px-5 py-3 tracking-wide">
-            <Camera className="w-4 h-4 text-amber" />
+            <Camera className="w-4 h-4 text-terracotta" />
             <span>共 {photos.length} 条记录</span>
           </div>
         </div>

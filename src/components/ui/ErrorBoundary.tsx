@@ -16,16 +16,17 @@ export class ErrorBoundary extends Component<Props, State> {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-dusk-700 flex flex-col items-center justify-center p-8 text-center">
+        <div className="min-h-screen flex flex-col items-center justify-center p-8 text-center" style={{ backgroundColor: 'oklch(24% 0.03 45)' }}>
           <div className="glass-card p-10 max-w-sm">
-            <h2 className="text-lg font-serif font-semibold text-amber tracking-wide mb-2">出了点问题</h2>
-            <p className="text-sm text-dusk-100/60 mb-6">{this.state.error?.message}</p>
+            <h2 className="text-[17px] font-serif font-semibold text-terracotta tracking-[0.02em] mb-2">出了点问题</h2>
+            <p className="text-[13px] text-dusk-100/60 mb-6">{this.state.error?.message}</p>
             <button
               onClick={() => {
                 this.setState({ hasError: false, error: null })
                 window.location.href = '/'
               }}
-              className="px-6 py-3 bg-gradient-to-br from-amber to-caramel-700 text-white rounded-2xl shadow-lg shadow-caramel/30 font-medium tracking-wide active:scale-95 transition-transform"
+              className="px-6 py-3 bg-gradient-to-br from-terracotta to-amber text-white rounded-[14px] font-medium tracking-[0.02em] active:brightness-95 transition-all"
+              style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}
             >
               重新加载
             </button>

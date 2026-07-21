@@ -1,4 +1,4 @@
-import { MapPin, Camera, ImageOff, ChevronRight } from 'lucide-react'
+import { MapPin, ImageOff, ChevronRight } from 'lucide-react'
 import type { CitySummary, Photo } from '../../types'
 
 interface CityTooltipProps {
@@ -31,14 +31,14 @@ export function CityPopup({ city, photos, x, y }: CityTooltipProps) {
       <div className="glass-popup w-[290px] overflow-hidden animate-scale-in">
         <div className="p-4">
           <div className="flex items-center gap-2.5 mb-3">
-            <div className="w-9 h-9 rounded-xl bg-amber/15 flex items-center justify-center flex-shrink-0">
-              <MapPin className="w-4 h-4 text-amber" />
+            <div className="w-9 h-9 rounded-[10px] bg-terracotta/15 flex items-center justify-center flex-shrink-0">
+              <MapPin className="w-4 h-4 text-terracotta" />
             </div>
             <div className="min-w-0">
-              <h4 className="font-serif font-semibold text-dusk-50 text-[15px] leading-tight truncate tracking-wide">
+              <h4 className="font-serif font-semibold text-dusk-50 text-[15px] leading-tight truncate tracking-[0.02em]">
                 {city.city_name}
               </h4>
-              <p className="text-[10px] text-dusk-100/50 tracking-wider mt-0.5">
+              <p className="text-[10px] text-dusk-100/50 tracking-[0.02em] mt-0.5">
                 {city.visit_count} 次到访 · {city.photo_count} 张照片
               </p>
             </div>
@@ -48,7 +48,7 @@ export function CityPopup({ city, photos, x, y }: CityTooltipProps) {
             <div className="grid grid-cols-2 gap-2 mb-3">
               {cityPhotos.map((p) => (
                 <div key={p.id} className="relative">
-                  <div className="aspect-[4/3] rounded-lg overflow-hidden bg-dusk-700 border border-dusk-300/20">
+                  <div className="aspect-[4/3] rounded-[6px] overflow-hidden bg-dusk-700 border border-dusk-300/20">
                     <img
                       src={p.image_url ?? ''}
                       alt={p.note || city.city_name}
@@ -59,21 +59,21 @@ export function CityPopup({ city, photos, x, y }: CityTooltipProps) {
                 </div>
               ))}
               {city.photo_count > 4 && (
-                <div className="aspect-[4/3] rounded-lg bg-amber/10 border border-amber/20 flex items-center justify-center">
-                  <span className="text-sm text-amber font-semibold">+{city.photo_count - 4}</span>
+                <div className="aspect-[4/3] rounded-[6px] bg-terracotta/10 border border-terracotta/20 flex items-center justify-center">
+                  <span className="text-[13px] text-terracotta font-semibold">+{city.photo_count - 4}</span>
                 </div>
               )}
             </div>
           ) : (
-            <div className="flex items-center justify-center gap-2 mb-3 py-4 rounded-lg bg-dusk-800/40 border border-dashed border-dusk-300/30">
+            <div className="flex items-center justify-center gap-2 mb-3 py-4 rounded-[6px] bg-dusk-800/40 border border-dashed border-dusk-300/30">
               <ImageOff className="w-4 h-4 text-dusk-100/40" />
-              <span className="text-xs text-dusk-100/50">还没有照片</span>
+              <span className="text-[11px] text-dusk-100/50">还没有照片</span>
             </div>
           )}
 
           {latestNote && (
-            <div className="mb-3 pl-3 border-l-2 border-amber/40">
-              <p className="text-xs text-dusk-100/70 leading-relaxed line-clamp-2 italic">
+            <div className="mb-3 pl-3 border-l-2 border-terracotta/40">
+              <p className="text-[11px] text-dusk-100/70 leading-relaxed line-clamp-2 italic">
                 {latestNote}
               </p>
             </div>
@@ -86,7 +86,7 @@ export function CityPopup({ city, photos, x, y }: CityTooltipProps) {
               {city.trips.slice(0, 2).map((t, i) => (
                 <span
                   key={i}
-                  className="text-[10px] px-2 py-0.5 bg-white/8 rounded-full text-dusk-100/70 font-medium tracking-wide"
+                  className="text-[10px] px-2 py-0.5 bg-white/8 rounded-full text-dusk-100/70 font-medium tracking-[0.02em]"
                 >
                   {t}
                 </span>
@@ -98,7 +98,7 @@ export function CityPopup({ city, photos, x, y }: CityTooltipProps) {
               )}
             </div>
 
-            <span className="flex items-center gap-0.5 text-[10px] text-amber font-medium tracking-wider">
+            <span className="flex items-center gap-0.5 text-[10px] text-terracotta font-medium tracking-[0.02em]">
               查看详情
               <ChevronRight className="w-3 h-3" />
             </span>

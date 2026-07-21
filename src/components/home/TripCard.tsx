@@ -31,7 +31,7 @@ export function TripCard({ trip, cityCount, onClick, onDelete, index = 0 }: Trip
     <>
       <div
         onClick={onClick}
-        className={`min-w-[210px] glass-card overflow-hidden hover-lift active:scale-[0.97] transition-transform duration-150 cursor-pointer flex-shrink-0 relative group ${staggerClass}`}
+        className={`min-w-[210px] glass-card overflow-hidden hover-lift active:brightness-95 transition-all duration-200 cursor-pointer flex-shrink-0 relative group ${staggerClass}`}
         style={{ opacity: 0 }}
       >
         <div className="relative h-36 overflow-hidden">
@@ -39,7 +39,7 @@ export function TripCard({ trip, cityCount, onClick, onDelete, index = 0 }: Trip
             <img
               src={trip.cover_photo}
               alt={trip.title}
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 group-hover:brightness-110"
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-103 group-hover:brightness-105"
             />
           ) : (
             // 无封面：星座连线背景
@@ -50,7 +50,7 @@ export function TripCard({ trip, cityCount, onClick, onDelete, index = 0 }: Trip
                 preserveAspectRatio="none"
                 aria-hidden="true"
               >
-                <g stroke="oklch(68% 0.17 40)" strokeWidth="0.6" fill="oklch(68% 0.17 40)">
+                <g stroke="#c4735a" strokeWidth="0.6" fill="#c4735a">
                   <line x1="30" y1="40" x2="80" y2="60" />
                   <line x1="80" y1="60" x2="140" y2="35" />
                   <line x1="140" y1="35" x2="180" y2="80" />
@@ -65,7 +65,7 @@ export function TripCard({ trip, cityCount, onClick, onDelete, index = 0 }: Trip
                   <circle cx="40" cy="95" r="1.8" />
                 </g>
               </svg>
-              <span className="font-serif font-semibold text-2xl text-amber/85 tracking-[0.15em] relative">
+              <span className="font-display italic font-semibold text-2xl text-terracotta/85 tracking-[0.02em] relative">
                 {trip.title.slice(0, 2)}
               </span>
             </div>
@@ -75,14 +75,14 @@ export function TripCard({ trip, cityCount, onClick, onDelete, index = 0 }: Trip
 
           <button
             onClick={(e) => { e.stopPropagation(); setShowDelete(true) }}
-            className="absolute top-2.5 right-2.5 w-8 h-8 rounded-xl bg-black/30 backdrop-blur-md flex items-center justify-center hover:bg-red-500/40 hover:text-white text-dusk-50/80 z-10 transition-all duration-200 max-sm:opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
-            title="删除旅行"
+            className="absolute top-2.5 right-2.5 w-8 h-8 rounded-[10px] bg-black/30 backdrop-blur-md flex items-center justify-center hover:bg-red-500/40 hover:text-white text-dusk-50/80 z-10 transition-colors duration-200 max-sm:opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
+            aria-label="删除旅行"
           >
             <Trash2 className="w-4 h-4" />
           </button>
 
           <div className="absolute bottom-3 left-3.5 right-3.5 flex items-end justify-between">
-            <h4 className="font-serif font-semibold text-[17px] text-dusk-50 leading-tight tracking-wide text-balance">
+            <h4 className="font-serif font-semibold text-[17px] text-dusk-50 leading-tight tracking-[0.02em] text-balance">
               {trip.title}
             </h4>
           </div>
@@ -90,7 +90,7 @@ export function TripCard({ trip, cityCount, onClick, onDelete, index = 0 }: Trip
           {/* 年份贴纸 — 略微旋转 */}
           <div className="absolute top-3 left-3.5">
             <span
-              className="font-mono text-[11px] text-dusk-50/95 px-2.5 py-1 rounded-full bg-black/35 backdrop-blur-md tracking-wider inline-block"
+              className="font-mono text-[11px] text-dusk-50/95 px-2.5 py-1 rounded-full bg-black/35 backdrop-blur-md tracking-[0.02em] inline-block"
               style={{ transform: 'rotate(-2deg)', boxShadow: '0 2px 6px rgba(0,0,0,0.25)' }}
             >
               {new Date(trip.start_date).getFullYear()}.
@@ -99,11 +99,11 @@ export function TripCard({ trip, cityCount, onClick, onDelete, index = 0 }: Trip
           </div>
         </div>
 
-        <div className="px-4 py-3 flex items-center gap-3 text-[11px] text-dusk-100/60 tracking-wide">
+        <div className="px-4 py-3 flex items-center gap-3 text-[11px] text-dusk-100/60 tracking-[0.02em]">
           <span>{cityCount} 城</span>
-          <span className="w-1 h-1 rounded-full bg-amber/50" />
+          <span className="w-1 h-1 rounded-full bg-terracotta/50" />
           <span>{duration} 天</span>
-          <span className="w-1 h-1 rounded-full bg-amber/50" />
+          <span className="w-1 h-1 rounded-full bg-terracotta/50" />
           <span className="font-mono">
             {new Date(trip.start_date).toLocaleDateString('zh-CN', { month: 'numeric', day: 'numeric' })}
           </span>

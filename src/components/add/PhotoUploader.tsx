@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { Camera, RefreshCw } from 'lucide-react'
+import { Camera } from 'lucide-react'
 
 interface PhotoUploaderProps {
   onFileSelect: (file: File) => void
@@ -18,8 +18,8 @@ export function PhotoUploader({ onFileSelect }: PhotoUploaderProps) {
   }
 
   return (
-    <div className="mx-6">
-      <label className="block text-sm font-medium text-dusk-100/80 mb-3 tracking-wide">照片</label>
+    <div className="mx-7">
+      <label className="block text-[13px] font-medium text-dusk-100/80 mb-3 tracking-[0.02em]">照片</label>
 
       <input
         ref={inputRef}
@@ -33,7 +33,6 @@ export function PhotoUploader({ onFileSelect }: PhotoUploaderProps) {
       />
 
       {preview ? (
-        // 拍立得相纸风格预览
         <div className="relative animate-scale-in">
           <div className="polaroid-frame rounded-[2px]">
             <img
@@ -41,16 +40,13 @@ export function PhotoUploader({ onFileSelect }: PhotoUploaderProps) {
               alt="预览"
               className="w-full aspect-[4/3] object-cover rounded-[1px]"
             />
-            <p className="text-center text-[10px] text-dusk-900/60 mt-2 italic tracking-wider font-serif">
-              · 我们的回忆 ·
-            </p>
           </div>
+          {/* 纯文字链接，不抢眼 */}
           <button
             onClick={(e) => { e.stopPropagation(); setPreview(null); inputRef.current?.click() }}
-            className="absolute -bottom-2 right-4 flex items-center gap-1.5 px-4 py-2.5 glass-nav rounded-xl text-sm text-amber hover:bg-white/10 transition-colors"
+            className="absolute -bottom-1 right-4 text-[13px] text-terracotta/80 hover:text-terracotta transition-colors tracking-[0.02em]"
           >
-            <RefreshCw className="w-4 h-4" />
-            重拍
+            换一张
           </button>
         </div>
       ) : (
@@ -64,30 +60,19 @@ export function PhotoUploader({ onFileSelect }: PhotoUploaderProps) {
             const file = e.dataTransfer.files?.[0]
             if (file && file.type.startsWith('image/')) handleFile(file)
           }}
-          className={`w-full border-2 border-dashed rounded-2xl p-12 text-center transition-all duration-200 group relative overflow-hidden ${
+          className={`w-full border rounded-[14px] p-12 text-center transition-colors duration-200 ${
             dragging
-              ? 'border-amber bg-amber/10 scale-[1.01]'
-              : 'border-dusk-300/40 hover:border-amber/50 hover:bg-amber/5'
+              ? 'border-terracotta'
+              : 'border-dusk-300/40 hover:border-terracotta/50'
           }`}
+          style={dragging ? { backgroundColor: 'oklch(58% 0.13 40 / 0.06)' } : undefined}
         >
-          {/* 背景呼吸 */}
-          <span
-            className="absolute inset-0 pointer-events-none opacity-50 animate-breathe"
-            style={{
-              background: 'radial-gradient(circle at 50% 50%, oklch(68% 0.17 40 / 0.06), transparent 70%)',
-            }}
-            aria-hidden="true"
-          />
-
           <div className="relative">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-amber/12 flex items-center justify-center group-hover:scale-110 transition-transform animate-float-soft">
-              <Camera className="w-8 h-8 text-amber" />
+            <div className="w-14 h-14 mx-auto mb-4 flex items-center justify-center">
+              <Camera className="w-7 h-7 text-terracotta/70" />
             </div>
-            <p className="text-sm text-dusk-50 font-medium tracking-wide">
-              点击拍照或选择照片
-            </p>
-            <p className="text-xs text-dusk-100/40 mt-2 tracking-wider">
-              JPG / PNG / HEIC · 也支持拖拽上传
+            <p className="text-[15px] text-dusk-50/85 font-medium tracking-[0.02em]">
+              选择照片
             </p>
           </div>
         </button>

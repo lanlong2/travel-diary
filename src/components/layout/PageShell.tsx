@@ -9,9 +9,9 @@ interface PageShellProps {
 
 export function PageShell({ children, hideNav = false }: PageShellProps) {
   return (
-    <div className="min-h-screen bg-dusk-700 relative overflow-hidden">
+    <div className="min-h-screen relative overflow-hidden" style={{ backgroundColor: 'oklch(24% 0.03 45)' }}>
       <Particles />
-      <div className="max-w-2xl mx-auto pb-28 relative z-10 animate-page-enter">
+      <div className="max-w-[640px] mx-auto pb-28 relative z-10 animate-page-enter">
         {children}
       </div>
       {!hideNav && <BottomNav />}

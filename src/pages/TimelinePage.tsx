@@ -49,44 +49,30 @@ export function TimelinePage() {
 
   return (
     <PageShell>
-      <div className="px-6 pt-8 pb-2">
-        <h1 className="flex items-center gap-2.5 font-serif text-2xl font-bold text-dusk-50 tracking-[0.15em]">
-          <ScrollText className="w-6 h-6 text-amber" />
+      <div className="px-7 pt-8 pb-2">
+        <h1 className="flex items-center gap-2.5 font-serif text-2xl font-bold text-dusk-50 tracking-[0.03em] animate-fade-in-down">
+          <ScrollText className="w-6 h-6 text-terracotta" />
           时光日记
         </h1>
-        <p className="text-xs text-dusk-100/50 mt-2 tracking-wider font-mono">
+        <p className="text-[11px] text-dusk-100/50 mt-2 tracking-[0.02em] font-mono">
           {photos.length} 条记录
         </p>
       </div>
 
       {photos.length === 0 ? (
-        <div className="relative mx-6 mt-8 mb-8 py-10">
-          {/* 空时间线竖线 */}
+        <div className="relative mx-7 mt-8 mb-8 py-10">
+          {/* 空时间线竖线 — 极简 1px */}
           <div
-            className="absolute left-[18px] top-0 bottom-0 w-[1.5px]"
-            style={{
-              background:
-                'repeating-linear-gradient(to bottom, oklch(68% 0.17 40 / 0.35) 0, oklch(68% 0.17 40 / 0.35) 6px, transparent 6px, transparent 12px)',
-            }}
+            className="absolute left-[18px] top-0 bottom-0 w-px"
+            style={{ background: 'oklch(58% 0.13 40 / 0.15)' }}
             aria-hidden="true"
           />
-          {/* 起点爱心 */}
           <div className="flex flex-col items-start pl-[36px]">
             <div
-              className="w-12 h-12 rounded-full bg-gradient-to-br from-amber/20 to-caramel/20 border border-amber/40 flex items-center justify-center animate-breathe"
-              style={{ boxShadow: '0 0 24px oklch(68% 0.17 40 / 0.35)' }}
+              className="w-12 h-12 rounded-full bg-terracotta/15 border border-terracotta/30 flex items-center justify-center"
             >
-              <ScrollText className="w-5 h-5 text-amber" />
+              <ScrollText className="w-5 h-5 text-terracotta/70" />
             </div>
-            <p className="font-serif text-base text-dusk-50 tracking-wide mt-6 leading-relaxed">
-              时间线还空着
-            </p>
-            <p className="text-xs text-dusk-100/55 mt-2 leading-relaxed max-w-[260px]">
-              去记录属于你们的第一个瞬间吧
-              <span className="inline-block ml-1 animate-float-soft" style={{ animationDuration: '2s' }}>
-                ↓
-              </span>
-            </p>
           </div>
         </div>
       ) : (
@@ -99,6 +85,7 @@ export function TimelinePage() {
                   key={record.id}
                   record={record}
                   index={i}
+                  isFirstInMonth={i === 0}
                   onClick={() => {
                     const trip = trips.find((t) => t.id === record.trip_id)
                     if (trip) navigate(`/trip/${trip.id}`)

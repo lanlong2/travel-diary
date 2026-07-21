@@ -51,9 +51,9 @@ export function HomePage() {
     return (
       <PageShell>
         <DayCounter />
-        <div className="mx-6 mt-4 glass-card p-10 text-center animate-fade-in-up">
-          <p className="font-serif text-lg text-amber tracking-wide mb-2">数据加载失败</p>
-          <p className="text-sm text-dusk-100/60">{tripsError}</p>
+        <div className="mx-7 mt-4 glass-card p-10 text-center animate-fade-in-up">
+          <p className="font-serif text-[17px] text-terracotta tracking-[0.02em] mb-2">加载失败</p>
+          <p className="text-[13px] text-dusk-100/60">{tripsError}</p>
         </div>
       </PageShell>
     )
@@ -63,10 +63,10 @@ export function HomePage() {
     return (
       <PageShell>
         <DayCounter />
-        <div className="mx-6 mt-4 glass-card flex items-center justify-center" style={{ height: '55vh' }}>
+        <div className="mx-7 mt-4 glass-card flex items-center justify-center" style={{ height: '48vh' }}>
           <div className="text-center animate-scale-in">
-            <div className="w-10 h-10 mx-auto mb-4 rounded-full border-[2px] border-dusk-400 border-t-amber animate-spin" />
-            <p className="text-xs text-dusk-100/60 tracking-wider">加载旅途回忆</p>
+            <div className="w-10 h-10 mx-auto mb-4 rounded-full border-[1.5px] border-dusk-400 border-t-terracotta animate-spin" />
+            <p className="text-[11px] text-dusk-100/60 tracking-[0.02em]">加载中</p>
           </div>
         </div>
       </PageShell>
@@ -87,16 +87,18 @@ export function HomePage() {
       />
 
       {recentPhotos.length > 0 && (
-        <div className="mt-7">
-          <div className="flex items-center justify-between mx-6 mb-3">
-            <h3 className="font-serif text-[15px] font-semibold text-dusk-50 tracking-[0.15em]">
-              最近照片
+        <div className="mt-8 mb-2">
+          <div className="flex items-center mx-7 mb-3">
+            <span className="w-1 h-1 rounded-full bg-terracotta mr-2.5" aria-hidden="true" />
+            <h3 className="font-serif text-[15px] font-semibold text-dusk-50 tracking-[0.02em]">
+              最近照片 · {photos.length} 张
             </h3>
-            <span className="text-[11px] text-dusk-100/60 font-mono tracking-wider">
-              {photos.length} 张
-            </span>
           </div>
-          <div className="flex gap-3 overflow-x-auto px-6 pb-3 scrollbar-hide">
+          {/* 照片横滚 — 重叠 8px 模拟桌上摊开 */}
+          <div
+            className="flex overflow-x-auto px-7 pb-3 scrollbar-hide"
+            style={{ gap: '8px' }}
+          >
             {recentPhotos.map((photo, i) => (
               <PhotoThumb
                 key={photo.id}
@@ -113,16 +115,14 @@ export function HomePage() {
       )}
 
       {trips.length > 0 ? (
-        <div className="mt-7 mb-2">
-          <div className="flex items-center justify-between mx-6 mb-4">
-            <h3 className="font-serif text-[15px] font-semibold text-dusk-50 tracking-[0.15em]">
-              最近旅行
+        <div className="mt-8 mb-2">
+          <div className="flex items-center mx-7 mb-4">
+            <span className="w-1 h-1 rounded-full bg-terracotta mr-2.5" aria-hidden="true" />
+            <h3 className="font-serif text-[15px] font-semibold text-dusk-50 tracking-[0.02em]">
+              最近旅行 · {trips.length} 次
             </h3>
-            <span className="text-[11px] text-dusk-100/60 font-mono tracking-wider">
-              {trips.length} 次
-            </span>
           </div>
-          <div className="flex gap-4 overflow-x-auto px-6 pb-3 scrollbar-hide">
+          <div className="flex gap-4 overflow-x-auto px-7 pb-3 scrollbar-hide">
             {trips.slice(0, 8).map((trip, i) => (
               <TripCard
                 key={trip.id}
@@ -136,15 +136,10 @@ export function HomePage() {
           </div>
         </div>
       ) : (
-        <div className="mx-6 mt-6 mb-8 animate-fade-in-up">
+        <div className="mx-7 mt-6 mb-8 animate-fade-in-up">
           <div className="glass-card p-12 text-center">
-            <p className="font-serif text-base text-dusk-50 tracking-wide mb-2">
-              还没有旅行记录
-            </p>
-            <p className="text-xs text-dusk-100/55 mt-3 max-w-[280px] mx-auto leading-relaxed tracking-wide">
-              点击下方 <span className="text-amber font-semibold">记录</span> 按钮
-              <br />
-              添加第一次旅行和照片
+            <p className="font-serif text-[15px] text-dusk-50/85 tracking-[0.02em]">
+              这里还空着
             </p>
           </div>
         </div>
@@ -155,30 +150,31 @@ export function HomePage() {
 
 function PhotoThumb({ photo, index, onClick }: { photo: Photo; index: number; onClick: () => void }) {
   const staggerClass = index < 10 ? `animate-fade-in-up stagger-${(index % 8) + 1}` : ''
+  const tilt = (index % 3 === 0 ? 0.6 : index % 3 === 1 ? -0.8 : 0.3)
 
   return (
     <button
       onClick={onClick}
       className={`flex-shrink-0 group ${staggerClass}`}
-      style={{ opacity: 0 }}
+      style={{ opacity: 0, marginTop: `${tilt * 3}px` }}
+      aria-label={photo.city_name}
     >
-      <div className="w-[100px]">
-        <div className="w-full aspect-square rounded-xl overflow-hidden bg-dusk-600 border border-dusk-300/20 shadow-md shadow-black/20">
+      {/* 竖长形 aspect-[3/4]，圆角 6px */}
+      <div className="w-[80px]">
+        <div
+          className="w-full rounded-[6px] overflow-hidden bg-dusk-600 border border-dusk-300/15"
+          style={{ aspectRatio: '3/4', transform: `rotate(${tilt}deg)`, boxShadow: '0 2px 8px rgba(0,0,0,0.2)' }}
+        >
           <img
             src={photo.image_url ?? ''}
             alt={photo.note || photo.city_name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-500"
             loading="lazy"
           />
         </div>
-        <p className="text-center text-[11px] text-dusk-100/70 mt-2 font-medium tracking-wide truncate">
+        <p className="text-center text-[11px] text-dusk-100/70 mt-2 font-medium tracking-[0.01em] truncate">
           {photo.city_name}
         </p>
-        {photo.note && (
-          <p className="text-center text-[10px] text-dusk-100/40 truncate leading-tight mt-0.5 tracking-wide">
-            {photo.note}
-          </p>
-        )}
       </div>
     </button>
   )

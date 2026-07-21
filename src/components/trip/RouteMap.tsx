@@ -71,20 +71,19 @@ export function RouteMap({ cities }: RouteMapProps) {
 
         const polyline = new AMap.Polyline({
           path,
-          strokeColor: '#e8755a',
+          strokeColor: '#c4735a',
           strokeWeight: 3,
           strokeStyle: 'dashed',
           lineJoin: 'round',
           strokeOpacity: 0.85,
           showDir: true,
-          // 用 dasharray 模拟「从起点绘制到终点」的动画
           strokeDasharray: [pathLength, pathLength * 2],
         })
         map.add(polyline)
 
-        // 通过逐步减小 gap 来达到「绘制」效果
+        // 绘制速度从 30 步 → 45 步，更慢更有仪式感
         let progress = 0
-        const totalSteps = 30
+        const totalSteps = 45
         const animInterval = setInterval(() => {
           progress += 1
           if (progress >= totalSteps) {
@@ -105,11 +104,11 @@ export function RouteMap({ cities }: RouteMapProps) {
         }, 50)
       }
 
-      // 标记点 stagger 出现 + 序号圆圈光晕脉动
+      // 标记点 stagger 0.5s/个
       cities.forEach((city, i) => {
         const el = document.createElement('div')
-        el.innerHTML = `<div class="route-marker" style="animation-delay:${i * 0.3}s">
-          <span class="route-marker-halo" style="animation-delay:${i * 0.3}s"></span>
+        el.innerHTML = `<div class="route-marker" style="animation-delay:${i * 0.5}s">
+          <span class="route-marker-halo" style="animation-delay:${i * 0.5}s"></span>
           <div class="route-marker-inner">${i + 1}</div>
           <div class="route-marker-label">${city.city_name}</div>
         </div>`
@@ -130,25 +129,25 @@ export function RouteMap({ cities }: RouteMapProps) {
 
   if (cities.length === 0) {
     return (
-      <div className="mx-6 p-6 glass-card text-center text-sm text-dusk-100/50 tracking-wide">
+      <div className="mx-7 p-6 glass-card text-center text-[13px] text-dusk-100/50 tracking-[0.02em]">
         暂无路线信息
       </div>
     )
   }
 
   return (
-    <div className="mx-6">
-      <h3 className="font-serif text-[15px] font-semibold text-dusk-50 mb-3 tracking-[0.15em]">
+    <div className="mx-7">
+      <h3 className="font-serif text-[15px] font-semibold text-dusk-50 mb-3 tracking-[0.02em]">
         旅行路线
       </h3>
-      {/* 可横向滚动的城市胶囊条 */}
+      {/* 城市胶囊条 */}
       <div className="flex gap-2 mb-3 overflow-x-auto scrollbar-hide pb-1">
         {cities.map((city, i) => (
           <span
             key={city.id}
-            className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1.5 bg-white/8 border border-dusk-300/20 rounded-lg text-dusk-100/80 font-medium tracking-wide flex-shrink-0"
+            className="inline-flex items-center gap-1.5 text-[11px] px-2.5 py-1.5 bg-white/8 border border-dusk-300/20 rounded-[6px] text-dusk-100/80 font-medium tracking-[0.02em] flex-shrink-0"
           >
-            <span className="w-4 h-4 rounded-full bg-gradient-to-br from-amber to-caramel-700 text-white text-[10px] flex items-center justify-center font-bold">
+            <span className="w-4 h-4 rounded-full bg-gradient-to-br from-terracotta to-caramel-700 text-white text-[10px] flex items-center justify-center font-bold">
               {i + 1}
             </span>
             {city.city_name}
@@ -180,9 +179,9 @@ export function RouteMap({ cities }: RouteMapProps) {
           font-size: 13px;
           font-weight: bold;
           color: #fff;
-          background: linear-gradient(135deg, #e8755a, #c44d34);
+          background: linear-gradient(135deg, #c4735a, #a85a44);
           border: 2px solid rgba(255, 255, 255, 0.25);
-          box-shadow: 0 0 12px rgba(232, 117, 90, 0.5), 0 2px 8px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
           font-family: system-ui, sans-serif;
         }
         .route-marker-halo {
@@ -193,7 +192,7 @@ export function RouteMap({ cities }: RouteMapProps) {
           height: 28px;
           margin: -14px 0 0 -14px;
           border-radius: 50%;
-          border: 1.5px solid oklch(68% 0.17 40 / 0.55);
+          border: 1.5px solid oklch(58% 0.13 40 / 0.45);
           animation: routeMarkerHalo 2s ease-out infinite;
           pointer-events: none;
           z-index: 1;
@@ -203,7 +202,7 @@ export function RouteMap({ cities }: RouteMapProps) {
           top: -20px;
           left: 50%;
           transform: translateX(-50%);
-          background: oklch(28% 0.04 300 / 0.85);
+          background: oklch(24% 0.03 45 / 0.85);
           backdrop-filter: blur(12px);
           padding: 1px 8px;
           border-radius: 8px;
@@ -212,14 +211,14 @@ export function RouteMap({ cities }: RouteMapProps) {
           white-space: nowrap;
           font-weight: 600;
           pointer-events: none;
-          letter-spacing: 0.05em;
+          letter-spacing: 0.02em;
         }
         @keyframes routeMarkerIn {
           from { opacity: 0; transform: scale(0.3); }
           to { opacity: 1; transform: scale(1); }
         }
         @keyframes routeMarkerHalo {
-          0% { transform: scale(1); opacity: 0.55; }
+          0% { transform: scale(1); opacity: 0.45; }
           100% { transform: scale(2.6); opacity: 0; }
         }
       `}</style>

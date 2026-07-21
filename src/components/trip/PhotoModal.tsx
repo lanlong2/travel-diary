@@ -66,7 +66,7 @@ export function PhotoModal({ photo, onClose, onDelete, onUpdate }: PhotoModalPro
             <img
               src={photo.image_url}
               alt={photo.note || photo.city_name}
-              className="max-w-full max-h-full object-contain rounded-lg"
+              className="max-w-full max-h-full object-contain rounded-[6px]"
             />
           ) : (
             <div className="glass-popup max-w-md w-full p-8">
@@ -90,6 +90,7 @@ export function PhotoModal({ photo, onClose, onDelete, onUpdate }: PhotoModalPro
                 <button
                   onClick={() => setEditing(true)}
                   className="w-9 h-9 bg-white/8 rounded-full flex items-center justify-center text-dusk-100 hover:bg-white/15 transition-colors"
+                  aria-label="编辑"
                 >
                   <Pencil className="w-4 h-4" />
                 </button>
@@ -98,6 +99,7 @@ export function PhotoModal({ photo, onClose, onDelete, onUpdate }: PhotoModalPro
                 <button
                   onClick={() => setShowDelete(true)}
                   className="w-9 h-9 bg-white/8 rounded-full flex items-center justify-center text-dusk-100 hover:bg-red-500/40 transition-colors"
+                  aria-label="删除"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
@@ -105,6 +107,7 @@ export function PhotoModal({ photo, onClose, onDelete, onUpdate }: PhotoModalPro
               <button
                 onClick={onClose}
                 className="w-9 h-9 bg-white/8 rounded-full flex items-center justify-center text-dusk-100 hover:bg-white/15 transition-colors"
+                aria-label="关闭"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -114,38 +117,38 @@ export function PhotoModal({ photo, onClose, onDelete, onUpdate }: PhotoModalPro
           {editing ? (
             <div className="space-y-4">
               <div>
-                <label className="text-xs text-dusk-100/60 mb-1.5 block tracking-wide">留言</label>
+                <label className="text-[11px] text-dusk-100/60 mb-1.5 block tracking-[0.02em]">留言</label>
                 <textarea
                   value={editNote}
                   onChange={(e) => setEditNote(e.target.value)}
-                  className="w-full px-4 py-3 bg-dusk-600/40 border border-dusk-300/30 rounded-xl text-dusk-50 placeholder:text-dusk-100/35 focus:outline-none focus:ring-2 focus:ring-amber/30 focus:border-amber/60 resize-none"
+                  className="w-full px-4 py-3 bg-dusk-600/40 border border-dusk-300/30 rounded-[12px] text-[15px] text-dusk-50 placeholder:text-dusk-100/25 focus:outline-none focus:ring-[1px] focus:ring-terracotta/25 focus:border-terracotta/50 resize-none"
                   rows={3}
                   placeholder="写点什么"
                 />
               </div>
               <div>
-                <label className="text-xs text-dusk-100/60 mb-1.5 block tracking-wide">城市</label>
+                <label className="text-[11px] text-dusk-100/60 mb-1.5 block tracking-[0.02em]">城市</label>
                 <input
                   value={editCity}
                   onChange={(e) => setEditCity(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-dusk-600/40 border border-dusk-300/30 rounded-xl text-dusk-50 placeholder:text-dusk-100/35 focus:outline-none focus:ring-2 focus:ring-amber/30 focus:border-amber/60"
+                  className="w-full px-4 py-2.5 bg-dusk-600/40 border border-dusk-300/30 rounded-[12px] text-[15px] text-dusk-50 placeholder:text-dusk-100/25 focus:outline-none focus:ring-[1px] focus:ring-terracotta/25 focus:border-terracotta/50"
                   placeholder="城市名称"
                 />
               </div>
               <div>
-                <label className="text-xs text-dusk-100/60 mb-1.5 block tracking-wide">日期</label>
+                <label className="text-[11px] text-dusk-100/60 mb-1.5 block tracking-[0.02em]">日期</label>
                 <input
                   type="date"
                   value={editDate}
                   onChange={(e) => setEditDate(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-dusk-600/40 border border-dusk-300/30 rounded-xl text-dusk-50 focus:outline-none focus:ring-2 focus:ring-amber/30 focus:border-amber/60"
+                  className="w-full px-4 py-2.5 bg-dusk-600/40 border border-dusk-300/30 rounded-[12px] text-[15px] text-dusk-50 focus:outline-none focus:ring-[1px] focus:ring-terracotta/25 focus:border-terracotta/50"
                 />
               </div>
               <div className="flex gap-3 pt-2">
                 <button
                   type="button"
                   onClick={() => setEditing(false)}
-                  className="flex-1 py-2.5 rounded-xl border border-dusk-300/30 text-dusk-100/70 font-medium hover:bg-white/8 transition-colors"
+                  className="flex-1 py-2.5 rounded-[12px] border border-dusk-300/30 text-dusk-100/70 font-medium hover:bg-white/8 transition-colors"
                 >
                   取消
                 </button>
@@ -153,7 +156,7 @@ export function PhotoModal({ photo, onClose, onDelete, onUpdate }: PhotoModalPro
                   type="button"
                   onClick={handleSave}
                   disabled={saving}
-                  className="flex-1 py-2.5 rounded-xl bg-gradient-to-br from-amber to-caramel-700 text-white font-medium hover:brightness-110 transition-all disabled:opacity-50"
+                  className="flex-1 py-2.5 rounded-[12px] bg-gradient-to-br from-terracotta to-amber text-white font-medium hover:brightness-105 transition-all disabled:opacity-50"
                 >
                   {saving ? '保存中' : '保存'}
                 </button>
@@ -163,22 +166,22 @@ export function PhotoModal({ photo, onClose, onDelete, onUpdate }: PhotoModalPro
             <>
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs px-3 py-1 bg-amber/15 rounded-xl text-amber font-medium flex items-center gap-1 tracking-wide">
+                  <span className="text-[11px] px-3 py-1 bg-terracotta/15 rounded-[10px] text-terracotta font-medium flex items-center gap-1 tracking-[0.02em]">
                     <MapPin className="w-3 h-3" />
                     {photo.city_name}
                   </span>
                 </div>
-                <span className="text-xs text-dusk-100/50 font-mono">{dateStr}</span>
+                <span className="text-[11px] text-dusk-100/50 font-mono">{dateStr}</span>
               </div>
 
               {photo.note ? (
-                <div className="pl-3 border-l-2 border-amber/40">
-                  <p className="text-dusk-50 text-base leading-relaxed italic font-serif">
+                <div className="pl-3 border-l-2 border-terracotta/40">
+                  <p className="text-dusk-50 text-[15px] leading-relaxed italic font-serif">
                     {photo.note}
                   </p>
                 </div>
               ) : (
-                <p className="text-dusk-100/40 text-sm italic">没有留言</p>
+                <p className="text-dusk-100/40 text-[13px] italic">没有留言</p>
               )}
             </>
           )}

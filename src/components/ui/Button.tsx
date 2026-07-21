@@ -13,23 +13,24 @@ export function Button({
   children,
   ...props
 }: ButtonProps) {
-  const base = 'inline-flex items-center justify-center gap-2 font-semibold rounded-2xl transition-all duration-200 active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100 tracking-wide'
+  const base = 'inline-flex items-center justify-center gap-2 font-semibold rounded-[14px] transition-all duration-200 active:brightness-95 disabled:opacity-40 disabled:cursor-not-allowed disabled:active:brightness-100 tracking-[0.01em]'
 
   const variants = {
-    primary: 'bg-gradient-to-br from-amber to-caramel-700 text-white shadow-lg shadow-caramel/30 hover:shadow-xl hover:shadow-caramel/45 hover:brightness-110',
+    primary: 'bg-gradient-to-br from-terracotta to-amber text-white hover:brightness-105',
     secondary: 'glass-nav text-dusk-50 hover:bg-white/10',
     ghost: 'text-dusk-100/70 hover:bg-white/8',
   }
 
   const sizes = {
-    sm: 'px-5 py-2.5 text-sm rounded-xl',
-    md: 'px-7 py-3.5 text-base',
-    lg: 'px-10 py-4 text-lg rounded-[18px]',
+    sm: 'px-5 py-2.5 text-[13px] rounded-[12px]',
+    md: 'px-7 py-3.5 text-[15px]',
+    lg: 'px-10 py-4 text-[17px] rounded-[14px]',
   }
 
   return (
     <button
       className={`${base} ${variants[variant]} ${sizes[size]} ${className}`}
+      style={variant === 'primary' ? { boxShadow: '0 2px 8px rgba(0,0,0,0.15)' } : undefined}
       {...props}
     >
       {children}

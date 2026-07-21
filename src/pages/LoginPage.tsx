@@ -1,11 +1,8 @@
-import { useState, FormEvent, useEffect, useMemo } from 'react'
+import { useState, FormEvent, useEffect } from 'react'
 import { useAuth } from '../hooks/useAuth'
 import { Button } from '../components/ui/Button'
 import { Input } from '../components/ui/Input'
 import { Heart, Mail, Lock } from 'lucide-react'
-
-const TITLE_CHARS = ['崔', '浩', ' ', '&', ' ', '李', '沐', '桐']
-const SUBTITLE_CHARS = ['旅', '行', '日', '记']
 
 export function LoginPage() {
   const { signIn } = useAuth()
@@ -39,25 +36,22 @@ export function LoginPage() {
     setLoading(false)
   }
 
-  const titleChars = useMemo(() => TITLE_CHARS, [])
-  const subtitleChars = useMemo(() => SUBTITLE_CHARS, [])
-
   return (
-    <div className="min-h-screen bg-dusk-700 flex flex-col items-center justify-center px-8 relative overflow-hidden">
-      {/* 顶部飘落爱心层（轻量 CSS 实现） */}
+    <div className="min-h-screen flex flex-col items-center justify-center px-7 relative overflow-hidden" style={{ backgroundColor: 'oklch(22% 0.03 40)' }}>
+      {/* 飘落爱心 — 极少、极淡 */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
-        {Array.from({ length: 8 }).map((_, i) => (
+        {Array.from({ length: 5 }).map((_, i) => (
           <span
             key={i}
-            className="absolute text-amber/40 animate-float-soft"
+            className="absolute text-terracotta/40 animate-float-soft"
             style={{
-              left: `${(i * 12 + 6) % 100}%`,
-              top: `${(i * 17) % 100}%`,
-              fontSize: `${10 + (i % 4) * 4}px`,
-              animationDelay: `${i * 0.5}s`,
-              animationDuration: `${4 + (i % 3) * 1.5}s`,
+              left: `${(i * 22 + 8) % 100}%`,
+              top: `${(i * 19) % 100}%`,
+              fontSize: `${10 + (i % 3) * 3}px`,
+              animationDelay: `${i * 0.8}s`,
+              animationDuration: `${5 + (i % 2) * 2}s`,
               filter: 'blur(0.5px)',
-              opacity: 0.18 + (i % 3) * 0.05,
+              opacity: 0.08 + (i % 2) * 0.04,
             }}
           >
             <Heart fill="currentColor" className="w-full h-full" />
@@ -68,113 +62,90 @@ export function LoginPage() {
       <div className="w-full max-w-md relative z-10">
         {/* 标题 + 爱心 */}
         <div className="text-center mb-12">
-          {/* 爱心 + 三层波纹 */}
-          <div className="inline-flex mb-6 relative">
-            <span className="absolute inset-0 rounded-[1.75rem] animate-ripple" style={{ animationDelay: '0s' }} aria-hidden="true" />
-            <span className="absolute inset-0 rounded-[1.75rem] animate-ripple" style={{ animationDelay: '1s' }} aria-hidden="true" />
-            <span className="absolute inset-0 rounded-[1.75rem] animate-ripple" style={{ animationDelay: '2s' }} aria-hidden="true" />
+          {/* 爱心 — 只保留呼吸，无三层波纹 */}
+          <div className="inline-flex mb-7 relative">
             <div
-              className="relative w-24 h-24 rounded-[1.75rem] bg-gradient-to-br from-amber/25 to-caramel/25 border border-amber/40 flex items-center justify-center shadow-lg shadow-caramel/25 animate-float-soft"
-              style={{ animationDuration: '3.5s' }}
+              className="relative w-24 h-24 rounded-[1.75rem] bg-gradient-to-br from-terracotta/25 to-caramel/20 border border-terracotta/30 flex items-center justify-center animate-breathe"
+              style={{
+                boxShadow: '0 2px 12px rgba(0,0,0,0.15)',
+                animationDuration: '4s',
+              }}
             >
               <Heart
-                className="w-12 h-12 text-amber animate-breathe"
+                className="w-12 h-12 text-terracotta"
                 fill="currentColor"
-                style={{ filter: 'drop-shadow(0 0 16px oklch(68% 0.17 40 / 0.65))' }}
+                style={{ filter: 'drop-shadow(0 0 24px oklch(58% 0.13 40 / 0.35))' }}
               />
             </div>
           </div>
 
-          {/* 标题 — 逐字渐入 */}
-          <h1 className="font-serif text-[30px] font-bold text-dusk-50 tracking-[0.2em] leading-tight char-stagger">
-            {titleChars.map((c, i) => (
-              <span key={i} style={{ animationDelay: `${0.4 + i * 0.08}s` }}>
-                {c}
-              </span>
-            ))}
+          {/* 标题 — 整体淡入，无逐字动画 */}
+          <h1
+            className="font-serif text-[29px] font-semibold text-dusk-50 tracking-[0.05em] leading-tight"
+            style={{
+              animation: 'fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) both',
+            }}
+          >
+            崔浩 &amp; 李沐桐
           </h1>
 
-          {/* 副标题 — 字距动画 */}
-          <p
-            className="text-sm text-dusk-100/55 mt-3 tracking-[0.25em] animate-fade-in-down"
-            style={{ animationDelay: '1.2s', opacity: 0 }}
-          >
-            <span className="char-stagger">
-              {subtitleChars.map((c, i) => (
-                <span key={i} style={{ animationDelay: `${1.2 + i * 0.08}s` }}>{c}</span>
-              ))}
-            </span>
+          {/* 副标题 — 静态显示，不做动画 */}
+          <p className="text-[13px] text-dusk-100/55 mt-3 tracking-[0.05em]">
+            旅行日记
           </p>
         </div>
 
-        {/* 表单 */}
+        {/* 表单 — 1.5s 后淡入 */}
         <form
           onSubmit={handleSubmit}
-          className="space-y-5 animate-fade-in-up"
-          style={{ animationDelay: '1.5s', opacity: 0 }}
+          className="space-y-5"
+          style={{
+            animation: 'fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 1.5s both',
+          }}
         >
-          <div className="relative">
-            <Input
-              label="邮箱"
-              icon={Mail}
-              type="email"
-              placeholder="输入共享邮箱"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className={emailFilled ? 'border-amber/40' : ''}
-            />
-            <style>{`
-              input:focus + .input-glow, .input-glow:focus { box-shadow: 0 0 0 3px oklch(68% 0.17 40 / 0.18); }
-            `}</style>
-          </div>
+          <Input
+            label="邮箱"
+            icon={Mail}
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className={emailFilled ? 'border-terracotta/40' : ''}
+          />
           <Input
             label="密码"
             icon={Lock}
             type="password"
-            placeholder="输入我们的密码"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className={pwdFilled ? 'border-amber/40' : ''}
+            className={pwdFilled ? 'border-terracotta/40' : ''}
           />
 
           {error && (
-            <div className="p-4 rounded-2xl bg-red-500/15 border border-red-400/30 text-red-300 text-sm text-center animate-scale-in backdrop-blur-sm">
+            <div className="p-4 rounded-[14px] bg-red-500/15 border border-red-400/30 text-red-300 text-[13px] text-center animate-scale-in">
               {error}
             </div>
           )}
 
-          <div className="relative">
-            {/* 脉冲光晕 */}
-            {!loading && (
-              <span
-                className="absolute inset-0 rounded-[18px] pointer-events-none animate-ripple"
-                style={{ opacity: 0.5 }}
-                aria-hidden="true"
-              />
+          <Button
+            type="submit"
+            size="lg"
+            className="w-full mt-3"
+            disabled={loading}
+          >
+            {loading ? (
+              <span className="flex items-center justify-center gap-2">
+                <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                登录中
+              </span>
+            ) : (
+              '开门'
             )}
-            <Button
-              type="submit"
-              size="lg"
-              className="w-full mt-3 relative hover:scale-[1.02] hover:shadow-2xl hover:shadow-caramel/55"
-              disabled={loading}
-            >
-              {loading ? (
-                <span className="flex items-center justify-center gap-2">
-                  <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  登录中
-                </span>
-              ) : (
-                '进入我们的世界'
-              )}
-            </Button>
-          </div>
+          </Button>
         </form>
 
-        <p
-          className="text-center text-xs text-dusk-100/40 mt-12 animate-fade-in-up tracking-[0.2em] relative overflow-hidden"
-          style={{ animationDelay: '1.8s', opacity: 0 }}
-        >
-          <span className="animate-shimmer-text">崔浩和李沐桐的私人空间</span>
+        {/* 底部 — 极淡极小，几乎融入背景 */}
+        <p className="text-center text-[10px] text-dusk-100/25 mt-12 tracking-[0.03em]">
+          崔浩 · 李沐桐
         </p>
       </div>
     </div>

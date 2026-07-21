@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 
-type ParticleType = 'heart' | 'sparkle' | 'dust' | 'petal'
+type ParticleType = 'heart' | 'sparkle' | 'dust'
 type LightType = 'orb' | 'flash'
 
 interface Particle {
@@ -45,8 +45,6 @@ interface FlashLight {
 
 const HEART_PATH = 'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'
 
-const PETAL_PATH = 'M12 2C7 6 4 10 4 14c0 4 3 8 8 8s8-4 8-8c0-4-3-8-8-12z'
-
 const isMobile = () =>
   typeof window !== 'undefined' &&
   (window.matchMedia('(max-width: 768px)').matches ||
@@ -68,10 +66,10 @@ export function Particles() {
     let orbs: LightOrb[] = []
     let flashes: FlashLight[] = []
     let lastFlashTime = 0
-    let nextFlashDelay = 3000 + Math.random() * 5000
+    let nextFlashDelay = 8000 + Math.random() * 4000
 
     const mobile = isMobile()
-    const PARTICLE_COUNT = mobile ? 32 : 58
+    const PARTICLE_COUNT = mobile ? 20 : 38
     const ORB_COUNT = mobile ? 2 : 4
 
     function resize() {
@@ -83,28 +81,23 @@ export function Particles() {
 
     function createParticle(randomY: boolean): Particle {
       const typeRoll = Math.random()
-      const type: ParticleType = typeRoll < 0.32 ? 'heart'
-        : typeRoll < 0.6 ? 'sparkle'
-        : typeRoll < 0.85 ? 'dust'
-        : 'petal'
+      const type: ParticleType = typeRoll < 0.34 ? 'heart'
+        : typeRoll < 0.7 ? 'sparkle'
+        : 'dust'
 
       return {
         x: Math.random() * canvas!.width,
         y: randomY ? Math.random() * canvas!.height : canvas!.height + 20,
         size: type === 'heart' ? 5 + Math.random() * 9
           : type === 'sparkle' ? 1.8 + Math.random() * 3.5
-          : type === 'petal' ? 4 + Math.random() * 6
           : 1 + Math.random() * 2,
-        speed: type === 'petal' ? 0.04 + Math.random() * 0.18 : 0.08 + Math.random() * 0.25,
-        opacity: 0.12 + Math.random() * 0.28,
+        speed: 0.08 + Math.random() * 0.25,
+        opacity: 0.06 + Math.random() * 0.09,
         rotation: Math.random() * 360,
-        rotationSpeed: type === 'petal'
-          ? (Math.random() - 0.5) * 1.5
-          : (Math.random() - 0.5) * 0.4,
+        rotationSpeed: (Math.random() - 0.5) * 0.4,
         type,
-        hue: type === 'heart' ? 28 + Math.random() * 15
-          : type === 'sparkle' ? 35 + Math.random() * 15
-          : type === 'petal' ? 15 + Math.random() * 25
+        hue: type === 'heart' ? 18 + Math.random() * 12
+          : type === 'sparkle' ? 30 + Math.random() * 12
           : 30 + Math.random() * 20,
         wobble: Math.random() * Math.PI * 2,
         wobbleSpeed: 0.008 + Math.random() * 0.022,
@@ -117,13 +110,13 @@ export function Particles() {
     }
 
     function createOrb(): LightOrb {
-      const hues = [28, 35, 18, 45]
+      const hues = [18, 30, 22, 40]
       return {
         x: Math.random() * canvas!.width,
         y: Math.random() * canvas!.height,
         radius: 100 + Math.random() * 200,
         hue: hues[Math.floor(Math.random() * hues.length)],
-        opacity: 0.04 + Math.random() * 0.04,
+        opacity: 0.02 + Math.random() * 0.02,
         driftAngle: Math.random() * Math.PI * 2,
         driftRadius: 60 + Math.random() * 80,
         speed: 0.0003 + Math.random() * 0.0006,
@@ -143,9 +136,7 @@ export function Particles() {
       ctx.translate(x, y)
       ctx.rotate((rotation * Math.PI) / 180)
       ctx.globalAlpha = opacity
-      ctx.fillStyle = `hsl(${hue}, 70%, 75%)`
-      ctx.shadowColor = `hsl(${hue}, 80%, 70%)`
-      ctx.shadowBlur = size * 1.5
+      ctx.fillStyle = `hsl(${hue}, 60%, 70%)`
       const path = new Path2D(HEART_PATH)
       const scale = size / 24
       ctx.scale(scale, scale)
@@ -157,9 +148,7 @@ export function Particles() {
       ctx.save()
       ctx.translate(x, y)
       ctx.globalAlpha = opacity
-      ctx.fillStyle = `hsl(${hue}, 80%, 85%)`
-      ctx.shadowColor = `hsl(${hue}, 80%, 85%)`
-      ctx.shadowBlur = size * 2.5
+      ctx.fillStyle = `hsl(${hue}, 70%, 80%)`
       ctx.beginPath()
       for (let i = 0; i < 4; i++) {
         const angle = (i * Math.PI) / 2
@@ -176,25 +165,10 @@ export function Particles() {
     function drawDust(x: number, y: number, size: number, opacity: number, hue: number) {
       ctx.save()
       ctx.globalAlpha = opacity
-      ctx.fillStyle = `hsl(${hue}, 50%, 80%)`
+      ctx.fillStyle = `hsl(${hue}, 40%, 75%)`
       ctx.beginPath()
       ctx.arc(x, y, size, 0, Math.PI * 2)
       ctx.fill()
-      ctx.restore()
-    }
-
-    function drawPetal(x: number, y: number, size: number, opacity: number, hue: number, rotation: number) {
-      ctx.save()
-      ctx.translate(x, y)
-      ctx.rotate((rotation * Math.PI) / 180)
-      ctx.globalAlpha = opacity
-      ctx.fillStyle = `hsl(${hue}, 60%, 72%)`
-      ctx.shadowColor = `hsl(${hue}, 70%, 75%)`
-      ctx.shadowBlur = size * 1.2
-      const path = new Path2D(PETAL_PATH)
-      const scale = size / 12
-      ctx.scale(scale, scale)
-      ctx.fill(path)
       ctx.restore()
     }
 
@@ -205,9 +179,9 @@ export function Particles() {
       const r = orb.radius * pulse
 
       const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r)
-      grad.addColorStop(0, `hsla(${orb.hue}, 75%, 70%, ${orb.opacity})`)
-      grad.addColorStop(0.5, `hsla(${orb.hue}, 70%, 65%, ${orb.opacity * 0.5})`)
-      grad.addColorStop(1, `hsla(${orb.hue}, 70%, 60%, 0)`)
+      grad.addColorStop(0, `hsla(${orb.hue}, 60%, 65%, ${orb.opacity})`)
+      grad.addColorStop(0.5, `hsla(${orb.hue}, 55%, 60%, ${orb.opacity * 0.5})`)
+      grad.addColorStop(1, `hsla(${orb.hue}, 55%, 55%, 0)`)
       ctx.fillStyle = grad
       ctx.beginPath()
       ctx.arc(cx, cy, r, 0, Math.PI * 2)
@@ -216,28 +190,17 @@ export function Particles() {
 
     function drawFlash(flash: FlashLight) {
       const progress = flash.life / flash.maxLife
-      const opacity = Math.sin(progress * Math.PI) * 0.5
+      const opacity = Math.sin(progress * Math.PI) * 0.35
       const size = flash.size * (0.5 + progress * 0.5)
 
       const grad = ctx.createRadialGradient(flash.x, flash.y, 0, flash.x, flash.y, size)
-      grad.addColorStop(0, `hsla(${flash.hue}, 85%, 88%, ${opacity})`)
-      grad.addColorStop(0.4, `hsla(${flash.hue}, 75%, 75%, ${opacity * 0.4})`)
-      grad.addColorStop(1, `hsla(${flash.hue}, 70%, 65%, 0)`)
+      grad.addColorStop(0, `hsla(${flash.hue}, 75%, 85%, ${opacity})`)
+      grad.addColorStop(0.4, `hsla(${flash.hue}, 65%, 70%, ${opacity * 0.4})`)
+      grad.addColorStop(1, `hsla(${flash.hue}, 60%, 60%, 0)`)
       ctx.fillStyle = grad
       ctx.beginPath()
       ctx.arc(flash.x, flash.y, size, 0, Math.PI * 2)
       ctx.fill()
-
-      // 中心亮点
-      ctx.save()
-      ctx.globalAlpha = opacity * 0.8
-      ctx.fillStyle = `hsl(${flash.hue}, 90%, 92%)`
-      ctx.shadowColor = `hsl(${flash.hue}, 90%, 88%)`
-      ctx.shadowBlur = size * 0.6
-      ctx.beginPath()
-      ctx.arc(flash.x, flash.y, size * 0.08, 0, Math.PI * 2)
-      ctx.fill()
-      ctx.restore()
     }
 
     function maybeSpawnFlash(time: number) {
@@ -248,17 +211,17 @@ export function Particles() {
           life: 0,
           maxLife: 1500,
           size: 40 + Math.random() * 60,
-          hue: 30 + Math.random() * 25,
+          hue: 25 + Math.random() * 20,
         })
         lastFlashTime = time
-        nextFlashDelay = 3000 + Math.random() * 5000
+        nextFlashDelay = 8000 + Math.random() * 4000
       }
     }
 
     function animate(time: number) {
       ctx.clearRect(0, 0, canvas!.width, canvas!.height)
 
-      // 底层 — 大光斑
+      // 底层 — 大光斑（极微妙）
       ctx.globalCompositeOperation = 'screen'
       orbs.forEach((orb) => drawOrb(orb, time))
       ctx.globalCompositeOperation = 'source-over'
@@ -285,7 +248,7 @@ export function Particles() {
 
         const pulse = 1 + Math.sin(p.pulsePhase) * 0.2
         const twinkle = 0.55 + Math.sin(p.twinklePhase) * 0.35
-        const xOffset = Math.sin(p.wobble) * (p.type === 'petal' ? 35 : 15)
+        const xOffset = Math.sin(p.wobble) * 15
 
         const fadeZone = 100
         let opacity = p.opacity
@@ -304,9 +267,6 @@ export function Particles() {
             break
           case 'sparkle':
             drawSparkle(p.x + xOffset, p.y, drawSize, Math.max(0, opacity), p.hue)
-            break
-          case 'petal':
-            drawPetal(p.x + xOffset, p.y, drawSize, Math.max(0, opacity), p.hue, p.rotation)
             break
           case 'dust':
             drawDust(p.x + xOffset, p.y, drawSize, Math.max(0, opacity), p.hue)

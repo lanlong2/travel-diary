@@ -36,10 +36,11 @@ export function TripHeader({ trip, onDelete, onEdit }: TripHeaderProps) {
   return (
     <>
       <div className="relative pt-5 pb-10">
-        <div className="absolute top-6 left-5 right-5 flex justify-between z-10">
+        <div className="absolute top-6 left-5 right-5 flex justify-between z-20">
           <button
             onClick={() => navigate(-1)}
-            className="w-11 h-11 glass-nav rounded-full flex items-center justify-center hover:bg-white/10 transition-colors active:scale-90"
+            className="w-11 h-11 glass-nav rounded-full flex items-center justify-center hover:bg-white/10 transition-colors active:brightness-95"
+            aria-label="返回"
           >
             <ArrowLeft className="w-5 h-5 text-dusk-50" />
           </button>
@@ -47,7 +48,8 @@ export function TripHeader({ trip, onDelete, onEdit }: TripHeaderProps) {
             {onEdit && (
               <button
                 onClick={onEdit}
-                className="w-11 h-11 glass-nav rounded-full flex items-center justify-center hover:bg-white/10 transition-colors active:scale-90"
+                className="w-11 h-11 glass-nav rounded-full flex items-center justify-center hover:bg-white/10 transition-colors active:brightness-95"
+                aria-label="编辑"
               >
                 <Pencil className="w-4 h-4 text-dusk-100" />
               </button>
@@ -55,7 +57,8 @@ export function TripHeader({ trip, onDelete, onEdit }: TripHeaderProps) {
             {onDelete && (
               <button
                 onClick={() => setShowDelete(true)}
-                className="w-11 h-11 glass-nav rounded-full flex items-center justify-center hover:bg-red-500/30 transition-colors active:scale-90"
+                className="w-11 h-11 glass-nav rounded-full flex items-center justify-center hover:bg-red-500/30 transition-colors active:brightness-95"
+                aria-label="删除"
               >
                 <Trash2 className="w-4 h-4 text-dusk-100" />
               </button>
@@ -63,29 +66,53 @@ export function TripHeader({ trip, onDelete, onEdit }: TripHeaderProps) {
           </div>
         </div>
 
-        <div className="relative flex flex-col items-center px-8 pt-12 text-center">
-          {trip.cover_photo ? (
-            <div className="w-20 h-20 rounded-2xl overflow-hidden border border-dusk-300/30 shadow-lg mb-5">
-              <img src={trip.cover_photo} alt={trip.title} className="w-full h-full object-cover" />
-            </div>
-          ) : (
-            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-amber/20 to-caramel/20 border border-amber/30 flex items-center justify-center mb-5">
-              <span className="font-serif font-bold text-2xl text-amber tracking-wider">
+        {trip.cover_photo ? (
+          // 封面 hero — 全宽，无圆角，从屏幕边缘到边缘
+          <div
+            className="relative w-screen"
+            style={{ marginLeft: 'calc(50% - 50vw)', height: '220px' }}
+          >
+            <img
+              src={trip.cover_photo}
+              alt={trip.title}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+            {/* 上 → 浅 → 深 蒙版渐变 */}
+            <div
+              className="absolute inset-0"
+              style={{
+                background: 'linear-gradient(180deg, oklch(20% 0.03 40 / 0.6) 0%, oklch(20% 0.03 40 / 0.15) 50%, oklch(24% 0.03 45 / 0.95) 100%)',
+              }}
+            />
+            {/* 暖色叠加 */}
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{ background: 'rgba(196, 115, 90, 0.08)' }}
+            />
+          </div>
+        ) : (
+          <div className="w-full flex justify-center pt-12">
+            {/* 无封面 — 首字母大卡片 120x120 */}
+            <div className="w-[120px] h-[120px] rounded-[14px] bg-gradient-to-br from-terracotta/20 to-caramel/15 border border-terracotta/30 flex items-center justify-center mb-5">
+              <span className="font-display italic font-bold text-3xl text-terracotta tracking-[0.02em]">
                 {trip.title.slice(0, 1)}
               </span>
             </div>
-          )}
+          </div>
+        )}
 
-          <h1 className="font-serif text-3xl font-bold text-dusk-50 mb-4 tracking-[0.1em]">
+        {/* 标题 — 在封面下方 40px 处，与封面形成重叠 */}
+        <div className={`relative px-7 text-center ${trip.cover_photo ? 'mt-10' : ''}`}>
+          <h1 className="font-serif text-[31px] font-bold text-dusk-50 mb-4 tracking-[0.03em]">
             {trip.title}
           </h1>
 
-          <div className="flex items-center gap-2.5 text-xs text-dusk-100/60 glass-nav px-4 py-2 rounded-full tracking-wide">
-            <Calendar className="w-3.5 h-3.5 text-amber" />
+          <div className="flex items-center justify-center gap-2.5 text-[11px] text-dusk-100/60 glass-nav px-4 py-2 rounded-full tracking-[0.02em]">
+            <Calendar className="w-3.5 h-3.5 text-terracotta" />
             <span className="font-mono">{startStr}</span>
-            <span className="text-amber/50">—</span>
+            <span className="text-terracotta/50">→</span>
             <span className="font-mono">{endStr}</span>
-            <span className="w-1 h-1 rounded-full bg-amber/50" />
+            <span className="w-1 h-1 rounded-full bg-terracotta/50" />
             <span>{duration} 天</span>
           </div>
         </div>

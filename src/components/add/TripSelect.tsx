@@ -25,11 +25,11 @@ export function TripSelect({ trips, selectedTripId, onSelectTrip, onCreateTrip }
   }
 
   return (
-    <div className="mx-6">
-      <label className="block text-sm font-medium text-dusk-100/80 mb-3 tracking-wide">
+    <div className="mx-7">
+      <label className="block text-[13px] font-medium text-dusk-100/80 mb-3 tracking-[0.02em]">
         旅行
         {selectedTripId && trips.find(t => t.id === selectedTripId) && (
-          <span className="ml-2 text-xs font-normal text-dusk-100/45">已选择</span>
+          <span className="ml-2 text-[11px] font-normal text-dusk-100/45">已选择</span>
         )}
       </label>
 
@@ -40,26 +40,26 @@ export function TripSelect({ trips, selectedTripId, onSelectTrip, onCreateTrip }
             <button
               key={trip.id}
               onClick={() => onSelectTrip(trip.id)}
-              className={`w-full p-4 rounded-2xl border text-left transition-all duration-200 ${
+              className={`w-full p-4 rounded-[14px] border text-left transition-colors duration-200 ${
                 isSelected
-                  ? 'border-amber/50 bg-amber/10'
+                  ? 'border-terracotta/50 bg-terracotta/10'
                   : 'border-dusk-300/20 bg-dusk-600/30 hover:border-dusk-300/40 hover:bg-dusk-600/50'
               }`}
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3 min-w-0">
                   {isSelected ? (
-                    <div className="w-9 h-9 rounded-xl bg-amber/15 flex items-center justify-center flex-shrink-0">
-                      <Check className="w-5 h-5 text-amber" />
+                    <div className="w-9 h-9 rounded-[10px] bg-terracotta/15 flex items-center justify-center flex-shrink-0">
+                      <Check className="w-5 h-5 text-terracotta" />
                     </div>
                   ) : (
-                    <div className="w-9 h-9 rounded-xl bg-white/8 flex items-center justify-center flex-shrink-0">
+                    <div className="w-9 h-9 rounded-[10px] bg-white/8 flex items-center justify-center flex-shrink-0">
                       <BookOpen className="w-5 h-5 text-dusk-100/50" />
                     </div>
                   )}
-                  <span className="font-serif font-semibold text-base text-dusk-50 truncate tracking-wide">{trip.title}</span>
+                  <span className="font-serif font-semibold text-[15px] text-dusk-50 truncate tracking-[0.02em]">{trip.title}</span>
                 </div>
-                <span className="text-xs text-dusk-100/50 flex-shrink-0 ml-2 font-mono tracking-wider">
+                <span className="text-[11px] text-dusk-100/50 flex-shrink-0 ml-2 font-mono tracking-[0.02em]">
                   {trip.cities?.length || 0} 城
                 </span>
               </div>
@@ -70,11 +70,11 @@ export function TripSelect({ trips, selectedTripId, onSelectTrip, onCreateTrip }
 
       {showNew ? (
         <div className="p-5 glass-card animate-scale-in">
-          <p className="text-sm text-dusk-50 mb-3 font-medium tracking-wide">创建新旅行</p>
+          <p className="text-[13px] text-dusk-50 mb-3 font-medium tracking-[0.02em]">新建旅行</p>
           <div className="flex gap-2.5">
             <div className="flex-1">
               <Input
-                placeholder="旅行标题（如：川西环线）"
+                placeholder="旅行标题"
                 value={newTitle}
                 onChange={(e) => setNewTitle(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleCreate()}
@@ -83,21 +83,21 @@ export function TripSelect({ trips, selectedTripId, onSelectTrip, onCreateTrip }
           </div>
           <div className="flex gap-2.5 mt-2.5">
             <div className="flex-1">
-              <label className="block text-xs font-medium text-dusk-100/60 mb-1.5 tracking-wide">开始日期</label>
+              <label className="block text-[11px] font-medium text-dusk-100/60 mb-1.5 tracking-[0.02em]">开始日期</label>
               <input
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="w-full px-4 py-3 bg-dusk-600/40 border border-dusk-300/30 rounded-2xl text-sm text-dusk-50 focus:outline-none focus:ring-2 focus:ring-amber/30 focus:border-amber/60 transition-all"
+                className="w-full px-4 py-3 bg-dusk-600/40 border border-dusk-300/30 rounded-[12px] text-[13px] text-dusk-50 focus:outline-none focus:ring-[1px] focus:ring-terracotta/25 focus:border-terracotta/50 transition-colors"
               />
             </div>
             <div className="flex-1">
-              <label className="block text-xs font-medium text-dusk-100/60 mb-1.5 tracking-wide">结���日期</label>
+              <label className="block text-[11px] font-medium text-dusk-100/60 mb-1.5 tracking-[0.02em]">结束日期</label>
               <input
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                className="w-full px-4 py-3 bg-dusk-600/40 border border-dusk-300/30 rounded-2xl text-sm text-dusk-50 focus:outline-none focus:ring-2 focus:ring-amber/30 focus:border-amber/60 transition-all"
+                className="w-full px-4 py-3 bg-dusk-600/40 border border-dusk-300/30 rounded-[12px] text-[13px] text-dusk-50 focus:outline-none focus:ring-[1px] focus:ring-terracotta/25 focus:border-terracotta/50 transition-colors"
               />
             </div>
           </div>
@@ -105,13 +105,13 @@ export function TripSelect({ trips, selectedTripId, onSelectTrip, onCreateTrip }
             <button
               onClick={handleCreate}
               disabled={!newTitle.trim()}
-              className="px-6 py-3 bg-gradient-to-br from-amber to-caramel-700 text-white rounded-2xl text-sm font-semibold disabled:opacity-40 transition-opacity flex-shrink-0 tracking-wide active:scale-95"
+              className="px-6 py-3 bg-gradient-to-br from-terracotta to-amber text-white rounded-[14px] text-[13px] font-semibold disabled:opacity-40 transition-opacity flex-shrink-0 tracking-[0.02em] active:brightness-95"
             >
               创建
             </button>
             <button
               onClick={() => { setShowNew(false); setNewTitle('') }}
-              className="px-4 py-3 text-dusk-100/60 text-sm flex-shrink-0 hover:text-dusk-50 transition-colors"
+              className="px-4 py-3 text-dusk-100/60 text-[13px] flex-shrink-0 hover:text-dusk-50 transition-colors"
             >
               取消
             </button>
@@ -120,9 +120,9 @@ export function TripSelect({ trips, selectedTripId, onSelectTrip, onCreateTrip }
       ) : (
         <button
           onClick={() => setShowNew(true)}
-          className="w-full py-5 border-2 border-dashed border-dusk-300/40 rounded-2xl text-sm text-dusk-100/60 hover:border-amber/50 hover:text-amber transition-all flex items-center justify-center gap-2 hover:bg-amber/5 tracking-wide"
+          className="w-full py-5 border border-dusk-300/40 rounded-[14px] text-[13px] text-dusk-100/60 hover:border-terracotta/50 hover:text-terracotta transition-colors flex items-center justify-center gap-2 hover:bg-terracotta/5 tracking-[0.02em]"
         >
-          <div className="w-7 h-7 rounded-lg bg-amber/12 flex items-center justify-center">
+          <div className="w-7 h-7 rounded-[8px] bg-terracotta/12 flex items-center justify-center">
             <Plus className="w-4 h-4" />
           </div>
           新建旅行
