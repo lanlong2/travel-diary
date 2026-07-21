@@ -45,6 +45,22 @@ export default defineConfig({
             purpose: 'maskable',
           },
         ],
+        screenshots: [
+          {
+            src: 'screenshot-desktop.png',
+            sizes: '1280x720',
+            type: 'image/png',
+            form_factor: 'wide',
+            label: '桌面端 · 登录页',
+          },
+          {
+            src: 'screenshot-mobile.png',
+            sizes: '720x1280',
+            type: 'image/png',
+            form_factor: 'narrow',
+            label: '移动端 · 登录页',
+          },
+        ],
         shortcuts: [
           {
             name: '记录新回忆',
