@@ -60,14 +60,37 @@ export function TimelinePage() {
       </div>
 
       {photos.length === 0 ? (
-        <div className="mx-6 mt-8 glass-card p-12 text-center">
-          <p className="font-serif text-base text-dusk-50 tracking-wide mb-2">还没有记录</p>
-          <p className="text-xs text-dusk-100/55 mt-3">
-            点击底部「记录」按钮写下第一条
-          </p>
+        <div className="relative mx-6 mt-8 mb-8 py-10">
+          {/* 空时间线竖线 */}
+          <div
+            className="absolute left-[18px] top-0 bottom-0 w-[1.5px]"
+            style={{
+              background:
+                'repeating-linear-gradient(to bottom, oklch(68% 0.17 40 / 0.35) 0, oklch(68% 0.17 40 / 0.35) 6px, transparent 6px, transparent 12px)',
+            }}
+            aria-hidden="true"
+          />
+          {/* 起点爱心 */}
+          <div className="flex flex-col items-start pl-[36px]">
+            <div
+              className="w-12 h-12 rounded-full bg-gradient-to-br from-amber/20 to-caramel/20 border border-amber/40 flex items-center justify-center animate-breathe"
+              style={{ boxShadow: '0 0 24px oklch(68% 0.17 40 / 0.35)' }}
+            >
+              <ScrollText className="w-5 h-5 text-amber" />
+            </div>
+            <p className="font-serif text-base text-dusk-50 tracking-wide mt-6 leading-relaxed">
+              时间线还空着
+            </p>
+            <p className="text-xs text-dusk-100/55 mt-2 leading-relaxed max-w-[260px]">
+              去记录属于你们的第一个瞬间吧
+              <span className="inline-block ml-1 animate-float-soft" style={{ animationDuration: '2s' }}>
+                ↓
+              </span>
+            </p>
+          </div>
         </div>
       ) : (
-        <div className="py-2">
+        <div className="timeline-spine relative py-2">
           {groupedByMonth.map((group) => (
             <div key={group.month}>
               <MonthDivider label={group.month} />

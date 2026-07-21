@@ -31,9 +31,17 @@ export function ChinaMap({ cities, photos, onCityClick }: ChinaMapProps) {
       mapRef.current.clearMap()
       if (cities.length === 0) return
 
-      const markers = cities.map((city: CitySummary) => {
+      const markers = cities.map((city: CitySummary, idx: number) => {
         const el = document.createElement('div')
-        el.innerHTML = `<div style="position:relative;cursor:pointer"><div class="map-marker-dot" style="width:16px;height:16px;background:linear-gradient(135deg,oklch(68% 0.17 40),oklch(55% 0.15 35));border:2px solid oklch(96% 0.02 70);border-radius:50%;box-shadow:0 0 16px oklch(68% 0.17 40 / 0.6),0 2px 8px rgba(0,0,0,0.3);transition:transform 0.2s"></div><div style="position:absolute;top:-22px;left:50%;transform:translateX(-50%);background:oklch(28% 0.04 300 / 0.85);backdrop-filter:blur(12px);padding:2px 10px;border-radius:10px;font-size:11px;color:oklch(96% 0.02 70);white-space:nowrap;font-weight:600;pointer-events:none;letter-spacing:0.05em">${city.city_name}</div></div>`
+        // 不同城市呼吸相位错开（animation-delay 0/0.6/1.2/1.8s 四档循环）
+        const phase = (idx % 4) * 0.6
+        el.innerHTML = `<div class="map-marker-wrap">
+          <span class="map-marker-ripple"></span>
+          <span class="map-marker-ripple delay-1"></span>
+          <span class="map-marker-ripple delay-2"></span>
+          <div class="map-marker-dot" style="animation-delay:${phase}s"></div>
+          <div style="position:absolute;top:-22px;left:50%;transform:translateX(-50%);background:oklch(28% 0.04 300 / 0.85);backdrop-filter:blur(12px);padding:2px 10px;border-radius:10px;font-size:11px;color:oklch(96% 0.02 70);white-space:nowrap;font-weight:600;pointer-events:none;letter-spacing:0.05em">${city.city_name}</div>
+        </div>`
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const marker = new (AMap as any).Marker({
@@ -49,14 +57,20 @@ export function ChinaMap({ cities, photos, onCityClick }: ChinaMapProps) {
             hoverTimerRef.current = null
           }
           const dot = el.querySelector('.map-marker-dot') as HTMLElement | null
-          if (dot) dot.style.transform = 'scale(1.35)'
+          if (dot) {
+            dot.style.transform = 'scale(1.35)'
+            dot.style.animationPlayState = 'paused'
+          }
           const pixel = mapRef.current.lngLatToContainer([city.lng, city.lat])
           setHoveredCity({ city, x: pixel.x, y: pixel.y })
         }
 
         const hideTooltip = () => {
           const dot = el.querySelector('.map-marker-dot') as HTMLElement | null
-          if (dot) dot.style.transform = 'scale(1)'
+          if (dot) {
+            dot.style.transform = ''
+            dot.style.animationPlayState = 'running'
+          }
           hoverTimerRef.current = setTimeout(() => setHoveredCity(null), 150)
         }
 
@@ -70,7 +84,10 @@ export function ChinaMap({ cities, photos, onCityClick }: ChinaMapProps) {
           if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current)
           hoverTimerRef.current = setTimeout(() => {
             const dot = el.querySelector('.map-marker-dot') as HTMLElement | null
-            if (dot) dot.style.transform = 'scale(1)'
+            if (dot) {
+              dot.style.transform = ''
+              dot.style.animationPlayState = 'running'
+            }
             setHoveredCity(null)
           }, 2000)
         })
@@ -154,9 +171,34 @@ export function ChinaMap({ cities, photos, onCityClick }: ChinaMapProps) {
       <div ref={containerRef} className="w-full h-full" />
 
       {status === 'loading' && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-dusk-800/95 backdrop-blur-sm z-10 pointer-events-none">
-          <div className="w-10 h-10 border-[2px] border-dusk-400 border-t-amber rounded-full animate-spin mb-4" />
-          <span className="text-xs text-dusk-100/60 tracking-wider">正在绘制足迹地图</span>
+        <div className="absolute inset-0 z-10 pointer-events-none flex flex-col items-center justify-center map-skeleton">
+          <div className="absolute inset-0 bg-dusk-800/70 backdrop-blur-[2px]" aria-hidden="true" />
+          <div className="relative flex flex-col items-center justify-center">
+            {/* 半透明地图轮廓骨架 */}
+            <svg
+              width="180"
+              height="120"
+              viewBox="0 0 180 120"
+              className="opacity-40 animate-pulse"
+              aria-hidden="true"
+            >
+              <path
+                d="M30,80 Q40,60 50,70 T70,65 Q80,50 95,55 Q105,40 120,45 T140,40 Q150,30 160,40 L155,70 Q145,85 130,80 T100,90 Q80,95 60,85 T30,80 Z"
+                fill="none"
+                stroke="oklch(68% 0.17 40)"
+                strokeWidth="1.2"
+                strokeDasharray="3 3"
+              />
+              <circle cx="60" cy="75" r="2" fill="oklch(68% 0.17 40)" />
+              <circle cx="95" cy="65" r="2" fill="oklch(68% 0.17 40)" />
+              <circle cx="130" cy="55" r="2" fill="oklch(68% 0.17 40)" />
+              <circle cx="145" cy="70" r="2" fill="oklch(68% 0.17 40)" />
+            </svg>
+            <div className="w-8 h-8 mt-4 border-[2px] border-dusk-400 border-t-amber rounded-full animate-spin" />
+            <span className="text-xs text-dusk-100/70 tracking-wider mt-3 font-mono">
+              正在绘制我们的足迹…
+            </span>
+          </div>
         </div>
       )}
 

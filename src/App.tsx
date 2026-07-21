@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react'
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { AuthProvider, useAuth } from './hooks/useAuth'
 import { Spinner } from './components/ui/Spinner'
 
@@ -41,6 +41,31 @@ function PageLoader() {
   )
 }
 
+/**
+ * 路由过渡包装：每次 pathname 变化时，keyed div 强制重挂载，
+ * 触发 animate-page-enter 动画（新页从下方 20px 滑入并淡入，250ms）。
+ * 退出动画需要 framer-motion 才能流畅实现，此处先实现进入侧。
+ */
+function AnimatedRoutes() {
+  const location = useLocation()
+  return (
+    <div
+      key={location.pathname}
+      className="animate-page-enter"
+      style={{ animationDuration: '0.25s' }}
+    >
+      <Routes location={location}>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/timeline" element={<TimelinePage />} />
+        <Route path="/trip/:id" element={<TripDetailPage />} />
+        <Route path="/add" element={<AddRecordPage />} />
+        <Route path="/trips" element={<TripsPage />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </div>
+  )
+}
+
 function AppContent() {
   const { session, loading } = useAuth()
 
@@ -59,14 +84,7 @@ function AppContent() {
   // 已登录 — 延迟加载页面路由
   return (
     <Suspense fallback={<PageLoader />}>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/timeline" element={<TimelinePage />} />
-        <Route path="/trip/:id" element={<TripDetailPage />} />
-        <Route path="/add" element={<AddRecordPage />} />
-        <Route path="/trips" element={<TripsPage />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+      <AnimatedRoutes />
     </Suspense>
   )
 }

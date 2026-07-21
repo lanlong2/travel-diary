@@ -31,7 +31,7 @@ export function TripCard({ trip, cityCount, onClick, onDelete, index = 0 }: Trip
     <>
       <div
         onClick={onClick}
-        className={`min-w-[200px] glass-card overflow-hidden hover-lift active:scale-[0.97] transition-transform duration-150 cursor-pointer flex-shrink-0 relative group ${staggerClass}`}
+        className={`min-w-[210px] glass-card overflow-hidden hover-lift active:scale-[0.97] transition-transform duration-150 cursor-pointer flex-shrink-0 relative group ${staggerClass}`}
         style={{ opacity: 0 }}
       >
         <div className="relative h-36 overflow-hidden">
@@ -39,11 +39,33 @@ export function TripCard({ trip, cityCount, onClick, onDelete, index = 0 }: Trip
             <img
               src={trip.cover_photo}
               alt={trip.title}
-              className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 group-hover:brightness-110"
             />
           ) : (
+            // 无封面：星座连线背景
             <div className="absolute inset-0 bg-gradient-to-br from-dusk-500 to-dusk-700 flex items-center justify-center">
-              <span className="font-serif font-semibold text-2xl text-amber/80 tracking-[0.15em]">
+              <svg
+                className="absolute inset-0 w-full h-full opacity-25"
+                viewBox="0 0 210 144"
+                preserveAspectRatio="none"
+                aria-hidden="true"
+              >
+                <g stroke="oklch(68% 0.17 40)" strokeWidth="0.6" fill="oklch(68% 0.17 40)">
+                  <line x1="30" y1="40" x2="80" y2="60" />
+                  <line x1="80" y1="60" x2="140" y2="35" />
+                  <line x1="140" y1="35" x2="180" y2="80" />
+                  <line x1="180" y1="80" x2="100" y2="110" />
+                  <line x1="100" y1="110" x2="40" y2="95" />
+                  <line x1="40" y1="95" x2="30" y2="40" />
+                  <circle cx="30" cy="40" r="1.8" />
+                  <circle cx="80" cy="60" r="2.2" />
+                  <circle cx="140" cy="35" r="1.6" />
+                  <circle cx="180" cy="80" r="2" />
+                  <circle cx="100" cy="110" r="2.4" />
+                  <circle cx="40" cy="95" r="1.8" />
+                </g>
+              </svg>
+              <span className="font-serif font-semibold text-2xl text-amber/85 tracking-[0.15em] relative">
                 {trip.title.slice(0, 2)}
               </span>
             </div>
@@ -65,10 +87,13 @@ export function TripCard({ trip, cityCount, onClick, onDelete, index = 0 }: Trip
             </h4>
           </div>
 
+          {/* 年份贴纸 — 略微旋转 */}
           <div className="absolute top-3 left-3.5">
-            <span className="font-mono text-[11px] text-dusk-50/90 px-2.5 py-1 rounded-full bg-black/30 backdrop-blur-md tracking-wider">
-              {new Date(trip.start_date).getFullYear()}
-              .
+            <span
+              className="font-mono text-[11px] text-dusk-50/95 px-2.5 py-1 rounded-full bg-black/35 backdrop-blur-md tracking-wider inline-block"
+              style={{ transform: 'rotate(-2deg)', boxShadow: '0 2px 6px rgba(0,0,0,0.25)' }}
+            >
+              {new Date(trip.start_date).getFullYear()}.
               {String(new Date(trip.start_date).getMonth() + 1).padStart(2, '0')}
             </span>
           </div>

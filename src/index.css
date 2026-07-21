@@ -97,6 +97,8 @@
   .stagger-6 { animation-delay: 0.3s; }
   .stagger-7 { animation-delay: 0.35s; }
   .stagger-8 { animation-delay: 0.4s; }
+  .stagger-9 { animation-delay: 0.45s; }
+  .stagger-10 { animation-delay: 0.5s; }
 
   .scrollbar-hide {
     -ms-overflow-style: none;
@@ -120,14 +122,16 @@
   }
 
   .hover-lift {
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   @media (hover: hover) {
     .hover-lift:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 32px oklch(15% 0.02 280 / 0.5);
+      transform: translateY(-3px);
+      box-shadow: 0 18px 40px oklch(15% 0.02 280 / 0.55),
+                  0 0 0 1px oklch(80% 0.12 70 / 0.4);
     }
   }
 
@@ -141,6 +145,236 @@
 
   .text-balance {
     text-wrap: pretty;
+  }
+
+  /* === 琥珀流光 · 动效工具类 === */
+  .animate-breathe { animation: breathe 3s ease-in-out infinite; }
+  .animate-ripple { animation: rippleOut 2.2s ease-out infinite; }
+  .animate-rotate-halo { animation: rotateHalo 8s linear infinite; }
+
+  .animate-shimmer-text {
+    background: linear-gradient(
+      90deg,
+      oklch(68% 0.17 40) 0%,
+      oklch(96% 0.02 70) 25%,
+      oklch(68% 0.17 40) 50%,
+      oklch(96% 0.02 70) 75%,
+      oklch(68% 0.17 40) 100%
+    );
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmerText 4s ease-in-out infinite;
+  }
+
+  .animate-draw-line {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: drawLine 1.5s ease-out forwards;
+  }
+
+  .animate-sticker-peel:hover {
+    animation: stickerPeel 0.5s ease-out forwards;
+  }
+
+  .animate-float-soft {
+    animation: floatUpDown 4s ease-in-out infinite;
+  }
+
+  .parallax-slow {
+    transform: translateY(calc(var(--scroll-y, 0) * -0.15));
+    will-change: transform;
+  }
+
+  /* 薄款半透明 amber 滚动条（仅桌面端） */
+  @media (hover: hover) and (pointer: fine) {
+    .scrollbar-amber::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .scrollbar-amber::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .scrollbar-amber::-webkit-scrollbar-thumb {
+      background: oklch(68% 0.17 40 / 0.25);
+      border-radius: 9999px;
+    }
+    .scrollbar-amber::-webkit-scrollbar-thumb:hover {
+      background: oklch(68% 0.17 40 / 0.45);
+    }
+  }
+
+  /* 拍立得相纸 */
+  .polaroid-frame {
+    background: oklch(96% 0.02 70);
+    padding: 8px 8px 32px 8px;
+    box-shadow:
+      0 8px 24px oklch(15% 0.02 280 / 0.45),
+      0 0 0 1px oklch(80% 0.12 70 / 0.15);
+    transform: rotate(-1deg);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .polaroid-frame:hover {
+    transform: rotate(0.5deg) translateY(-2px);
+  }
+
+  /* 信纸质感 */
+  .letter-paper {
+    background-image: repeating-linear-gradient(
+      transparent 0,
+      transparent 27px,
+      oklch(80% 0.12 70 / 0.12) 27px,
+      oklch(80% 0.12 70 / 0.12) 28px
+    );
+    background-color: oklch(40% 0.03 300 / 0.4);
+  }
+
+  /* 时间线竖线 */
+  .timeline-spine::before {
+    content: '';
+    position: absolute;
+    left: 18px;
+    top: 0;
+    bottom: 0;
+    width: 1.5px;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      oklch(68% 0.17 40 / 0.6) 15%,
+      oklch(55% 0.15 35 / 0.45) 50%,
+      oklch(68% 0.17 40 / 0.6) 85%,
+      transparent 100%
+    );
+    background-size: 1.5px 6px;
+    background-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      oklch(68% 0.17 40 / 0.6) 15%,
+      oklch(55% 0.15 35 / 0.45) 50%,
+      oklch(68% 0.17 40 / 0.6) 85%,
+      transparent 100%
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      oklch(68% 0.17 40 / 0.6) 0,
+      oklch(68% 0.17 40 / 0.6) 6px,
+      transparent 6px,
+      transparent 10px
+    );
+  }
+
+  .timeline-dot {
+    position: absolute;
+    left: 14px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: oklch(68% 0.17 40);
+    box-shadow:
+      0 0 0 3px oklch(28% 0.04 300 / 0.7),
+      0 0 12px oklch(68% 0.17 40 / 0.6);
+    z-index: 2;
+  }
+
+  .timeline-dot.note {
+    background: oklch(52% 0.03 300);
+    box-shadow:
+      0 0 0 3px oklch(28% 0.04 300 / 0.7),
+      0 0 8px oklch(52% 0.03 300 / 0.4);
+  }
+
+  /* 便签纸多色 */
+  .sticky-yellow {
+    background: linear-gradient(135deg, oklch(85% 0.12 85 / 0.4), oklch(75% 0.10 75 / 0.35));
+  }
+  .sticky-pink {
+    background: linear-gradient(135deg, oklch(80% 0.10 15 / 0.38), oklch(72% 0.10 25 / 0.32));
+  }
+  .sticky-blue {
+    background: linear-gradient(135deg, oklch(75% 0.10 220 / 0.36), oklch(68% 0.10 240 / 0.30));
+  }
+  .sticky-green {
+    background: linear-gradient(135deg, oklch(80% 0.10 145 / 0.36), oklch(72% 0.10 160 / 0.30));
+  }
+
+  /* 字符逐字渐入 */
+  .char-stagger > span {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeInStagger 0.5s ease-out forwards;
+  }
+
+  /* === 高德地图标记涟漪 === */
+  .map-marker-wrap {
+    position: relative;
+    cursor: pointer;
+  }
+  .map-marker-dot {
+    width: 16px;
+    height: 16px;
+    background: linear-gradient(135deg, oklch(68% 0.17 40), oklch(55% 0.15 35));
+    border: 2px solid oklch(96% 0.02 70);
+    border-radius: 50%;
+    box-shadow: 0 0 16px oklch(68% 0.17 40 / 0.6), 0 2px 8px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s;
+    animation: markerBreathe 3s ease-in-out infinite;
+    position: relative;
+    z-index: 2;
+  }
+  .map-marker-ripple {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 16px;
+    height: 16px;
+    margin: -8px 0 0 -8px;
+    border-radius: 50%;
+    border: 1.5px solid oklch(68% 0.17 40 / 0.55);
+    pointer-events: none;
+    animation: markerRipple 3s ease-out infinite;
+    z-index: 1;
+  }
+  .map-marker-ripple.delay-1 { animation-delay: 1s; }
+  .map-marker-ripple.delay-2 { animation-delay: 2s; }
+  @keyframes markerBreathe {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+  }
+  @keyframes markerRipple {
+    0% { transform: scale(1); opacity: 0.65; }
+    100% { transform: scale(3.2); opacity: 0; }
+  }
+
+  /* 地图 loading 骨架 */
+  .map-skeleton {
+    background:
+      repeating-linear-gradient(
+        135deg,
+        oklch(28% 0.04 300 / 0.5) 0,
+        oklch(28% 0.04 300 / 0.5) 12px,
+        oklch(32% 0.04 300 / 0.5) 12px,
+        oklch(32% 0.04 300 / 0.5) 24px
+      );
+    position: relative;
+    overflow: hidden;
+  }
+  .map-skeleton::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      100deg,
+      transparent 20%,
+      oklch(68% 0.17 40 / 0.08) 50%,
+      transparent 80%
+    );
+    transform: translateX(-100%);
+    animation: mapSkeletonShimmer 2.5s ease-in-out infinite;
+  }
+  @keyframes mapSkeletonShimmer {
+    100% { transform: translateX(100%); }
   }
 }
 

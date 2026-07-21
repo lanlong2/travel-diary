@@ -61,9 +61,20 @@ export default {
         'shimmer': 'shimmer 3s ease-in-out infinite',
         'glow': 'glow 2s ease-in-out infinite',
         'ripple-expand': 'rippleExpand 0.6s ease-out forwards',
-        'page-enter': 'pageEnter 0.2s ease-out both',
+        'page-enter': 'pageEnter 0.25s ease-out both',
+        'page-exit': 'pageExit 0.15s ease-in both',
         'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
         'tab-bounce': 'tabBounce 0.15s ease-out',
+        'breathe': 'breathe 3s ease-in-out infinite',
+        'ripple-out': 'rippleOut 2s ease-out infinite',
+        'shimmer-text': 'shimmerText 2.5s ease-in-out infinite',
+        'draw-line': 'drawLine 1.5s ease-out forwards',
+        'float-up-down': 'floatUpDown 4s ease-in-out infinite',
+        'sticker-peel': 'stickerPeel 0.4s ease-out forwards',
+        'rotate-halo': 'rotateHalo 4s linear infinite',
+        'fade-in-stagger': 'fadeInStagger 0.5s ease-out both',
+        'count-pulse': 'countPulse 2s ease-in-out infinite',
+        'ping-soft': 'pingSoft 2.5s ease-out infinite',
       },
       keyframes: {
         heartbeat: {
@@ -104,8 +115,12 @@ export default {
           '100%': { transform: 'scale(12)', opacity: '0' },
         },
         pageEnter: {
-          from: { opacity: '0', transform: 'translateY(12px)' },
+          from: { opacity: '0', transform: 'translateY(20px)' },
           to: { opacity: '1', transform: 'translateY(0)' },
+        },
+        pageExit: {
+          from: { opacity: '1', transform: 'scale(1)' },
+          to: { opacity: '0', transform: 'scale(0.95)' },
         },
         pulseGlow: {
           '0%, 100%': { boxShadow: '0 4px 16px rgba(196,77,52,0.25)' },
@@ -116,6 +131,47 @@ export default {
           '30%': { transform: 'scale(0.85)' },
           '60%': { transform: 'scale(1.05)' },
           '100%': { transform: 'scale(1)' },
+        },
+        breathe: {
+          '0%, 100%': { transform: 'scale(1)', opacity: '1' },
+          '50%': { transform: 'scale(1.04)', opacity: '0.85' },
+        },
+        rippleOut: {
+          '0%': { boxShadow: '0 0 0 0 oklch(68% 0.17 40 / 0.5)' },
+          '100%': { boxShadow: '0 0 0 22px oklch(68% 0.17 40 / 0)' },
+        },
+        shimmerText: {
+          '0%': { backgroundPosition: '-200% center' },
+          '100%': { backgroundPosition: '200% center' },
+        },
+        drawLine: {
+          to: { strokeDashoffset: '0' },
+        },
+        floatUpDown: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-8px)' },
+        },
+        stickerPeel: {
+          '0%': { transform: 'rotate(0deg)' },
+          '30%': { transform: 'rotate(-1.5deg) scale(1.03)' },
+          '100%': { transform: 'rotate(0.5deg) scale(1.02)' },
+        },
+        rotateHalo: {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg)' },
+        },
+        fadeInStagger: {
+          from: { opacity: '0', transform: 'translateY(12px) scale(0.96)' },
+          to: { opacity: '1', transform: 'translateY(0) scale(1)' },
+        },
+        countPulse: {
+          '0%, 100%': { filter: 'drop-shadow(0 0 24px oklch(68% 0.17 40 / 0.35))' },
+          '50%': { filter: 'drop-shadow(0 0 48px oklch(68% 0.17 40 / 0.55))' },
+        },
+        pingSoft: {
+          '0%': { transform: 'scale(1)', opacity: '0.6' },
+          '70%': { transform: 'scale(2.2)', opacity: '0' },
+          '100%': { transform: 'scale(2.2)', opacity: '0' },
         },
       },
     },
