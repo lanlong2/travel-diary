@@ -47,7 +47,7 @@ export default {
         },
       },
       fontFamily: {
-        serif: ['"Noto Serif SC"', '"PingFang SC"', '"Microsoft YaHei"', '"Hiragino Sans GB"', 'serif'],
+        serif: ['"Noto Serif SC Variable"', '"Noto Serif SC"', '"PingFang SC"', '"Microsoft YaHei"', '"Hiragino Sans GB"', 'serif'],
         sans: ['system-ui', '-apple-system', '"PingFang SC"', 'sans-serif'],
         mono: ['ui-monospace', '"SF Mono"', '"Cascadia Code"', '"Consolas"', 'monospace'],
       },
