@@ -43,7 +43,7 @@ export function LoginPage() {
         {Array.from({ length: 5 }).map((_, i) => (
           <span
             key={i}
-            className="absolute text-terracotta/40 animate-float-soft"
+            className="absolute text-amber/40 animate-float-soft"
             style={{
               left: `${(i * 22 + 8) % 100}%`,
               top: `${(i * 19) % 100}%`,
@@ -65,14 +65,14 @@ export function LoginPage() {
           {/* 爱心 — 只保留呼吸，无三层波纹 */}
           <div className="inline-flex mb-7 relative">
             <div
-              className="relative w-24 h-24 rounded-[1.75rem] bg-gradient-to-br from-terracotta/25 to-caramel/20 border border-terracotta/30 flex items-center justify-center animate-breathe"
+              className="relative w-24 h-24 rounded-[1.75rem] bg-gradient-to-br from-amber/25 to-caramel/20 border border-amber/30 flex items-center justify-center animate-breathe"
               style={{
                 boxShadow: '0 2px 12px rgba(0,0,0,0.15)',
                 animationDuration: '4s',
               }}
             >
               <Heart
-                className="w-12 h-12 text-terracotta"
+                className="w-12 h-12 text-amber"
                 fill="currentColor"
                 style={{ filter: 'drop-shadow(0 0 24px oklch(58% 0.13 40 / 0.35))' }}
               />
@@ -109,7 +109,7 @@ export function LoginPage() {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className={emailFilled ? 'border-terracotta/40' : ''}
+            className={emailFilled ? 'border-amber/40' : ''}
           />
           <Input
             label="密码"
@@ -117,7 +117,7 @@ export function LoginPage() {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className={pwdFilled ? 'border-terracotta/40' : ''}
+            className={pwdFilled ? 'border-amber/40' : ''}
           />
 
           {error && (

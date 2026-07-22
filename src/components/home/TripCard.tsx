@@ -65,7 +65,7 @@ export function TripCard({ trip, cityCount, onClick, onDelete, index = 0 }: Trip
                   <circle cx="40" cy="95" r="1.8" />
                 </g>
               </svg>
-              <span className="font-display italic font-semibold text-2xl text-terracotta/85 tracking-[0.02em] relative">
+              <span className="font-display italic font-semibold text-2xl text-amber/85 tracking-[0.02em] relative">
                 {trip.title.slice(0, 2)}
               </span>
             </div>
@@ -101,9 +101,9 @@ export function TripCard({ trip, cityCount, onClick, onDelete, index = 0 }: Trip
 
         <div className="px-4 py-3 flex items-center gap-3 text-[11px] text-dusk-100/60 tracking-[0.02em]">
           <span>{cityCount} 城</span>
-          <span className="w-1 h-1 rounded-full bg-terracotta/50" />
+          <span className="w-1 h-1 rounded-full bg-amber/50" />
           <span>{duration} 天</span>
-          <span className="w-1 h-1 rounded-full bg-terracotta/50" />
+          <span className="w-1 h-1 rounded-full bg-amber/50" />
           <span className="font-mono">
             {new Date(trip.start_date).toLocaleDateString('zh-CN', { month: 'numeric', day: 'numeric' })}
           </span>

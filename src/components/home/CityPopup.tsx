@@ -31,8 +31,8 @@ export function CityPopup({ city, photos, x, y }: CityTooltipProps) {
       <div className="glass-popup w-[290px] overflow-hidden animate-scale-in">
         <div className="p-4">
           <div className="flex items-center gap-2.5 mb-3">
-            <div className="w-9 h-9 rounded-[10px] bg-terracotta/15 flex items-center justify-center flex-shrink-0">
-              <MapPin className="w-4 h-4 text-terracotta" />
+            <div className="w-9 h-9 rounded-[10px] bg-amber/15 flex items-center justify-center flex-shrink-0">
+              <MapPin className="w-4 h-4 text-amber" />
             </div>
             <div className="min-w-0">
               <h4 className="font-serif font-semibold text-dusk-50 text-[15px] leading-tight truncate tracking-[0.02em]">
@@ -59,8 +59,8 @@ export function CityPopup({ city, photos, x, y }: CityTooltipProps) {
                 </div>
               ))}
               {city.photo_count > 4 && (
-                <div className="aspect-[4/3] rounded-[6px] bg-terracotta/10 border border-terracotta/20 flex items-center justify-center">
-                  <span className="text-[13px] text-terracotta font-semibold">+{city.photo_count - 4}</span>
+                <div className="aspect-[4/3] rounded-[6px] bg-amber/10 border border-amber/20 flex items-center justify-center">
+                  <span className="text-[13px] text-amber font-semibold">+{city.photo_count - 4}</span>
                 </div>
               )}
             </div>
@@ -72,7 +72,7 @@ export function CityPopup({ city, photos, x, y }: CityTooltipProps) {
           )}
 
           {latestNote && (
-            <div className="mb-3 pl-3 border-l-2 border-terracotta/40">
+            <div className="mb-3 pl-3 border-l-2 border-amber/40">
               <p className="text-[11px] text-dusk-100/70 leading-relaxed line-clamp-2 italic">
                 {latestNote}
               </p>
@@ -98,7 +98,7 @@ export function CityPopup({ city, photos, x, y }: CityTooltipProps) {
               )}
             </div>
 
-            <span className="flex items-center gap-0.5 text-[10px] text-terracotta font-medium tracking-[0.02em]">
+            <span className="flex items-center gap-0.5 text-[10px] text-amber font-medium tracking-[0.02em]">
               查看详情
               <ChevronRight className="w-3 h-3" />
             </span>

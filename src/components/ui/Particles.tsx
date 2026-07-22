@@ -66,11 +66,11 @@ export function Particles() {
     let orbs: LightOrb[] = []
     let flashes: FlashLight[] = []
     let lastFlashTime = 0
-    let nextFlashDelay = 8000 + Math.random() * 4000
+    let nextFlashDelay = 4000 + Math.random() * 4000
 
     const mobile = isMobile()
-    const PARTICLE_COUNT = mobile ? 20 : 38
-    const ORB_COUNT = mobile ? 2 : 4
+    const PARTICLE_COUNT = mobile ? 25 : 55
+    const ORB_COUNT = mobile ? 2 : 3
 
     function resize() {
       canvas!.width = window.innerWidth
@@ -92,7 +92,7 @@ export function Particles() {
           : type === 'sparkle' ? 1.8 + Math.random() * 3.5
           : 1 + Math.random() * 2,
         speed: 0.08 + Math.random() * 0.25,
-        opacity: 0.06 + Math.random() * 0.09,
+        opacity: 0.10 + Math.random() * 0.16,
         rotation: Math.random() * 360,
         rotationSpeed: (Math.random() - 0.5) * 0.4,
         type,
@@ -116,7 +116,7 @@ export function Particles() {
         y: Math.random() * canvas!.height,
         radius: 100 + Math.random() * 200,
         hue: hues[Math.floor(Math.random() * hues.length)],
-        opacity: 0.02 + Math.random() * 0.02,
+        opacity: 0.04 + Math.random() * 0.04,
         driftAngle: Math.random() * Math.PI * 2,
         driftRadius: 60 + Math.random() * 80,
         speed: 0.0003 + Math.random() * 0.0006,
@@ -214,7 +214,7 @@ export function Particles() {
           hue: 25 + Math.random() * 20,
         })
         lastFlashTime = time
-        nextFlashDelay = 8000 + Math.random() * 4000
+        nextFlashDelay = 4000 + Math.random() * 4000
       }
     }
 

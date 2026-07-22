@@ -121,7 +121,7 @@ export function PhotoModal({ photo, onClose, onDelete, onUpdate }: PhotoModalPro
                 <textarea
                   value={editNote}
                   onChange={(e) => setEditNote(e.target.value)}
-                  className="w-full px-4 py-3 bg-dusk-600/40 border border-dusk-300/30 rounded-[12px] text-[15px] text-dusk-50 placeholder:text-dusk-100/25 focus:outline-none focus:ring-[1px] focus:ring-terracotta/25 focus:border-terracotta/50 resize-none"
+                  className="w-full px-4 py-3 bg-dusk-600/40 border border-dusk-300/30 rounded-[12px] text-[15px] text-dusk-50 placeholder:text-dusk-100/25 focus:outline-none focus:ring-[1px] focus:ring-amber/25 focus:border-amber/50 resize-none"
                   rows={3}
                   placeholder="写点什么"
                 />
@@ -131,7 +131,7 @@ export function PhotoModal({ photo, onClose, onDelete, onUpdate }: PhotoModalPro
                 <input
                   value={editCity}
                   onChange={(e) => setEditCity(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-dusk-600/40 border border-dusk-300/30 rounded-[12px] text-[15px] text-dusk-50 placeholder:text-dusk-100/25 focus:outline-none focus:ring-[1px] focus:ring-terracotta/25 focus:border-terracotta/50"
+                  className="w-full px-4 py-2.5 bg-dusk-600/40 border border-dusk-300/30 rounded-[12px] text-[15px] text-dusk-50 placeholder:text-dusk-100/25 focus:outline-none focus:ring-[1px] focus:ring-amber/25 focus:border-amber/50"
                   placeholder="城市名称"
                 />
               </div>
@@ -141,7 +141,7 @@ export function PhotoModal({ photo, onClose, onDelete, onUpdate }: PhotoModalPro
                   type="date"
                   value={editDate}
                   onChange={(e) => setEditDate(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-dusk-600/40 border border-dusk-300/30 rounded-[12px] text-[15px] text-dusk-50 focus:outline-none focus:ring-[1px] focus:ring-terracotta/25 focus:border-terracotta/50"
+                  className="w-full px-4 py-2.5 bg-dusk-600/40 border border-dusk-300/30 rounded-[12px] text-[15px] text-dusk-50 focus:outline-none focus:ring-[1px] focus:ring-amber/25 focus:border-amber/50"
                 />
               </div>
               <div className="flex gap-3 pt-2">
@@ -156,7 +156,7 @@ export function PhotoModal({ photo, onClose, onDelete, onUpdate }: PhotoModalPro
                   type="button"
                   onClick={handleSave}
                   disabled={saving}
-                  className="flex-1 py-2.5 rounded-[12px] bg-gradient-to-br from-terracotta to-amber text-white font-medium hover:brightness-105 transition-all disabled:opacity-50"
+                  className="flex-1 py-2.5 rounded-[12px] bg-gradient-to-br from-amber to-amber text-white font-medium hover:brightness-105 transition-all disabled:opacity-50"
                 >
                   {saving ? '保存中' : '保存'}
                 </button>
@@ -166,7 +166,7 @@ export function PhotoModal({ photo, onClose, onDelete, onUpdate }: PhotoModalPro
             <>
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                  <span className="text-[11px] px-3 py-1 bg-terracotta/15 rounded-[10px] text-terracotta font-medium flex items-center gap-1 tracking-[0.02em]">
+                  <span className="text-[11px] px-3 py-1 bg-amber/15 rounded-[10px] text-amber font-medium flex items-center gap-1 tracking-[0.02em]">
                     <MapPin className="w-3 h-3" />
                     {photo.city_name}
                   </span>
@@ -175,7 +175,7 @@ export function PhotoModal({ photo, onClose, onDelete, onUpdate }: PhotoModalPro
               </div>
 
               {photo.note ? (
-                <div className="pl-3 border-l-2 border-terracotta/40">
+                <div className="pl-3 border-l-2 border-amber/40">
                   <p className="text-dusk-50 text-[15px] leading-relaxed italic font-serif">
                     {photo.note}
                   </p>

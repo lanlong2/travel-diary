@@ -6,7 +6,7 @@ export function MonthDivider({ label }: MonthDividerProps) {
   return (
     <div className="flex items-center gap-3 mx-3 sm:mx-6 my-6 ml-[44px] sm:ml-[68px] animate-fade-in-up">
       {/* 左侧细线 */}
-      <div className="flex-1 max-w-[20px] h-px bg-gradient-to-r from-transparent to-terracotta/30" />
+      <div className="flex-1 max-w-[20px] h-px bg-gradient-to-r from-transparent to-amber/30" />
 
       {/* 简洁月份标签 */}
       <div
@@ -17,7 +17,7 @@ export function MonthDivider({ label }: MonthDividerProps) {
         }}
       >
         <span
-          className="inline-block w-[5px] h-[5px] bg-terracotta/70 rounded-full"
+          className="inline-block w-[5px] h-[5px] bg-amber/70 rounded-full"
           aria-hidden="true"
         />
         <span className="text-[11px] text-dusk-50/90 font-mono tracking-[0.05em] whitespace-nowrap">
@@ -26,7 +26,7 @@ export function MonthDivider({ label }: MonthDividerProps) {
       </div>
 
       {/* 右侧细线 */}
-      <div className="flex-1 h-px bg-gradient-to-l from-transparent to-terracotta/30" />
+      <div className="flex-1 h-px bg-gradient-to-l from-transparent to-amber/30" />
     </div>
   )
 }

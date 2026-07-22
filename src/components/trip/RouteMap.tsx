@@ -147,7 +147,7 @@ export function RouteMap({ cities }: RouteMapProps) {
             key={city.id}
             className="inline-flex items-center gap-1.5 text-[11px] px-2.5 py-1.5 bg-white/8 border border-dusk-300/20 rounded-[6px] text-dusk-100/80 font-medium tracking-[0.02em] flex-shrink-0"
           >
-            <span className="w-4 h-4 rounded-full bg-gradient-to-br from-terracotta to-caramel-700 text-white text-[10px] flex items-center justify-center font-bold">
+            <span className="w-4 h-4 rounded-full bg-gradient-to-br from-amber to-caramel-700 text-white text-[10px] flex items-center justify-center font-bold">
               {i + 1}
             </span>
             {city.city_name}

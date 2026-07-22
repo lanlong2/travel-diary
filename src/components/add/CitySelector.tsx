@@ -77,11 +77,11 @@ export function CitySelector({ onCitySelect, selectedCity }: CitySelectorProps) 
       </label>
 
       {selectedCity ? (
-        <div className="relative p-5 glass-card border-terracotta/40 overflow-hidden">
+        <div className="relative p-5 glass-card border-amber/40 overflow-hidden">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-[12px] bg-terracotta/15 flex items-center justify-center">
-                <MapPin className="w-6 h-6 text-terracotta" />
+              <div className="w-12 h-12 rounded-[12px] bg-amber/15 flex items-center justify-center">
+                <MapPin className="w-6 h-6 text-amber" />
               </div>
               <span className="font-serif font-semibold text-[15px] text-dusk-50 tracking-[0.02em]">{selectedCity.name}</span>
             </div>
@@ -103,7 +103,7 @@ export function CitySelector({ onCitySelect, selectedCity }: CitySelectorProps) 
             <button
               onClick={locateMe}
               disabled={locating}
-              className="relative glass-nav rounded-[14px] text-terracotta hover:bg-white/10 transition-colors disabled:opacity-60 flex-shrink-0 group px-5"
+              className="relative glass-nav rounded-[14px] text-amber hover:bg-white/10 transition-colors disabled:opacity-60 flex-shrink-0 group px-5"
               aria-label="自动定位"
             >
               <Navigation className={`w-6 h-6 ${locating ? 'animate-pulse' : 'group-hover:scale-110 transition-transform'}`} />
@@ -118,8 +118,8 @@ export function CitySelector({ onCitySelect, selectedCity }: CitySelectorProps) 
                   onClick={() => { onCitySelect(s); setQuery(''); setSuggestions([]) }}
                   className="w-full px-5 py-3.5 flex items-center gap-3 text-left hover:bg-white/8 transition-colors border-b border-dusk-300/15 last:border-0"
                 >
-                  <span className="w-8 h-8 rounded-[8px] bg-terracotta/12 flex items-center justify-center flex-shrink-0">
-                    <MapPin className="w-4 h-4 text-terracotta" />
+                  <span className="w-8 h-8 rounded-[8px] bg-amber/12 flex items-center justify-center flex-shrink-0">
+                    <MapPin className="w-4 h-4 text-amber" />
                   </span>
                   <span className="text-[13px] text-dusk-50 font-medium tracking-[0.02em]">{s.name}</span>
                 </button>

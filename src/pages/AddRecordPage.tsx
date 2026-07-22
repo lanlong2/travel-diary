@@ -144,7 +144,7 @@ export function AddRecordPage() {
         </div>
         <div className="relative h-[2px] bg-dusk-300/15 rounded-full overflow-hidden">
           <div
-            className="absolute left-0 top-0 h-full bg-terracotta transition-all duration-500"
+            className="absolute left-0 top-0 h-full bg-amber transition-all duration-500"
             style={{ width: `${progress * 100}%` }}
           />
         </div>
@@ -158,7 +158,7 @@ export function AddRecordPage() {
           </label>
           <div className="relative inline-flex p-1 rounded-full bg-dusk-600/40 border border-dusk-300/25">
             <div
-              className="absolute top-1 bottom-1 rounded-full bg-terracotta transition-transform duration-300"
+              className="absolute top-1 bottom-1 rounded-full bg-amber transition-transform duration-300"
               style={{
                 width: 'calc(50% - 4px)',
                 transform: entryType === 'photo' ? 'translateX(0)' : 'translateX(100%)',
@@ -208,7 +208,7 @@ export function AddRecordPage() {
             type="date"
             value={recordDate}
             onChange={(e) => setRecordDate(e.target.value)}
-            className="w-full px-4 py-3.5 rounded-[14px] bg-dusk-600/40 backdrop-blur-sm border border-dusk-300/30 focus:outline-none focus:ring-[1px] focus:ring-terracotta/25 focus:border-terracotta/50 transition-colors text-dusk-50 text-[15px]"
+            className="w-full px-4 py-3.5 rounded-[14px] bg-dusk-600/40 backdrop-blur-sm border border-dusk-300/30 focus:outline-none focus:ring-[1px] focus:ring-amber/25 focus:border-amber/50 transition-colors text-dusk-50 text-[15px]"
           />
         </div>
 

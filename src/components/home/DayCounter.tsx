@@ -11,7 +11,7 @@ export function DayCounter() {
       <div className="relative px-5 py-7 text-center">
         {/* 左上角日期戳记 — 胶片感 */}
         <div
-          className="absolute top-4 left-4 font-mono text-[10px] tracking-[0.05em] text-terracotta/50"
+          className="absolute top-4 left-4 font-mono text-[10px] tracking-[0.05em] text-amber/50"
           aria-hidden="true"
         >
           EST. 2023
@@ -23,9 +23,9 @@ export function DayCounter() {
 
         <div className="my-3 flex items-end justify-center gap-2">
           <span
-            className="font-display italic font-semibold text-[120px] leading-none text-terracotta tracking-tight"
+            className="font-serif font-black text-[88px] leading-none text-amber tracking-tight animate-count-pulse"
             style={{
-              filter: 'drop-shadow(0 12px 24px oklch(58% 0.13 40 / 0.35))',
+              textShadow: '0 0 48px oklch(68% 0.17 40 / 0.45)',
             }}
           >
             {animatedDays}
@@ -41,7 +41,7 @@ export function DayCounter() {
           style={{ animationDelay: '0.6s', opacity: 0 }}
         >
           <span>从 {startDateStr}</span>
-          <span className="w-1 h-1 rounded-full bg-terracotta/50" />
+          <span className="w-1 h-1 rounded-full bg-amber/50" />
           <span>已携手 {months} 个月</span>
         </div>
 
@@ -50,7 +50,7 @@ export function DayCounter() {
           className="absolute bottom-0 left-1/2 -translate-x-1/2 h-px"
           style={{
             width: '20%',
-            background: 'linear-gradient(90deg, transparent 0%, oklch(58% 0.13 40 / 0.5) 50%, transparent 100%)',
+            background: 'linear-gradient(90deg, transparent 0%, oklch(68% 0.17 40 / 0.55) 30%, oklch(55% 0.15 35 / 0.7) 50%, oklch(68% 0.17 40 / 0.55) 70%, transparent 100%)',
           }}
           aria-hidden="true"
         />

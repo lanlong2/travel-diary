@@ -65,17 +65,17 @@ export function TimelineCard({ record, index, isFirstInMonth = false, onClick }:
           <div className="glass-card letter-paper rounded-[14px] p-4 sm:p-5 relative overflow-hidden">
             {/* 左上角装订孔 */}
             <span
-              className="absolute top-3 left-2 w-[3px] h-[3px] rounded-full bg-terracotta/40"
+              className="absolute top-3 left-2 w-[3px] h-[3px] rounded-full bg-amber/40"
               aria-hidden="true"
             />
             <div className="flex items-start gap-2 mb-1">
-              <span className="font-serif text-2xl text-terracotta/60 leading-none">"</span>
+              <span className="font-serif text-2xl text-amber/60 leading-none">"</span>
               <p className="text-[14px] sm:text-[15px] text-dusk-50/90 leading-relaxed whitespace-pre-wrap flex-1 pt-1">
                 {record.note}
               </p>
             </div>
             <div className="flex items-center justify-between gap-2 mt-2 pt-2 border-t border-dusk-300/15">
-              <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] px-2 py-0.5 bg-white/8 rounded-lg text-terracotta font-medium tracking-[0.02em]">
+              <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] px-2 py-0.5 bg-white/8 rounded-lg text-amber font-medium tracking-[0.02em]">
                 <MapPin className="w-3 h-3" />
                 <span className="truncate max-w-[5em]">{record.city_name}</span>
               </span>

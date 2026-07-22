@@ -93,8 +93,8 @@ export function TripHeader({ trip, onDelete, onEdit }: TripHeaderProps) {
         ) : (
           <div className="w-full flex justify-center pt-12">
             {/* 无封面 — 首字母大卡片 120x120 */}
-            <div className="w-[120px] h-[120px] rounded-[14px] bg-gradient-to-br from-terracotta/20 to-caramel/15 border border-terracotta/30 flex items-center justify-center mb-5">
-              <span className="font-display italic font-bold text-3xl text-terracotta tracking-[0.02em]">
+            <div className="w-[120px] h-[120px] rounded-[14px] bg-gradient-to-br from-amber/20 to-caramel/15 border border-amber/30 flex items-center justify-center mb-5">
+              <span className="font-display italic font-bold text-3xl text-amber tracking-[0.02em]">
                 {trip.title.slice(0, 1)}
               </span>
             </div>
@@ -108,11 +108,11 @@ export function TripHeader({ trip, onDelete, onEdit }: TripHeaderProps) {
           </h1>
 
           <div className="flex items-center justify-center gap-2.5 text-[11px] text-dusk-100/60 glass-nav px-4 py-2 rounded-full tracking-[0.02em]">
-            <Calendar className="w-3.5 h-3.5 text-terracotta" />
+            <Calendar className="w-3.5 h-3.5 text-amber" />
             <span className="font-mono">{startStr}</span>
-            <span className="text-terracotta/50">→</span>
+            <span className="text-amber/50">→</span>
             <span className="font-mono">{endStr}</span>
-            <span className="w-1 h-1 rounded-full bg-terracotta/50" />
+            <span className="w-1 h-1 rounded-full bg-amber/50" />
             <span>{duration} 天</span>
           </div>
         </div>

@@ -52,7 +52,7 @@ export function HomePage() {
       <PageShell>
         <DayCounter />
         <div className="mx-7 mt-4 glass-card p-10 text-center animate-fade-in-up">
-          <p className="font-serif text-[17px] text-terracotta tracking-[0.02em] mb-2">加载失败</p>
+          <p className="font-serif text-[17px] text-amber tracking-[0.02em] mb-2">加载失败</p>
           <p className="text-[13px] text-dusk-100/60">{tripsError}</p>
         </div>
       </PageShell>
@@ -65,7 +65,7 @@ export function HomePage() {
         <DayCounter />
         <div className="mx-7 mt-4 glass-card flex items-center justify-center" style={{ height: '48vh' }}>
           <div className="text-center animate-scale-in">
-            <div className="w-10 h-10 mx-auto mb-4 rounded-full border-[1.5px] border-dusk-400 border-t-terracotta animate-spin" />
+            <div className="w-10 h-10 mx-auto mb-4 rounded-full border-[1.5px] border-dusk-400 border-t-amber animate-spin" />
             <p className="text-[11px] text-dusk-100/60 tracking-[0.02em]">加载中</p>
           </div>
         </div>
@@ -89,7 +89,7 @@ export function HomePage() {
       {recentPhotos.length > 0 && (
         <div className="mt-8 mb-2">
           <div className="flex items-center mx-7 mb-3">
-            <span className="w-1 h-1 rounded-full bg-terracotta mr-2.5" aria-hidden="true" />
+            <span className="w-1 h-1 rounded-full bg-amber mr-2.5" aria-hidden="true" />
             <h3 className="font-serif text-[15px] font-semibold text-dusk-50 tracking-[0.02em]">
               最近照片 · {photos.length} 张
             </h3>
@@ -117,7 +117,7 @@ export function HomePage() {
       {trips.length > 0 ? (
         <div className="mt-8 mb-2">
           <div className="flex items-center mx-7 mb-4">
-            <span className="w-1 h-1 rounded-full bg-terracotta mr-2.5" aria-hidden="true" />
+            <span className="w-1 h-1 rounded-full bg-amber mr-2.5" aria-hidden="true" />
             <h3 className="font-serif text-[15px] font-semibold text-dusk-50 tracking-[0.02em]">
               最近旅行 · {trips.length} 次
             </h3>

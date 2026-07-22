@@ -34,7 +34,7 @@ export function Toast({ message, type = 'success', isVisible, onClose, duration 
       }`}
     >
       {isSuccess
-        ? <CheckCircle className="w-5 h-5 text-terracotta flex-shrink-0" />
+        ? <CheckCircle className="w-5 h-5 text-amber flex-shrink-0" />
         : <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
       }
       <span className={`text-[13px] font-medium ${isSuccess ? 'text-dusk-50' : 'text-red-300'}`}>

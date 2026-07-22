@@ -42,12 +42,12 @@ export function BottomNav() {
                   aria-label={label}
                 >
                   <div
-                    className="relative w-[54px] h-[54px] bg-terracotta rounded-[14px] flex items-center justify-center transition-all duration-200 active:brightness-95"
+                    className="relative w-[54px] h-[54px] bg-gradient-to-br from-amber to-caramel rounded-[14px] flex items-center justify-center transition-all duration-200 active:brightness-95 shadow-lg shadow-amber-glow"
                     style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}
                   >
                     <Icon className="w-7 h-7 text-white" fill="white" />
                   </div>
-                  <span className="text-[10px] font-medium text-terracotta/80 tracking-[0.02em]">
+                  <span className="text-[10px] font-semibold text-amber tracking-[0.02em]">
                     {label}
                   </span>
                 </button>
@@ -61,13 +61,13 @@ export function BottomNav() {
                 aria-label={label}
                 aria-current={active ? 'page' : undefined}
                 className={`flex flex-col items-center gap-1 min-w-[44px] min-h-[44px] justify-center transition-colors duration-200 ${
-                  active ? 'text-terracotta' : 'text-dusk-100/55 hover:text-terracotta/80'
+                  active ? 'text-amber' : 'text-dusk-100/55 hover:text-amber/80'
                 }`}
               >
                 <div className="relative p-2">
                   <Icon className="w-6 h-6 relative" />
                   {active && (
-                    <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-[2px] rounded-full bg-terracotta" />
+                    <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-[2px] rounded-full bg-amber" />
                   )}
                 </div>
                 <span className="text-[10px] font-medium tracking-[0.01em]">{label}</span>

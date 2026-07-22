@@ -18,14 +18,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         )}
         <div className="relative">
           {Icon && (
-            <Icon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-terracotta/60" />
+            <Icon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-amber/60" />
           )}
           <input
             ref={ref}
             className={`w-full bg-dusk-600/40 backdrop-blur-sm border rounded-[14px] py-3.5 transition-colors duration-200
               ${Icon ? 'pl-11' : 'pl-4'} pr-4 text-[15px]
               text-dusk-50 placeholder:text-dusk-100/25
-              focus:outline-none focus:ring-[1px] focus:ring-terracotta/25 focus:border-terracotta/50
+              focus:outline-none focus:ring-[1px] focus:ring-amber/25 focus:border-amber/50
               ${error ? 'border-red-400/60 focus:ring-red-400/25' : 'border-dusk-300/30'}
               ${className}`}
             {...props}

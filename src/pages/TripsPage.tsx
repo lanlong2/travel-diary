@@ -47,22 +47,22 @@ export function TripsPage() {
     <PageShell>
       <div className="px-7 pt-8 pb-2">
         <h1 className="flex items-center gap-2.5 font-serif text-2xl font-bold text-dusk-50 tracking-[0.03em] animate-fade-in-down">
-          <Compass className="w-6 h-6 text-terracotta" />
+          <Compass className="w-6 h-6 text-amber" />
           旅行
         </h1>
         <div className="flex items-center gap-3 mt-2 text-[11px] text-dusk-100/55 tracking-[0.02em] font-mono">
           <span className="inline-flex items-center gap-1">
-            <span className="text-terracotta text-[14px] font-bold tabular-nums">{animatedTrips}</span>
+            <span className="text-amber text-[14px] font-bold tabular-nums">{animatedTrips}</span>
             <span>次</span>
           </span>
-          <span className="w-1 h-1 rounded-full bg-terracotta/40" />
+          <span className="w-1 h-1 rounded-full bg-amber/40" />
           <span className="inline-flex items-center gap-1">
-            <span className="text-terracotta text-[14px] font-bold tabular-nums">{animatedPhotos}</span>
+            <span className="text-amber text-[14px] font-bold tabular-nums">{animatedPhotos}</span>
             <span>张照片</span>
           </span>
-          <span className="w-1 h-1 rounded-full bg-terracotta/40" />
+          <span className="w-1 h-1 rounded-full bg-amber/40" />
           <span className="inline-flex items-center gap-1">
-            <span className="text-terracotta text-[14px] font-bold tabular-nums">{animatedCities}</span>
+            <span className="text-amber text-[14px] font-bold tabular-nums">{animatedCities}</span>
             <span>座城市</span>
           </span>
         </div>
@@ -135,25 +135,25 @@ export function TripsPage() {
                         </h3>
                         <div className="flex items-center gap-3 mt-2 text-[11px] text-dusk-100/55">
                           <span className="flex items-center gap-1 font-mono">
-                            <Calendar className="w-3.5 h-3.5 text-terracotta/70" />
+                            <Calendar className="w-3.5 h-3.5 text-amber/70" />
                             {startStr} → {endStr}
                           </span>
-                          <span className="text-terracotta/70">{duration} 天</span>
+                          <span className="text-amber/70">{duration} 天</span>
                         </div>
                         <div className="flex items-center gap-3 mt-1.5">
                           <span className="flex items-center gap-1 text-[11px] text-dusk-100/55">
-                            <MapPin className="w-3.5 h-3.5 text-terracotta/70" />
+                            <MapPin className="w-3.5 h-3.5 text-amber/70" />
                             {trip.cities.length} 座城市
                           </span>
                           {photoCount > 0 && (
-                            <span className="flex items-center gap-1 text-[11px] text-terracotta/80">
+                            <span className="flex items-center gap-1 text-[11px] text-amber/80">
                               <Camera className="w-3.5 h-3.5" />
                               {photoCount} 张
                             </span>
                           )}
                         </div>
                       </div>
-                      <ChevronRight className="w-5 h-5 text-dusk-100/40 flex-shrink-0 ml-2 transition-transform duration-200 group-hover:translate-x-1 group-hover:text-terracotta/70" />
+                      <ChevronRight className="w-5 h-5 text-dusk-100/40 flex-shrink-0 ml-2 transition-transform duration-200 group-hover:translate-x-1 group-hover:text-amber/70" />
                     </div>
                   </div>
 

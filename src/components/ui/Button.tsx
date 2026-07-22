@@ -16,7 +16,7 @@ export function Button({
   const base = 'inline-flex items-center justify-center gap-2 font-semibold rounded-[14px] transition-all duration-200 active:brightness-95 disabled:opacity-40 disabled:cursor-not-allowed disabled:active:brightness-100 tracking-[0.01em]'
 
   const variants = {
-    primary: 'bg-gradient-to-br from-terracotta to-amber text-white hover:brightness-105',
+    primary: 'bg-gradient-to-br from-amber to-amber text-white hover:brightness-105',
     secondary: 'glass-nav text-dusk-50 hover:bg-white/10',
     ghost: 'text-dusk-100/70 hover:bg-white/8',
   }

@@ -42,15 +42,15 @@ export function TripSelect({ trips, selectedTripId, onSelectTrip, onCreateTrip }
               onClick={() => onSelectTrip(trip.id)}
               className={`w-full p-4 rounded-[14px] border text-left transition-colors duration-200 ${
                 isSelected
-                  ? 'border-terracotta/50 bg-terracotta/10'
+                  ? 'border-amber/50 bg-amber/10'
                   : 'border-dusk-300/20 bg-dusk-600/30 hover:border-dusk-300/40 hover:bg-dusk-600/50'
               }`}
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3 min-w-0">
                   {isSelected ? (
-                    <div className="w-9 h-9 rounded-[10px] bg-terracotta/15 flex items-center justify-center flex-shrink-0">
-                      <Check className="w-5 h-5 text-terracotta" />
+                    <div className="w-9 h-9 rounded-[10px] bg-amber/15 flex items-center justify-center flex-shrink-0">
+                      <Check className="w-5 h-5 text-amber" />
                     </div>
                   ) : (
                     <div className="w-9 h-9 rounded-[10px] bg-white/8 flex items-center justify-center flex-shrink-0">
@@ -88,7 +88,7 @@ export function TripSelect({ trips, selectedTripId, onSelectTrip, onCreateTrip }
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="w-full px-4 py-3 bg-dusk-600/40 border border-dusk-300/30 rounded-[12px] text-[13px] text-dusk-50 focus:outline-none focus:ring-[1px] focus:ring-terracotta/25 focus:border-terracotta/50 transition-colors"
+                className="w-full px-4 py-3 bg-dusk-600/40 border border-dusk-300/30 rounded-[12px] text-[13px] text-dusk-50 focus:outline-none focus:ring-[1px] focus:ring-amber/25 focus:border-amber/50 transition-colors"
               />
             </div>
             <div className="flex-1">
@@ -97,7 +97,7 @@ export function TripSelect({ trips, selectedTripId, onSelectTrip, onCreateTrip }
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                className="w-full px-4 py-3 bg-dusk-600/40 border border-dusk-300/30 rounded-[12px] text-[13px] text-dusk-50 focus:outline-none focus:ring-[1px] focus:ring-terracotta/25 focus:border-terracotta/50 transition-colors"
+                className="w-full px-4 py-3 bg-dusk-600/40 border border-dusk-300/30 rounded-[12px] text-[13px] text-dusk-50 focus:outline-none focus:ring-[1px] focus:ring-amber/25 focus:border-amber/50 transition-colors"
               />
             </div>
           </div>
@@ -105,7 +105,7 @@ export function TripSelect({ trips, selectedTripId, onSelectTrip, onCreateTrip }
             <button
               onClick={handleCreate}
               disabled={!newTitle.trim()}
-              className="px-6 py-3 bg-gradient-to-br from-terracotta to-amber text-white rounded-[14px] text-[13px] font-semibold disabled:opacity-40 transition-opacity flex-shrink-0 tracking-[0.02em] active:brightness-95"
+              className="px-6 py-3 bg-gradient-to-br from-amber to-amber text-white rounded-[14px] text-[13px] font-semibold disabled:opacity-40 transition-opacity flex-shrink-0 tracking-[0.02em] active:brightness-95"
             >
               创建
             </button>
@@ -120,9 +120,9 @@ export function TripSelect({ trips, selectedTripId, onSelectTrip, onCreateTrip }
       ) : (
         <button
           onClick={() => setShowNew(true)}
-          className="w-full py-5 border border-dusk-300/40 rounded-[14px] text-[13px] text-dusk-100/60 hover:border-terracotta/50 hover:text-terracotta transition-colors flex items-center justify-center gap-2 hover:bg-terracotta/5 tracking-[0.02em]"
+          className="w-full py-5 border border-dusk-300/40 rounded-[14px] text-[13px] text-dusk-100/60 hover:border-amber/50 hover:text-amber transition-colors flex items-center justify-center gap-2 hover:bg-amber/5 tracking-[0.02em]"
         >
-          <div className="w-7 h-7 rounded-[8px] bg-terracotta/12 flex items-center justify-center">
+          <div className="w-7 h-7 rounded-[8px] bg-amber/12 flex items-center justify-center">
             <Plus className="w-4 h-4" />
           </div>
           新建旅行

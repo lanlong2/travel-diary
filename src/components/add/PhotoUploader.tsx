@@ -44,7 +44,7 @@ export function PhotoUploader({ onFileSelect }: PhotoUploaderProps) {
           {/* 纯文字链接，不抢眼 */}
           <button
             onClick={(e) => { e.stopPropagation(); setPreview(null); inputRef.current?.click() }}
-            className="absolute -bottom-1 right-4 text-[13px] text-terracotta/80 hover:text-terracotta transition-colors tracking-[0.02em]"
+            className="absolute -bottom-1 right-4 text-[13px] text-amber/80 hover:text-amber transition-colors tracking-[0.02em]"
           >
             换一张
           </button>
@@ -62,14 +62,14 @@ export function PhotoUploader({ onFileSelect }: PhotoUploaderProps) {
           }}
           className={`w-full border rounded-[14px] p-12 text-center transition-colors duration-200 ${
             dragging
-              ? 'border-terracotta'
-              : 'border-dusk-300/40 hover:border-terracotta/50'
+              ? 'border-amber'
+              : 'border-dusk-300/40 hover:border-amber/50'
           }`}
           style={dragging ? { backgroundColor: 'oklch(58% 0.13 40 / 0.06)' } : undefined}
         >
           <div className="relative">
             <div className="w-14 h-14 mx-auto mb-4 flex items-center justify-center">
-              <Camera className="w-7 h-7 text-terracotta/70" />
+              <Camera className="w-7 h-7 text-amber/70" />
             </div>
             <p className="text-[15px] text-dusk-50/85 font-medium tracking-[0.02em]">
               选择照片

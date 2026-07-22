@@ -51,7 +51,7 @@ export function TimelinePage() {
     <PageShell>
       <div className="px-7 pt-8 pb-2">
         <h1 className="flex items-center gap-2.5 font-serif text-2xl font-bold text-dusk-50 tracking-[0.03em] animate-fade-in-down">
-          <ScrollText className="w-6 h-6 text-terracotta" />
+          <ScrollText className="w-6 h-6 text-amber" />
           时光日记
         </h1>
         <p className="text-[11px] text-dusk-100/50 mt-2 tracking-[0.02em] font-mono">
@@ -69,9 +69,9 @@ export function TimelinePage() {
           />
           <div className="flex flex-col items-start pl-[36px]">
             <div
-              className="w-12 h-12 rounded-full bg-terracotta/15 border border-terracotta/30 flex items-center justify-center"
+              className="w-12 h-12 rounded-full bg-amber/15 border border-amber/30 flex items-center justify-center"
             >
-              <ScrollText className="w-5 h-5 text-terracotta/70" />
+              <ScrollText className="w-5 h-5 text-amber/70" />
             </div>
           </div>
         </div>

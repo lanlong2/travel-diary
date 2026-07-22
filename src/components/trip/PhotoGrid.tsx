@@ -29,7 +29,7 @@ export function PhotoGrid({ photos, onPhotoClick, onDeletePhoto }: PhotoGridProp
     return (
       <div className="mx-7 py-16 text-center animate-fade-in-up">
         <div className="w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-          <Camera className="w-7 h-7 text-terracotta/50" />
+          <Camera className="w-7 h-7 text-amber/50" />
         </div>
         <p className="text-[13px] text-dusk-50/80 font-medium tracking-[0.01em]">还没有记录</p>
         <p className="text-[11px] text-dusk-100/45 mt-2 tracking-[0.01em]">添加第一条记录</p>
@@ -41,7 +41,7 @@ export function PhotoGrid({ photos, onPhotoClick, onDeletePhoto }: PhotoGridProp
     <>
       <div className="mx-7">
         <div className="flex items-center gap-2 mb-5">
-          <span className="w-1 h-1 rounded-full bg-terracotta" aria-hidden="true" />
+          <span className="w-1 h-1 rounded-full bg-amber" aria-hidden="true" />
           <h3 className="font-serif text-[15px] font-semibold text-dusk-50 tracking-[0.02em]">
             回忆碎片 · {photos.length}
           </h3>
@@ -76,7 +76,7 @@ export function PhotoGrid({ photos, onPhotoClick, onDeletePhoto }: PhotoGridProp
                     onClick={() => onPhotoClick(photo)}
                   >
                     <div className="flex items-start gap-1.5 mb-2">
-                      <span className="font-serif text-xl text-terracotta/60 leading-none">"</span>
+                      <span className="font-serif text-xl text-amber/60 leading-none">"</span>
                       <p className="text-[13px] text-dusk-50/90 leading-relaxed whitespace-pre-wrap line-clamp-[10] flex-1 pt-0.5">
                         {photo.note}
                       </p>

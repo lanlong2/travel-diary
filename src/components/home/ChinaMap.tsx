@@ -157,7 +157,7 @@ export function ChinaMap({ cities, photos, onCityClick }: ChinaMapProps) {
   if (status === 'error') {
     return (
       <div className="mx-7 mt-4 glass-card flex flex-col items-center justify-center px-6 text-center" style={{ height: mapHeight }}>
-        <p className="text-[13px] text-terracotta font-medium tracking-[0.02em] mb-2">地图加载失败</p>
+        <p className="text-[13px] text-amber font-medium tracking-[0.02em] mb-2">地图加载失败</p>
         <p className="text-[11px] text-dusk-100/50 mb-3">{errorMsg}</p>
         <p className="text-[11px] text-dusk-100/40">
           请确认高德 Key 已开通「Web端 JS API」服务
@@ -189,7 +189,7 @@ export function ChinaMap({ cities, photos, onCityClick }: ChinaMapProps) {
                 strokeDasharray="3 3"
               />
             </svg>
-            <div className="w-8 h-8 mt-4 border-[1.5px] border-dusk-400 border-t-terracotta rounded-full animate-spin" />
+            <div className="w-8 h-8 mt-4 border-[1.5px] border-dusk-400 border-t-amber rounded-full animate-spin" />
             <span className="text-[11px] text-dusk-100/60 tracking-[0.02em] mt-3 font-mono">
               加载中
             </span>
