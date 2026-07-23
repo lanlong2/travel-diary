@@ -39,7 +39,7 @@ export function ChinaMap({ cities, photos, onCityClick }: ChinaMapProps) {
           <span class="map-marker-ripple delay-1"></span>
           <span class="map-marker-ripple delay-2"></span>
           <div class="map-marker-dot" style="animation-delay:${phase}s"></div>
-          <div style="position:absolute;top:-22px;left:50%;transform:translateX(-50%);background:oklch(24% 0.03 45 / 0.85);backdrop-filter:blur(12px);padding:2px 10px;border-radius:10px;font-size:11px;color:oklch(96% 0.02 70);white-space:nowrap;font-weight:600;pointer-events:none;letter-spacing:0.02em">${city.city_name}</div>
+          <div style="position:absolute;top:-22px;left:50%;transform:translateX(-50%);background:oklch(24% 0.03 45 / 0.9);backdrop-filter:blur(12px);padding:2px 10px;border-radius:10px;font-size:11px;color:oklch(96% 0.02 70);white-space:nowrap;font-weight:600;pointer-events:none;letter-spacing:0.05em;box-shadow:0 2px 8px rgba(0,0,0,0.3), inset 0 1px 0 oklch(96% 0.02 70 / 0.12)">${city.city_name}</div>
         </div>`
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -151,13 +151,12 @@ export function ChinaMap({ cities, photos, onCityClick }: ChinaMapProps) {
     if (status === 'loaded') updateMarkers()
   }, [cities, status, updateMarkers])
 
-  // 地图高度从 56vh 缩到 48vh
   const mapHeight = '48vh'
 
   if (status === 'error') {
     return (
       <div className="mx-7 mt-4 glass-card flex flex-col items-center justify-center px-6 text-center" style={{ height: mapHeight }}>
-        <p className="text-[13px] text-amber font-medium tracking-[0.02em] mb-2">地图加载失败</p>
+        <p className="text-[13px] text-amber font-medium tracking-[0.04em] mb-2">地图加载失败</p>
         <p className="text-[11px] text-dusk-100/50 mb-3">{errorMsg}</p>
         <p className="text-[11px] text-dusk-100/40">
           请确认高德 Key 已开通「Web端 JS API」服务
@@ -167,44 +166,74 @@ export function ChinaMap({ cities, photos, onCityClick }: ChinaMapProps) {
   }
 
   return (
-    <div className="mx-7 mt-4 rounded-[20px] overflow-hidden border border-dusk-300/30 shadow-lg shadow-black/20 relative" style={{ height: mapHeight }}>
-      <div ref={containerRef} className="w-full h-full" />
+    <div className="mt-4">
+      {/* 章节式标题 */}
+      <div className="flex items-center mx-7 mb-3 gap-3">
+        <span className="editorial-chapter">I</span>
+        <span className="font-serif text-[15px] font-semibold text-dusk-50 tracking-[0.05em]">
+          足迹地图
+        </span>
+        <span className="font-mono text-[11px] text-amber/70 tabular-nums">{cities.length} 城</span>
+        <span className="flex-1 h-px bg-gradient-to-r from-amber/35 to-transparent" />
+      </div>
 
-      {status === 'loading' && (
-        <div className="absolute inset-0 z-10 pointer-events-none flex flex-col items-center justify-center map-skeleton">
-          <div className="absolute inset-0 bg-dusk-800/70 backdrop-blur-[2px]" aria-hidden="true" />
-          <div className="relative flex flex-col items-center justify-center">
-            <svg
-              width="180"
-              height="120"
-              viewBox="0 0 180 120"
-              className="opacity-30"
-              aria-hidden="true"
-            >
-              <path
-                d="M30,80 Q40,60 50,70 T70,65 Q80,50 95,55 Q105,40 120,45 T140,40 Q150,30 160,40 L155,70 Q145,85 130,80 T100,90 Q80,95 60,85 T30,80 Z"
-                fill="none"
-                stroke="#c4735a"
-                strokeWidth="1.2"
-                strokeDasharray="3 3"
-              />
-            </svg>
-            <div className="w-8 h-8 mt-4 border-[1.5px] border-dusk-400 border-t-amber rounded-full animate-spin" />
-            <span className="text-[11px] text-dusk-100/60 tracking-[0.02em] mt-3 font-mono">
-              加载中
-            </span>
+      <div
+        className="mx-7 rounded-[20px] overflow-hidden border border-dusk-300/30 shadow-lg shadow-black/30 relative"
+        style={{ height: mapHeight }}
+      >
+        <div ref={containerRef} className="w-full h-full" />
+
+        {/* 地图右下角邮戳 */}
+        {status === 'loaded' && cities.length > 0 && (
+          <div
+            className="absolute bottom-3 right-3 stamp-mark px-2.5 py-1 flex flex-col items-center"
+            style={{ transform: 'rotate(-4deg)' }}
+            aria-hidden="true"
+          >
+            <span className="font-mono text-[8px] tracking-[0.12em] text-stamp-dim leading-none">VISITED</span>
+            <span className="font-mono text-[12px] font-bold tracking-[0.04em] text-stamp-ink leading-tight">{cities.length} CITIES</span>
           </div>
-        </div>
-      )}
+        )}
 
-      {hoveredCity && status === 'loaded' && (
-        <CityPopup
-          city={hoveredCity.city}
-          photos={photos}
-          x={hoveredCity.x}
-          y={hoveredCity.y}
-        />
-      )}
+        {status === 'loading' && (
+          <div className="absolute inset-0 z-10 pointer-events-none flex flex-col items-center justify-center map-skeleton">
+            <div className="absolute inset-0 bg-dusk-950/75 backdrop-blur-[2px]" aria-hidden="true" />
+            <div className="relative flex flex-col items-center justify-center">
+              <svg
+                width="180"
+                height="120"
+                viewBox="0 0 180 120"
+                className="opacity-30"
+                aria-hidden="true"
+              >
+                <path
+                  d="M30,80 Q40,60 50,70 T70,65 Q80,50 95,55 Q105,40 120,45 T140,40 Q150,30 160,40 L155,70 Q145,85 130,80 T100,90 Q80,95 60,85 T30,80 Z"
+                  fill="none"
+                  stroke="#c4735a"
+                  strokeWidth="1.2"
+                  strokeDasharray="3 3"
+                />
+              </svg>
+              <div className="relative w-8 h-8 mt-4">
+                <div className="absolute inset-0 border-[1.5px] border-dusk-400/20 rounded-full" />
+                <div className="absolute inset-0 border-[1.5px] border-transparent border-t-amber rounded-full animate-spin" />
+              </div>
+              <span className="text-[11px] text-dusk-100/65 tracking-[0.06em] mt-3 font-mono">
+                加载地图
+              </span>
+            </div>
+          </div>
+        )}
+
+        {hoveredCity && status === 'loaded' && (
+          <CityPopup
+            city={hoveredCity.city}
+            photos={photos}
+            x={hoveredCity.x}
+            y={hoveredCity.y}
+          />
+        )}
+      </div>
     </div>
   )
 }

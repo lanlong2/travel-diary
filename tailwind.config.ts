@@ -22,6 +22,7 @@ export default {
         wood: '#8b7355',
         caramel: '#c44d34',
         blush: '#f4a460',
+        // 暮色琥珀 — 主深色背景体系（5 段层级 + 4 段光斑）
         dusk: {
           50: 'oklch(96% 0.02 70)',
           100: 'oklch(80% 0.03 65)',
@@ -33,17 +34,37 @@ export default {
           700: 'oklch(30% 0.035 55)',
           800: 'oklch(24% 0.03 45)',
           900: 'oklch(20% 0.03 40)',
+          950: 'oklch(16% 0.025 40)',
         },
+        // 玻璃材质 — 三层透明度（轻/中/重）+ 边光
         glass: {
           float: 'oklch(46% 0.035 50 / 0.5)',
           popup: 'oklch(46% 0.035 50 / 0.65)',
+          heavy: 'oklch(46% 0.035 50 / 0.78)',
           border: 'oklch(75% 0.08 55 / 0.2)',
           'border-strong': 'oklch(68% 0.12 45 / 0.5)',
+          'border-warm': 'oklch(80% 0.14 60 / 0.35)',
         },
+        // 琥珀主调 — 留 default/glow/dim，增加 ember(余烬) 与 honey(蜜光)
         amber: {
           DEFAULT: 'oklch(68% 0.17 40)',
           glow: 'oklch(68% 0.17 40 / 0.3)',
           dim: 'oklch(68% 0.17 40 / 0.12)',
+          ember: 'oklch(55% 0.15 35)',
+          honey: 'oklch(78% 0.14 65)',
+          wine: 'oklch(48% 0.10 20)',
+        },
+        // 邮戳红 — 仅用于印戳与日期标签
+        stamp: {
+          DEFAULT: 'oklch(52% 0.14 25)',
+          dim: 'oklch(52% 0.14 25 / 0.55)',
+          ink: 'oklch(38% 0.10 25 / 0.85)',
+        },
+        // 米白 — 拍立得纸面
+        paper: {
+          DEFAULT: 'oklch(94% 0.012 80)',
+          warm: 'oklch(92% 0.018 75)',
+          cream: 'oklch(90% 0.025 70)',
         },
       },
       fontFamily: {
@@ -51,6 +72,12 @@ export default {
         serif: ['"Noto Serif SC Variable"', '"Noto Serif SC"', '"PingFang SC"', '"Microsoft YaHei"', '"Hiragino Sans GB"', 'serif'],
         sans: ['"Inter"', '"PingFang SC"', '"Microsoft YaHei"', 'system-ui', '-apple-system', 'sans-serif'],
         mono: ['"SF Mono"', '"Cascadia Code"', '"Consolas"', 'monospace'],
+      },
+      letterSpacing: {
+        'editorial': '0.04em',
+        'stamp': '0.08em',
+        'label': '0.12em',
+        'wide-label': '0.18em',
       },
       animation: {
         'fade-in-up': 'fadeInUp 0.5s ease-out both',
@@ -70,6 +97,13 @@ export default {
         'shimmer-text': 'shimmerText 2.5s ease-in-out infinite',
         'tab-bounce': 'tabBounce 0.15s ease-out',
         'heartbeat': 'heartbeat 2s ease-in-out infinite',
+        // 新增 — 黄昏感动画
+        'ember-glow': 'emberGlow 4s ease-in-out infinite',
+        'stamp-press': 'stampPress 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both',
+        'tape-stick': 'tapeStick 0.5s ease-out both',
+        'paper-flutter': 'paperFlutter 5s ease-in-out infinite',
+        'thread-draw': 'threadDraw 2s ease-out forwards',
+        'dusk-shift': 'duskShift 8s ease-in-out infinite',
       },
       keyframes: {
         fadeInUp: {
@@ -142,6 +176,31 @@ export default {
           '0%, 100%': { transform: 'scale(1)' },
           '15%': { transform: 'scale(1.15)' },
           '30%': { transform: 'scale(1)' },
+        },
+        // 余烬呼吸 — 比单纯 scale 更有"火光感"
+        emberGlow: {
+          '0%, 100%': { filter: 'drop-shadow(0 0 8px oklch(68% 0.17 40 / 0.15))' },
+          '50%': { filter: 'drop-shadow(0 0 24px oklch(68% 0.17 40 / 0.4))' },
+        },
+        stampPress: {
+          '0%': { transform: 'scale(1.4) rotate(-15deg)', opacity: '0' },
+          '60%': { transform: 'scale(0.92) rotate(-2deg)', opacity: '1' },
+          '100%': { transform: 'scale(1) rotate(-3deg)', opacity: '1' },
+        },
+        tapeStick: {
+          '0%': { transform: 'rotate(-25deg) translateY(-30px)', opacity: '0' },
+          '100%': { transform: 'rotate(-12deg) translateY(0)', opacity: '1' },
+        },
+        paperFlutter: {
+          '0%, 100%': { transform: 'rotate(-0.3deg) translateY(0)' },
+          '50%': { transform: 'rotate(0.4deg) translateY(-2px)' },
+        },
+        threadDraw: {
+          to: { strokeDashoffset: '0' },
+        },
+        duskShift: {
+          '0%, 100%': { opacity: '0.6' },
+          '50%': { opacity: '1' },
         },
       },
     },

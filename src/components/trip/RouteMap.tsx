@@ -6,7 +6,6 @@ interface RouteMapProps {
   cities: TripCity[]
 }
 
-// 简单近似估算路径总长度（用于 strokeDasharray 模拟绘制动画）
 function approxPathLength(cities: TripCity[]): number {
   let total = 0
   for (let i = 1; i < cities.length; i++) {
@@ -81,7 +80,6 @@ export function RouteMap({ cities }: RouteMapProps) {
         })
         map.add(polyline)
 
-        // 绘制速度从 30 步 → 45 步，更慢更有仪式感
         let progress = 0
         const totalSteps = 45
         const animInterval = setInterval(() => {
@@ -104,7 +102,6 @@ export function RouteMap({ cities }: RouteMapProps) {
         }, 50)
       }
 
-      // 标记点 stagger 0.5s/个
       cities.forEach((city, i) => {
         const el = document.createElement('div')
         el.innerHTML = `<div class="route-marker" style="animation-delay:${i * 0.5}s">
@@ -129,7 +126,7 @@ export function RouteMap({ cities }: RouteMapProps) {
 
   if (cities.length === 0) {
     return (
-      <div className="mx-7 p-6 glass-card text-center text-[13px] text-dusk-100/50 tracking-[0.02em]">
+      <div className="mx-7 p-6 glass-card text-center text-[13px] text-dusk-100/55 tracking-[0.04em]">
         暂无路线信息
       </div>
     )
@@ -137,26 +134,38 @@ export function RouteMap({ cities }: RouteMapProps) {
 
   return (
     <div className="mx-7">
-      <h3 className="font-serif text-[15px] font-semibold text-dusk-50 mb-3 tracking-[0.02em]">
-        旅行路线
-      </h3>
-      {/* 城市胶囊条 */}
-      <div className="flex gap-2 mb-3 overflow-x-auto scrollbar-hide pb-1">
+      {/* 章节式标题 */}
+      <div className="flex items-center gap-3 mb-3">
+        <span className="editorial-chapter">I</span>
+        <h3 className="font-serif text-[15px] font-semibold text-dusk-50 tracking-[0.05em]">
+          旅行路线
+        </h3>
+        <span className="font-mono text-[11px] text-amber/70 tabular-nums">{cities.length} 城</span>
+        <span className="flex-1 h-px bg-gradient-to-r from-amber/35 to-transparent" />
+      </div>
+
+      {/* 城市胶囊条 — 编辑式时间线 */}
+      <div className="flex gap-2 mb-3 overflow-x-auto scrollbar-hide pb-1 items-center">
         {cities.map((city, i) => (
-          <span
-            key={city.id}
-            className="inline-flex items-center gap-1.5 text-[11px] px-2.5 py-1.5 bg-white/8 border border-dusk-300/20 rounded-[6px] text-dusk-100/80 font-medium tracking-[0.02em] flex-shrink-0"
-          >
-            <span className="w-4 h-4 rounded-full bg-gradient-to-br from-amber to-caramel-700 text-white text-[10px] flex items-center justify-center font-bold">
-              {i + 1}
+          <div key={city.id} className="flex items-center gap-2 flex-shrink-0">
+            <span
+              className="inline-flex items-center gap-1.5 text-[11px] px-2.5 py-1.5 bg-white/8 border border-dusk-300/20 rounded-[6px] text-dusk-100/85 font-medium tracking-[0.04em] flex-shrink-0"
+            >
+              <span className="w-4 h-4 rounded-full bg-gradient-to-br from-amber to-amber-ember text-white text-[10px] flex items-center justify-center font-bold">
+                {i + 1}
+              </span>
+              {city.city_name}
             </span>
-            {city.city_name}
-          </span>
+            {i < cities.length - 1 && (
+              <span className="text-amber/50 text-[10px] font-mono">→</span>
+            )}
+          </div>
         ))}
       </div>
+
       <div
         ref={containerRef}
-        className="w-full h-56 rounded-[20px] overflow-hidden border border-dusk-300/30 shadow-lg shadow-black/20"
+        className="w-full h-56 rounded-[20px] overflow-hidden border border-dusk-300/30 shadow-lg shadow-black/30"
       />
 
       <style>{`
@@ -180,8 +189,8 @@ export function RouteMap({ cities }: RouteMapProps) {
           font-weight: bold;
           color: #fff;
           background: linear-gradient(135deg, #c4735a, #a85a44);
-          border: 2px solid rgba(255, 255, 255, 0.25);
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+          border: 2px solid rgba(255, 255, 255, 0.3);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
           font-family: system-ui, sans-serif;
         }
         .route-marker-halo {
@@ -192,7 +201,7 @@ export function RouteMap({ cities }: RouteMapProps) {
           height: 28px;
           margin: -14px 0 0 -14px;
           border-radius: 50%;
-          border: 1.5px solid oklch(58% 0.13 40 / 0.45);
+          border: 1.5px solid oklch(58% 0.13 40 / 0.5);
           animation: routeMarkerHalo 2s ease-out infinite;
           pointer-events: none;
           z-index: 1;
@@ -202,16 +211,17 @@ export function RouteMap({ cities }: RouteMapProps) {
           top: -20px;
           left: 50%;
           transform: translateX(-50%);
-          background: oklch(24% 0.03 45 / 0.85);
+          background: oklch(24% 0.03 45 / 0.9);
           backdrop-filter: blur(12px);
-          padding: 1px 8px;
+          padding: 2px 8px;
           border-radius: 8px;
           font-size: 10px;
           color: oklch(96% 0.02 70);
           white-space: nowrap;
           font-weight: 600;
           pointer-events: none;
-          letter-spacing: 0.02em;
+          letter-spacing: 0.05em;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
         @keyframes routeMarkerIn {
           from { opacity: 0; transform: scale(0.3); }

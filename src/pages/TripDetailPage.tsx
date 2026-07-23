@@ -35,7 +35,7 @@ export function TripDetailPage() {
       <PageShell>
         <div className="flex flex-col items-center justify-center min-h-[60vh] p-8 animate-fade-in-up">
           <div className="glass-card p-10 text-center">
-            <p className="font-serif text-[17px] text-amber tracking-[0.02em] mb-2">找不到这次旅行</p>
+            <p className="font-serif text-[17px] text-amber tracking-[0.04em] mb-2">找不到这次旅行</p>
             <Button variant="ghost" onClick={() => navigate('/')}>返回首页</Button>
           </div>
         </div>
@@ -58,7 +58,12 @@ export function TripDetailPage() {
 
       {editing && (
         <div className="mx-6 mb-5 p-6 glass-card animate-scale-in">
-          <h3 className="text-sm font-serif font-semibold text-dusk-50 mb-4 tracking-wide">编辑旅行</h3>
+          {/* 顶部折光线 */}
+          <div className="absolute top-0 left-5 right-5 h-px bg-gradient-to-r from-transparent via-amber/40 to-transparent" />
+          <h3 className="text-sm font-serif font-semibold text-dusk-50 mb-4 tracking-[0.05em] flex items-center gap-2">
+            <span className="w-1 h-1 rounded-full bg-amber" />
+            编辑旅行
+          </h3>
           <div className="space-y-3">
             <Input
               placeholder="旅行标题"
@@ -83,19 +88,25 @@ export function TripDetailPage() {
             </div>
 
             <div className="border-t border-dusk-300/20 pt-4 mt-4">
-              <h4 className="text-[13px] font-medium text-dusk-100/70 mb-3 tracking-[0.02em]">城市</h4>
+              <h4 className="text-[13px] font-medium text-dusk-100/75 mb-3 tracking-[0.04em] flex items-center gap-2">
+                <span className="w-1 h-1 rounded-full bg-amber/70" />
+                城市
+              </h4>
 
               {trip.cities.length > 0 && (
                 <div className="flex flex-wrap gap-2 mb-4">
-                  {trip.cities.map((city) => (
+                  {trip.cities.map((city, i) => (
                     <span
                       key={city.id}
                       className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/8 border border-dusk-300/20 rounded-full text-sm text-dusk-50"
                     >
+                      <span className="w-4 h-4 rounded-full bg-gradient-to-br from-amber to-amber-ember text-white text-[10px] flex items-center justify-center font-bold">
+                        {i + 1}
+                      </span>
                       {city.city_name}
                       <button
                         onClick={() => removeCity(city.id).then(() => refresh())}
-                        className="w-5 h-5 rounded-full bg-white/8 hover:bg-red-500/40 flex items-center justify-center transition-colors"
+                        className="w-5 h-5 rounded-full bg-white/8 hover:bg-red-500/40 flex items-center justify-center transition-colors active:scale-90 duration-200"
                       >
                         <X className="w-3 h-3 text-dusk-100/70" />
                       </button>
@@ -131,13 +142,13 @@ export function TripDetailPage() {
                 setEditing(false)
               }}
               disabled={!editTitle.trim()}
-              className="px-6 py-3 bg-gradient-to-br from-amber to-amber text-white rounded-[14px] text-[13px] font-semibold disabled:opacity-40 transition-opacity tracking-[0.02em] active:brightness-95"
+              className="px-6 py-3 bg-gradient-to-br from-amber via-amber to-amber-ember text-white rounded-[14px] text-[13px] font-semibold disabled:opacity-40 transition-all tracking-[0.04em] active:brightness-95 active:scale-95 duration-200 edge-glow-amber"
             >
               保存
             </button>
             <button
               onClick={() => setEditing(false)}
-              className="px-4 py-3 text-dusk-100/60 text-sm hover:text-dusk-50 transition-colors"
+              className="px-4 py-3 text-dusk-100/65 text-sm hover:text-dusk-50 transition-colors"
             >
               取消
             </button>
@@ -151,9 +162,9 @@ export function TripDetailPage() {
 
       {photos.length > 0 && (
         <div className="mx-6 mt-6">
-          <div className="flex items-center gap-2.5 text-xs text-dusk-100/60 glass-card rounded-2xl px-5 py-3 tracking-wide">
+          <div className="flex items-center gap-2.5 text-xs text-dusk-100/65 glass-card rounded-2xl px-5 py-3 tracking-[0.05em]">
             <Camera className="w-4 h-4 text-amber" />
-            <span>共 {photos.length} 条记录</span>
+            <span>共 <span className="text-amber font-bold tabular-nums">{photos.length}</span> 条记录</span>
           </div>
         </div>
       )}

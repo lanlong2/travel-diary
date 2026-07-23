@@ -89,6 +89,7 @@ export function AddRecordPage() {
       setToast({ message: '已保存', type: 'success' })
       setTimeout(() => navigate(`/trip/${tripId}`), 800)
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error('保存失败:', err)
       const msg = err instanceof Error ? err.message : '未知错误'
       setToast({ message: `保存失败：${msg}`, type: 'error' })
@@ -111,6 +112,7 @@ export function AddRecordPage() {
       setTripId(newTrip.id)
       setToast({ message: '新旅行已创建', type: 'success' })
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error('创建旅行失败:', err)
       const msg = err instanceof Error ? err.message : '未知错误'
       setToast({ message: `创建旅行失败：${msg}`, type: 'error' })
@@ -122,30 +124,31 @@ export function AddRecordPage() {
       <div className="flex items-center gap-4 px-7 py-5">
         <button
           onClick={() => navigate(-1)}
-          className="w-11 h-11 rounded-[14px] glass-nav flex items-center justify-center hover:bg-white/10 transition-colors active:brightness-95"
+          className="w-11 h-11 rounded-[14px] glass-nav flex items-center justify-center hover:bg-white/10 transition-all active:scale-90 duration-200"
           aria-label="返回"
         >
           <ArrowLeft className="w-5 h-5 text-dusk-50" />
         </button>
-        <h1 className="font-serif text-[19px] font-semibold text-dusk-50 tracking-[0.03em]">
-          记录
-        </h1>
+        <div>
+          <h1 className="display-hero text-[20px] text-dusk-50 tracking-[0.04em] italic">Record</h1>
+          <p className="text-[10px] text-dusk-100/50 tracking-[0.15em] font-mono">记录 · CHAPTER I</p>
+        </div>
       </div>
 
-      {/* 进度条 — 替代步骤圆点 */}
+      {/* 进度条 — 邮戳式 */}
       <div className="mx-7 mb-7 animate-fade-in-down">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-[11px] text-dusk-100/55 tracking-[0.02em]">
+          <span className="text-[11px] text-dusk-100/65 tracking-[0.04em] font-mono">
             正在{STEP_LABELS[activeStep]}…
           </span>
-          <span className="text-[11px] text-dusk-100/40 font-mono tracking-[0.02em]">
-            {activeStep + 1}/{STEP_LABELS.length}
+          <span className="text-[11px] text-amber/85 font-mono tracking-[0.04em] tabular-nums">
+            {String(activeStep + 1).padStart(2, '0')}/{String(STEP_LABELS.length).padStart(2, '0')}
           </span>
         </div>
-        <div className="relative h-[2px] bg-dusk-300/15 rounded-full overflow-hidden">
+        <div className="relative h-[3px] bg-dusk-300/15 rounded-full overflow-hidden">
           <div
-            className="absolute left-0 top-0 h-full bg-amber transition-all duration-500"
-            style={{ width: `${progress * 100}%` }}
+            className="absolute left-0 top-0 h-full bg-gradient-to-r from-amber via-amber to-amber-ember transition-all duration-500 rounded-full"
+            style={{ width: `${progress * 100}%`, boxShadow: '0 0 8px oklch(68% 0.17 40 / 0.5)' }}
           />
         </div>
       </div>
@@ -153,29 +156,31 @@ export function AddRecordPage() {
       <div className="space-y-7 pb-10">
         {/* 记录类型 — 分段控制器 */}
         <div className="mx-7">
-          <label className="block text-[13px] font-medium text-dusk-100/80 mb-3 tracking-[0.02em]">
+          <label className="block text-[13px] font-medium text-dusk-100/80 mb-3 tracking-[0.04em] flex items-center gap-2">
+            <span className="w-1 h-1 rounded-full bg-amber/60" />
             类型
           </label>
           <div className="relative inline-flex p-1 rounded-full bg-dusk-600/40 border border-dusk-300/25">
             <div
-              className="absolute top-1 bottom-1 rounded-full bg-amber transition-transform duration-300"
+              className="absolute top-1 bottom-1 rounded-full bg-gradient-to-r from-amber to-amber-ember transition-transform duration-300"
               style={{
                 width: 'calc(50% - 4px)',
                 transform: entryType === 'photo' ? 'translateX(0)' : 'translateX(100%)',
+                boxShadow: '0 0 12px oklch(68% 0.17 40 / 0.4)',
               }}
             />
             <button
               onClick={() => { setEntryType('photo'); setFile(null) }}
-              className={`relative z-10 px-6 py-2 text-[13px] font-medium tracking-[0.02em] transition-colors ${
-                entryType === 'photo' ? 'text-white' : 'text-dusk-100/60'
+              className={`relative z-10 px-6 py-2 text-[13px] font-medium tracking-[0.04em] transition-colors ${
+                entryType === 'photo' ? 'text-white' : 'text-dusk-100/65'
               }`}
             >
               照片
             </button>
             <button
               onClick={() => setEntryType('note')}
-              className={`relative z-10 px-6 py-2 text-[13px] font-medium tracking-[0.02em] transition-colors ${
-                entryType === 'note' ? 'text-white' : 'text-dusk-100/60'
+              className={`relative z-10 px-6 py-2 text-[13px] font-medium tracking-[0.04em] transition-colors ${
+                entryType === 'note' ? 'text-white' : 'text-dusk-100/65'
               }`}
             >
               文字
@@ -201,14 +206,15 @@ export function AddRecordPage() {
         />
 
         <div className="mx-7">
-          <label className="block text-[13px] font-medium text-dusk-100/80 mb-3 tracking-[0.02em]">
+          <label className="block text-[13px] font-medium text-dusk-100/80 mb-3 tracking-[0.04em] flex items-center gap-2">
+            <span className="w-1 h-1 rounded-full bg-amber/60" />
             日期
           </label>
           <input
             type="date"
             value={recordDate}
             onChange={(e) => setRecordDate(e.target.value)}
-            className="w-full px-4 py-3.5 rounded-[14px] bg-dusk-600/40 backdrop-blur-sm border border-dusk-300/30 focus:outline-none focus:ring-[1px] focus:ring-amber/25 focus:border-amber/50 transition-colors text-dusk-50 text-[15px]"
+            className="w-full px-4 py-3.5 rounded-[14px] bg-dusk-600/40 backdrop-blur-sm border border-dusk-300/30 focus:outline-none focus:ring-[1px] focus:ring-amber/30 focus:border-amber/55 transition-all text-dusk-50 text-[15px] font-mono"
           />
         </div>
 

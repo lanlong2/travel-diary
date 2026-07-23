@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { Trip } from '../../types'
-import { Trash2 } from 'lucide-react'
+import { Trash2, Calendar } from 'lucide-react'
 import { ConfirmDialog } from '../ui/ConfirmDialog'
 
 interface TripCardProps {
@@ -27,11 +27,14 @@ export function TripCard({ trip, cityCount, onClick, onDelete, index = 0 }: Trip
     setShowDelete(false)
   }
 
+  const startYear = new Date(trip.start_date).getFullYear()
+  const startMonth = String(new Date(trip.start_date).getMonth() + 1).padStart(2, '0')
+
   return (
     <>
       <div
         onClick={onClick}
-        className={`min-w-[210px] glass-card overflow-hidden hover-lift active:brightness-95 transition-all duration-200 cursor-pointer flex-shrink-0 relative group ${staggerClass}`}
+        className={`min-w-[220px] glass-card overflow-hidden hover-lift active:brightness-95 transition-all duration-300 cursor-pointer flex-shrink-0 relative group ${staggerClass}`}
         style={{ opacity: 0 }}
       >
         <div className="relative h-36 overflow-hidden">
@@ -39,18 +42,18 @@ export function TripCard({ trip, cityCount, onClick, onDelete, index = 0 }: Trip
             <img
               src={trip.cover_photo}
               alt={trip.title}
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-103 group-hover:brightness-105"
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:brightness-110"
             />
           ) : (
             // 无封面：星座连线背景
-            <div className="absolute inset-0 bg-gradient-to-br from-dusk-500 to-dusk-700 flex items-center justify-center">
+            <div className="absolute inset-0 bg-gradient-to-br from-dusk-500 via-dusk-700 to-dusk-800 flex items-center justify-center">
               <svg
-                className="absolute inset-0 w-full h-full opacity-25"
-                viewBox="0 0 210 144"
+                className="absolute inset-0 w-full h-full opacity-30"
+                viewBox="0 0 220 144"
                 preserveAspectRatio="none"
                 aria-hidden="true"
               >
-                <g stroke="#c4735a" strokeWidth="0.6" fill="#c4735a">
+                <g stroke="#c4735a" strokeWidth="0.5" fill="#c4735a">
                   <line x1="30" y1="40" x2="80" y2="60" />
                   <line x1="80" y1="60" x2="140" y2="35" />
                   <line x1="140" y1="35" x2="180" y2="80" />
@@ -65,46 +68,59 @@ export function TripCard({ trip, cityCount, onClick, onDelete, index = 0 }: Trip
                   <circle cx="40" cy="95" r="1.8" />
                 </g>
               </svg>
-              <span className="font-display italic font-semibold text-2xl text-amber/85 tracking-[0.02em] relative">
+              <span className="display-hero italic text-3xl text-amber/85 tracking-[0.04em] relative">
                 {trip.title.slice(0, 2)}
               </span>
             </div>
           )}
 
-          <div className="absolute inset-0 bg-gradient-to-t from-dusk-900/70 via-dusk-900/10 to-transparent" />
+          {/* 底部渐变 */}
+          <div className="absolute inset-0 bg-gradient-to-t from-dusk-950/85 via-dusk-900/15 to-transparent" />
+
+          {/* 暖色叠加 */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{ background: 'rgba(196, 115, 90, 0.06)' }}
+          />
 
           <button
             onClick={(e) => { e.stopPropagation(); setShowDelete(true) }}
-            className="absolute top-2.5 right-2.5 w-8 h-8 rounded-[10px] bg-black/30 backdrop-blur-md flex items-center justify-center hover:bg-red-500/40 hover:text-white text-dusk-50/80 z-10 transition-colors duration-200 max-sm:opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
+            className="absolute top-2.5 right-2.5 w-8 h-8 rounded-[10px] bg-black/35 backdrop-blur-md flex items-center justify-center hover:bg-red-500/50 hover:text-white text-dusk-50/80 z-10 transition-colors duration-200 max-sm:opacity-100 sm:opacity-0 sm:group-hover:opacity-100 active:scale-90"
             aria-label="删除旅行"
           >
             <Trash2 className="w-4 h-4" />
           </button>
 
-          <div className="absolute bottom-3 left-3.5 right-3.5 flex items-end justify-between">
-            <h4 className="font-serif font-semibold text-[17px] text-dusk-50 leading-tight tracking-[0.02em] text-balance">
+          {/* 标题底部 */}
+          <div className="absolute bottom-3 left-3.5 right-3.5">
+            <h4 className="font-serif font-semibold text-[17px] text-dusk-50 leading-tight tracking-[0.03em] text-balance drop-shadow-lg">
               {trip.title}
             </h4>
           </div>
 
-          {/* 年份贴纸 — 略微旋转 */}
+          {/* 年月邮戳 — 左上印戳 */}
           <div className="absolute top-3 left-3.5">
             <span
-              className="font-mono text-[11px] text-dusk-50/95 px-2.5 py-1 rounded-full bg-black/35 backdrop-blur-md tracking-[0.02em] inline-block"
-              style={{ transform: 'rotate(-2deg)', boxShadow: '0 2px 6px rgba(0,0,0,0.25)' }}
+              className="font-mono text-[10px] text-dusk-50/95 px-2.5 py-1 rounded-[4px] bg-black/40 backdrop-blur-md tracking-[0.12em] inline-flex items-center gap-1.5"
+              style={{
+                transform: 'rotate(-3deg)',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.3), inset 0 0 0 1px oklch(96% 0.02 70 / 0.18)',
+                border: '1px solid oklch(52% 0.14 25 / 0.35)',
+              }}
             >
-              {new Date(trip.start_date).getFullYear()}.
-              {String(new Date(trip.start_date).getMonth() + 1).padStart(2, '0')}
+              <Calendar className="w-2.5 h-2.5" />
+              {startYear}.{startMonth}
             </span>
           </div>
         </div>
 
-        <div className="px-4 py-3 flex items-center gap-3 text-[11px] text-dusk-100/60 tracking-[0.02em]">
-          <span>{cityCount} 城</span>
-          <span className="w-1 h-1 rounded-full bg-amber/50" />
-          <span>{duration} 天</span>
-          <span className="w-1 h-1 rounded-full bg-amber/50" />
-          <span className="font-mono">
+        {/* 底部信息条 — 双圆点分隔 */}
+        <div className="px-4 py-3 flex items-center gap-3 text-[11px] text-dusk-100/65 tracking-[0.03em] font-mono">
+          <span className="text-amber font-bold">{cityCount} 城</span>
+          <span className="w-1 h-1 rounded-full bg-amber/60" />
+          <span className="text-amber font-bold">{duration} 天</span>
+          <span className="flex-1" />
+          <span className="text-dusk-100/45">
             {new Date(trip.start_date).toLocaleDateString('zh-CN', { month: 'numeric', day: 'numeric' })}
           </span>
         </div>

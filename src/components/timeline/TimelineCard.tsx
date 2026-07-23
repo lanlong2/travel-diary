@@ -15,7 +15,6 @@ export function TimelineCard({ record, index, isFirstInMonth = false, onClick }:
 
   const hasPhoto = !!record.image_url
 
-  // 节奏化间距 — 跨月首条 mb-8（明显停顿），同月 mb-5（正常），同日多条 mb-3
   const marginClass = isFirstInMonth ? 'mb-8' : 'mb-5'
 
   return (
@@ -23,7 +22,6 @@ export function TimelineCard({ record, index, isFirstInMonth = false, onClick }:
       className={`relative pl-[44px] sm:pl-[68px] pr-3 sm:pr-6 ${marginClass} animate-fade-in-up`}
       style={{ opacity: 0, animationDelay: `${index * 0.06}s` }}
     >
-      {/* 时间线圆点 — 7px 极小 */}
       <span
         className={`timeline-dot ${hasPhoto ? '' : 'note'}`}
         style={{ top: '14px' }}
@@ -48,38 +46,37 @@ export function TimelineCard({ record, index, isFirstInMonth = false, onClick }:
             {record.note && (
               <div className="px-1 pt-2 pb-1">
                 <p className="text-[13px] text-dusk-900/85 leading-snug font-medium italic line-clamp-2 text-balance font-serif">
-                  {record.note}
+                  {`「${record.note}」`}
                 </p>
               </div>
             )}
             <div className="flex items-center justify-between gap-2 px-1 pt-1">
-              <span className="inline-flex items-center gap-1 text-[10px] text-dusk-900/55 font-mono tracking-[0.02em]">
+              <span className="inline-flex items-center gap-1 text-[10px] text-dusk-900/55 font-mono tracking-[0.04em]">
                 <MapPin className="w-3 h-3" />
                 {record.city_name}
               </span>
-              <span className="text-[10px] text-dusk-900/55 font-mono tracking-[0.02em]">{dateStr}</span>
+              <span className="text-[10px] text-dusk-900/55 font-mono tracking-[0.04em]">{dateStr}</span>
             </div>
           </div>
         ) : (
           // 信纸风格便签 — 不规则横线
-          <div className="glass-card letter-paper rounded-[14px] p-4 sm:p-5 relative overflow-hidden">
-            {/* 左上角装订孔 */}
+          <div className="glass-card letter-paper rounded-[14px] p-4 sm:p-5 relative overflow-hidden hover-lift">
             <span
-              className="absolute top-3 left-2 w-[3px] h-[3px] rounded-full bg-amber/40"
+              className="absolute top-3 left-2 w-[3px] h-[3px] rounded-full bg-amber/45"
               aria-hidden="true"
             />
             <div className="flex items-start gap-2 mb-1">
-              <span className="font-serif text-2xl text-amber/60 leading-none">"</span>
-              <p className="text-[14px] sm:text-[15px] text-dusk-50/90 leading-relaxed whitespace-pre-wrap flex-1 pt-1">
+              <span className="font-serif text-2xl text-amber/65 leading-none">"</span>
+              <p className="text-[14px] sm:text-[15px] text-dusk-50/90 leading-relaxed whitespace-pre-wrap flex-1 pt-1 italic">
                 {record.note}
               </p>
             </div>
             <div className="flex items-center justify-between gap-2 mt-2 pt-2 border-t border-dusk-300/15">
-              <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] px-2 py-0.5 bg-white/8 rounded-lg text-amber font-medium tracking-[0.02em]">
+              <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] px-2 py-0.5 bg-amber/15 border border-amber/25 rounded-lg text-amber font-medium tracking-[0.04em]">
                 <MapPin className="w-3 h-3" />
                 <span className="truncate max-w-[5em]">{record.city_name}</span>
               </span>
-              <span className="text-[10px] sm:text-[11px] text-dusk-100/40 font-mono">{dateStr}</span>
+              <span className="text-[10px] sm:text-[11px] text-dusk-100/45 font-mono tracking-[0.04em]">{dateStr}</span>
             </div>
           </div>
         )}

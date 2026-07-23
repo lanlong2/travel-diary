@@ -52,7 +52,7 @@ export function HomePage() {
       <PageShell>
         <DayCounter />
         <div className="mx-7 mt-4 glass-card p-10 text-center animate-fade-in-up">
-          <p className="font-serif text-[17px] text-amber tracking-[0.02em] mb-2">加载失败</p>
+          <p className="font-serif text-[17px] text-amber tracking-[0.04em] mb-2">加载失败</p>
           <p className="text-[13px] text-dusk-100/60">{tripsError}</p>
         </div>
       </PageShell>
@@ -65,8 +65,11 @@ export function HomePage() {
         <DayCounter />
         <div className="mx-7 mt-4 glass-card flex items-center justify-center" style={{ height: '48vh' }}>
           <div className="text-center animate-scale-in">
-            <div className="w-10 h-10 mx-auto mb-4 rounded-full border-[1.5px] border-dusk-400 border-t-amber animate-spin" />
-            <p className="text-[11px] text-dusk-100/60 tracking-[0.02em]">加载中</p>
+            <div className="relative w-10 h-10 mx-auto mb-4">
+              <div className="absolute inset-0 border-2 border-dusk-400/20 rounded-full" />
+              <div className="absolute inset-0 border-2 border-transparent border-t-amber rounded-full animate-spin" />
+            </div>
+            <p className="text-[11px] text-dusk-100/60 tracking-[0.05em] font-mono">加载中</p>
           </div>
         </div>
       </PageShell>
@@ -87,13 +90,17 @@ export function HomePage() {
       />
 
       {recentPhotos.length > 0 && (
-        <div className="mt-8 mb-2">
-          <div className="flex items-center mx-7 mb-3">
-            <span className="w-1 h-1 rounded-full bg-amber mr-2.5" aria-hidden="true" />
-            <h3 className="font-serif text-[15px] font-semibold text-dusk-50 tracking-[0.02em]">
-              最近照片 · {photos.length} 张
-            </h3>
+        <section className="mt-8 mb-2">
+          {/* 章节式分割 + 标题 */}
+          <div className="flex items-center mx-7 mb-4 gap-3">
+            <span className="editorial-chapter">II</span>
+            <span className="font-serif text-[15px] font-semibold text-dusk-50 tracking-[0.05em]">
+              最近照片
+            </span>
+            <span className="font-mono text-[11px] text-amber/70 tabular-nums">{photos.length}</span>
+            <span className="flex-1 h-px bg-gradient-to-r from-amber/35 to-transparent" />
           </div>
+
           {/* 照片横滚 — 重叠 8px 模拟桌上摊开 */}
           <div
             className="flex overflow-x-auto px-7 pb-3 scrollbar-hide"
@@ -111,16 +118,18 @@ export function HomePage() {
               />
             ))}
           </div>
-        </div>
+        </section>
       )}
 
       {trips.length > 0 ? (
-        <div className="mt-8 mb-2">
-          <div className="flex items-center mx-7 mb-4">
-            <span className="w-1 h-1 rounded-full bg-amber mr-2.5" aria-hidden="true" />
-            <h3 className="font-serif text-[15px] font-semibold text-dusk-50 tracking-[0.02em]">
-              最近旅行 · {trips.length} 次
-            </h3>
+        <section className="mt-8 mb-2">
+          <div className="flex items-center mx-7 mb-4 gap-3">
+            <span className="editorial-chapter">III</span>
+            <span className="font-serif text-[15px] font-semibold text-dusk-50 tracking-[0.05em]">
+              最近旅行
+            </span>
+            <span className="font-mono text-[11px] text-amber/70 tabular-nums">{trips.length}</span>
+            <span className="flex-1 h-px bg-gradient-to-r from-amber/35 to-transparent" />
           </div>
           <div className="flex gap-4 overflow-x-auto px-7 pb-3 scrollbar-hide">
             {trips.slice(0, 8).map((trip, i) => (
@@ -134,12 +143,12 @@ export function HomePage() {
               />
             ))}
           </div>
-        </div>
+        </section>
       ) : (
         <div className="mx-7 mt-6 mb-8 animate-fade-in-up">
           <div className="glass-card p-12 text-center">
-            <p className="font-serif text-[15px] text-dusk-50/85 tracking-[0.02em]">
-              这里还空着
+            <p className="font-serif text-[15px] text-dusk-50/85 tracking-[0.04em]">
+              这里还空着 · 等待第一段旅程
             </p>
           </div>
         </div>
@@ -159,20 +168,23 @@ function PhotoThumb({ photo, index, onClick }: { photo: Photo; index: number; on
       style={{ opacity: 0, marginTop: `${tilt * 3}px` }}
       aria-label={photo.city_name}
     >
-      {/* 竖长形 aspect-[3/4]，圆角 6px */}
       <div className="w-[80px]">
         <div
-          className="w-full rounded-[6px] overflow-hidden bg-dusk-600 border border-dusk-300/15"
-          style={{ aspectRatio: '3/4', transform: `rotate(${tilt}deg)`, boxShadow: '0 2px 8px rgba(0,0,0,0.2)' }}
+          className="w-full rounded-[6px] overflow-hidden bg-dusk-600 border border-dusk-300/20"
+          style={{
+            aspectRatio: '3/4',
+            transform: `rotate(${tilt}deg)`,
+            boxShadow: '0 4px 12px rgba(0,0,0,0.25), 0 0 0 1px oklch(80% 0.14 60 / 0.12)',
+          }}
         >
           <img
             src={photo.image_url ?? ''}
             alt={photo.note || photo.city_name}
-            className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-500"
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
             loading="lazy"
           />
         </div>
-        <p className="text-center text-[11px] text-dusk-100/70 mt-2 font-medium tracking-[0.01em] truncate">
+        <p className="text-center text-[11px] text-dusk-100/75 mt-2 font-medium tracking-[0.03em] truncate font-mono">
           {photo.city_name}
         </p>
       </div>

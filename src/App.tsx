@@ -26,16 +26,26 @@ const TimelinePage = lazy(() =>
 function PageLoader() {
   return (
     <div style={{
-      minHeight: '100vh', background: '#fefaf5',
+      minHeight: '100dvh',
+      backgroundColor: 'oklch(22% 0.035 45)',
+      color: 'oklch(96% 0.02 70)',
       display: 'flex', alignItems: 'center', justifyContent: 'center'
     }}>
       <div style={{ textAlign: 'center' }}>
-        <div style={{
-          width: 32, height: 32, margin: '0 auto 16px',
-          border: '3px solid #f0d5c0', borderTopColor: '#e8755a',
-          borderRadius: '50%', animation: 'spin 1s linear infinite'
-        }} />
-        <p style={{ color: '#8b7355' }}>加载中...</p>
+        <div style={{ position: 'relative', width: 40, height: 40, margin: '0 auto 20px' }}>
+          <div style={{
+            position: 'absolute', inset: 0,
+            border: '2px solid oklch(58% 0.13 40 / 0.2)',
+            borderRadius: '50%'
+          }} />
+          <div style={{
+            position: 'absolute', inset: 0,
+            border: '2px solid transparent',
+            borderTopColor: 'oklch(68% 0.17 40)',
+            borderRadius: '50%', animation: 'spin 1s linear infinite'
+          }} />
+        </div>
+        <p style={{ color: 'oklch(80% 0.03 65 / 0.6)', fontSize: 11, letterSpacing: '0.04em' }}>加载中</p>
       </div>
     </div>
   )

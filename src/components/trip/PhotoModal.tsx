@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { X, Trash2, Pencil, MapPin } from 'lucide-react'
+import { X, Trash2, Pencil, MapPin, Calendar } from 'lucide-react'
 import type { Photo } from '../../types'
 import { ConfirmDialog } from '../ui/ConfirmDialog'
 
@@ -60,17 +60,18 @@ export function PhotoModal({ photo, onClose, onDelete, onUpdate }: PhotoModalPro
 
   return (
     <>
-      <div className="fixed inset-0 z-50 bg-black/95 flex flex-col animate-scale-in" onClick={onClose}>
+      <div className="fixed inset-0 z-50 bg-black/95 flex flex-col animate-fade-in-up" style={{ animationDuration: '0.3s' }} onClick={onClose}>
         <div className="flex-1 flex items-center justify-center p-8" onClick={(e) => e.stopPropagation()}>
           {photo.image_url ? (
             <img
               src={photo.image_url}
               alt={photo.note || photo.city_name}
-              className="max-w-full max-h-full object-contain rounded-[6px]"
+              className="max-w-full max-h-full object-contain rounded-[4px]"
+              style={{ boxShadow: '0 24px 64px rgba(0,0,0,0.5)' }}
             />
           ) : (
             <div className="glass-popup max-w-md w-full p-8">
-              <p className="text-xl text-dusk-50 leading-relaxed whitespace-pre-wrap font-serif">
+              <p className="text-xl text-dusk-50 leading-relaxed whitespace-pre-wrap font-serif italic">
                 {photo.note}
               </p>
             </div>
@@ -81,6 +82,9 @@ export function PhotoModal({ photo, onClose, onDelete, onUpdate }: PhotoModalPro
           className="glass-popup rounded-b-none px-6 pt-5 pb-10"
           onClick={(e) => e.stopPropagation()}
         >
+          {/* 顶部折光线 */}
+          <div className="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-amber/40 to-transparent" />
+
           <div className="flex items-center justify-between mb-5">
             <div className="flex-1 flex justify-center">
               <div className="w-12 h-1.5 rounded-full bg-dusk-300/40" />
@@ -89,7 +93,7 @@ export function PhotoModal({ photo, onClose, onDelete, onUpdate }: PhotoModalPro
               {onUpdate && !editing && (
                 <button
                   onClick={() => setEditing(true)}
-                  className="w-9 h-9 bg-white/8 rounded-full flex items-center justify-center text-dusk-100 hover:bg-white/15 transition-colors"
+                  className="w-9 h-9 bg-white/8 rounded-full flex items-center justify-center text-dusk-100 hover:bg-white/15 transition-all active:scale-90 duration-200"
                   aria-label="编辑"
                 >
                   <Pencil className="w-4 h-4" />
@@ -98,7 +102,7 @@ export function PhotoModal({ photo, onClose, onDelete, onUpdate }: PhotoModalPro
               {onDelete && !editing && (
                 <button
                   onClick={() => setShowDelete(true)}
-                  className="w-9 h-9 bg-white/8 rounded-full flex items-center justify-center text-dusk-100 hover:bg-red-500/40 transition-colors"
+                  className="w-9 h-9 bg-white/8 rounded-full flex items-center justify-center text-dusk-100 hover:bg-red-500/40 transition-all active:scale-90 duration-200"
                   aria-label="删除"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -106,7 +110,7 @@ export function PhotoModal({ photo, onClose, onDelete, onUpdate }: PhotoModalPro
               )}
               <button
                 onClick={onClose}
-                className="w-9 h-9 bg-white/8 rounded-full flex items-center justify-center text-dusk-100 hover:bg-white/15 transition-colors"
+                className="w-9 h-9 bg-white/8 rounded-full flex items-center justify-center text-dusk-100 hover:bg-white/15 transition-all active:scale-90 duration-200"
                 aria-label="关闭"
               >
                 <X className="w-5 h-5" />
@@ -117,38 +121,47 @@ export function PhotoModal({ photo, onClose, onDelete, onUpdate }: PhotoModalPro
           {editing ? (
             <div className="space-y-4">
               <div>
-                <label className="text-[11px] text-dusk-100/60 mb-1.5 block tracking-[0.02em]">留言</label>
+                <label className="text-[11px] text-dusk-100/65 mb-1.5 block tracking-[0.04em] flex items-center gap-2">
+                  <span className="w-1 h-1 rounded-full bg-amber/60" />
+                  留言
+                </label>
                 <textarea
                   value={editNote}
                   onChange={(e) => setEditNote(e.target.value)}
-                  className="w-full px-4 py-3 bg-dusk-600/40 border border-dusk-300/30 rounded-[12px] text-[15px] text-dusk-50 placeholder:text-dusk-100/25 focus:outline-none focus:ring-[1px] focus:ring-amber/25 focus:border-amber/50 resize-none"
+                  className="w-full px-4 py-3 bg-dusk-600/40 border border-dusk-300/30 rounded-[12px] text-[15px] text-dusk-50 placeholder:text-dusk-100/25 focus:outline-none focus:ring-[1px] focus:ring-amber/30 focus:border-amber/60 resize-none"
                   rows={3}
                   placeholder="写点什么"
                 />
               </div>
               <div>
-                <label className="text-[11px] text-dusk-100/60 mb-1.5 block tracking-[0.02em]">城市</label>
+                <label className="text-[11px] text-dusk-100/65 mb-1.5 block tracking-[0.04em] flex items-center gap-2">
+                  <span className="w-1 h-1 rounded-full bg-amber/60" />
+                  城市
+                </label>
                 <input
                   value={editCity}
                   onChange={(e) => setEditCity(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-dusk-600/40 border border-dusk-300/30 rounded-[12px] text-[15px] text-dusk-50 placeholder:text-dusk-100/25 focus:outline-none focus:ring-[1px] focus:ring-amber/25 focus:border-amber/50"
+                  className="w-full px-4 py-2.5 bg-dusk-600/40 border border-dusk-300/30 rounded-[12px] text-[15px] text-dusk-50 placeholder:text-dusk-100/25 focus:outline-none focus:ring-[1px] focus:ring-amber/30 focus:border-amber/60"
                   placeholder="城市名称"
                 />
               </div>
               <div>
-                <label className="text-[11px] text-dusk-100/60 mb-1.5 block tracking-[0.02em]">日期</label>
+                <label className="text-[11px] text-dusk-100/65 mb-1.5 block tracking-[0.04em] flex items-center gap-2">
+                  <span className="w-1 h-1 rounded-full bg-amber/60" />
+                  日期
+                </label>
                 <input
                   type="date"
                   value={editDate}
                   onChange={(e) => setEditDate(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-dusk-600/40 border border-dusk-300/30 rounded-[12px] text-[15px] text-dusk-50 focus:outline-none focus:ring-[1px] focus:ring-amber/25 focus:border-amber/50"
+                  className="w-full px-4 py-2.5 bg-dusk-600/40 border border-dusk-300/30 rounded-[12px] text-[15px] text-dusk-50 focus:outline-none focus:ring-[1px] focus:ring-amber/30 focus:border-amber/60"
                 />
               </div>
               <div className="flex gap-3 pt-2">
                 <button
                   type="button"
                   onClick={() => setEditing(false)}
-                  className="flex-1 py-2.5 rounded-[12px] border border-dusk-300/30 text-dusk-100/70 font-medium hover:bg-white/8 transition-colors"
+                  className="flex-1 py-2.5 rounded-[12px] border border-dusk-300/30 text-dusk-100/70 font-medium hover:bg-white/8 transition-colors active:scale-[0.98] duration-200"
                 >
                   取消
                 </button>
@@ -156,7 +169,7 @@ export function PhotoModal({ photo, onClose, onDelete, onUpdate }: PhotoModalPro
                   type="button"
                   onClick={handleSave}
                   disabled={saving}
-                  className="flex-1 py-2.5 rounded-[12px] bg-gradient-to-br from-amber to-amber text-white font-medium hover:brightness-105 transition-all disabled:opacity-50"
+                  className="flex-1 py-2.5 rounded-[12px] bg-gradient-to-br from-amber via-amber to-amber-ember text-white font-medium hover:brightness-105 transition-all disabled:opacity-50 active:scale-[0.98] duration-200 edge-glow-amber"
                 >
                   {saving ? '保存中' : '保存'}
                 </button>
@@ -166,22 +179,26 @@ export function PhotoModal({ photo, onClose, onDelete, onUpdate }: PhotoModalPro
             <>
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                  <span className="text-[11px] px-3 py-1 bg-amber/15 rounded-[10px] text-amber font-medium flex items-center gap-1 tracking-[0.02em]">
+                  <span className="text-[11px] px-3 py-1 bg-amber/15 border border-amber/25 rounded-[10px] text-amber font-medium flex items-center gap-1.5 tracking-[0.04em]">
                     <MapPin className="w-3 h-3" />
                     {photo.city_name}
                   </span>
                 </div>
-                <span className="text-[11px] text-dusk-100/50 font-mono">{dateStr}</span>
+                <span className="text-[11px] text-dusk-100/55 font-mono flex items-center gap-1.5 tracking-[0.04em]">
+                  <Calendar className="w-3 h-3 text-amber/60" />
+                  {dateStr}
+                </span>
               </div>
 
               {photo.note ? (
-                <div className="pl-3 border-l-2 border-amber/40">
+                <div className="pl-3 border-l-2 border-amber/50 relative">
+                  <span className="absolute -left-1 -top-1 text-amber/65 font-serif text-xl">"</span>
                   <p className="text-dusk-50 text-[15px] leading-relaxed italic font-serif">
                     {photo.note}
                   </p>
                 </div>
               ) : (
-                <p className="text-dusk-100/40 text-[13px] italic">没有留言</p>
+                <p className="text-dusk-100/45 text-[13px] italic">没有留言</p>
               )}
             </>
           )}

@@ -18,8 +18,6 @@ interface Particle {
   pulsePhase: number
   twinklePhase: number
   twinkleSpeed: number
-  driftX: number
-  driftY: number
 }
 
 interface LightOrb {
@@ -66,11 +64,12 @@ export function Particles() {
     let orbs: LightOrb[] = []
     let flashes: FlashLight[] = []
     let lastFlashTime = 0
-    let nextFlashDelay = 4000 + Math.random() * 4000
+    let nextFlashDelay = 5000 + Math.random() * 5000
 
     const mobile = isMobile()
-    const PARTICLE_COUNT = mobile ? 25 : 55
-    const ORB_COUNT = mobile ? 2 : 3
+    // 减少粒子量，加重光斑 — 更"黄昏"
+    const PARTICLE_COUNT = mobile ? 18 : 38
+    const ORB_COUNT = mobile ? 3 : 5
 
     function resize() {
       canvas!.width = window.innerWidth
@@ -81,45 +80,45 @@ export function Particles() {
 
     function createParticle(randomY: boolean): Particle {
       const typeRoll = Math.random()
-      const type: ParticleType = typeRoll < 0.34 ? 'heart'
-        : typeRoll < 0.7 ? 'sparkle'
+      const type: ParticleType = typeRoll < 0.3 ? 'heart'
+        : typeRoll < 0.65 ? 'sparkle'
         : 'dust'
 
       return {
         x: Math.random() * canvas!.width,
         y: randomY ? Math.random() * canvas!.height : canvas!.height + 20,
-        size: type === 'heart' ? 5 + Math.random() * 9
-          : type === 'sparkle' ? 1.8 + Math.random() * 3.5
-          : 1 + Math.random() * 2,
-        speed: 0.08 + Math.random() * 0.25,
-        opacity: 0.10 + Math.random() * 0.16,
+        size: type === 'heart' ? 4 + Math.random() * 8
+          : type === 'sparkle' ? 1.5 + Math.random() * 3
+          : 0.8 + Math.random() * 1.8,
+        speed: 0.06 + Math.random() * 0.2,
+        opacity: 0.08 + Math.random() * 0.14,
         rotation: Math.random() * 360,
-        rotationSpeed: (Math.random() - 0.5) * 0.4,
+        rotationSpeed: (Math.random() - 0.5) * 0.3,
         type,
-        hue: type === 'heart' ? 18 + Math.random() * 12
-          : type === 'sparkle' ? 30 + Math.random() * 12
-          : 30 + Math.random() * 20,
+        // 暮色琥珀色板 — 暖色 hue 18-45
+        hue: type === 'heart' ? 18 + Math.random() * 10
+          : type === 'sparkle' ? 30 + Math.random() * 15
+          : 25 + Math.random() * 20,
         wobble: Math.random() * Math.PI * 2,
-        wobbleSpeed: 0.008 + Math.random() * 0.022,
+        wobbleSpeed: 0.006 + Math.random() * 0.018,
         pulsePhase: Math.random() * Math.PI * 2,
         twinklePhase: Math.random() * Math.PI * 2,
-        twinkleSpeed: 0.015 + Math.random() * 0.03,
-        driftX: 0,
-        driftY: 0,
+        twinkleSpeed: 0.012 + Math.random() * 0.025,
       }
     }
 
     function createOrb(): LightOrb {
-      const hues = [18, 30, 22, 40]
+      // 大光斑偏暖橙
+      const hues = [18, 28, 22, 38, 35]
       return {
         x: Math.random() * canvas!.width,
         y: Math.random() * canvas!.height,
-        radius: 100 + Math.random() * 200,
+        radius: 140 + Math.random() * 240,
         hue: hues[Math.floor(Math.random() * hues.length)],
-        opacity: 0.04 + Math.random() * 0.04,
+        opacity: 0.05 + Math.random() * 0.05,
         driftAngle: Math.random() * Math.PI * 2,
-        driftRadius: 60 + Math.random() * 80,
-        speed: 0.0003 + Math.random() * 0.0006,
+        driftRadius: 80 + Math.random() * 100,
+        speed: 0.0002 + Math.random() * 0.0005,
         phase: Math.random() * Math.PI * 2,
       }
     }
@@ -136,7 +135,7 @@ export function Particles() {
       ctx.translate(x, y)
       ctx.rotate((rotation * Math.PI) / 180)
       ctx.globalAlpha = opacity
-      ctx.fillStyle = `hsl(${hue}, 60%, 70%)`
+      ctx.fillStyle = `hsl(${hue}, 65%, 68%)`
       const path = new Path2D(HEART_PATH)
       const scale = size / 24
       ctx.scale(scale, scale)
@@ -148,7 +147,7 @@ export function Particles() {
       ctx.save()
       ctx.translate(x, y)
       ctx.globalAlpha = opacity
-      ctx.fillStyle = `hsl(${hue}, 70%, 80%)`
+      ctx.fillStyle = `hsl(${hue}, 75%, 78%)`
       ctx.beginPath()
       for (let i = 0; i < 4; i++) {
         const angle = (i * Math.PI) / 2
@@ -165,7 +164,7 @@ export function Particles() {
     function drawDust(x: number, y: number, size: number, opacity: number, hue: number) {
       ctx.save()
       ctx.globalAlpha = opacity
-      ctx.fillStyle = `hsl(${hue}, 40%, 75%)`
+      ctx.fillStyle = `hsl(${hue}, 45%, 72%)`
       ctx.beginPath()
       ctx.arc(x, y, size, 0, Math.PI * 2)
       ctx.fill()
@@ -175,13 +174,13 @@ export function Particles() {
     function drawOrb(orb: LightOrb, time: number) {
       const cx = orb.x + Math.cos(orb.driftAngle + time * orb.speed) * orb.driftRadius
       const cy = orb.y + Math.sin(orb.driftAngle + time * orb.speed * 0.7) * orb.driftRadius
-      const pulse = 1 + Math.sin(time * 0.0008 + orb.phase) * 0.08
+      const pulse = 1 + Math.sin(time * 0.0006 + orb.phase) * 0.1
       const r = orb.radius * pulse
 
       const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r)
-      grad.addColorStop(0, `hsla(${orb.hue}, 60%, 65%, ${orb.opacity})`)
-      grad.addColorStop(0.5, `hsla(${orb.hue}, 55%, 60%, ${orb.opacity * 0.5})`)
-      grad.addColorStop(1, `hsla(${orb.hue}, 55%, 55%, 0)`)
+      grad.addColorStop(0, `hsla(${orb.hue}, 65%, 60%, ${orb.opacity})`)
+      grad.addColorStop(0.4, `hsla(${orb.hue}, 55%, 55%, ${orb.opacity * 0.5})`)
+      grad.addColorStop(1, `hsla(${orb.hue}, 55%, 50%, 0)`)
       ctx.fillStyle = grad
       ctx.beginPath()
       ctx.arc(cx, cy, r, 0, Math.PI * 2)
@@ -190,13 +189,13 @@ export function Particles() {
 
     function drawFlash(flash: FlashLight) {
       const progress = flash.life / flash.maxLife
-      const opacity = Math.sin(progress * Math.PI) * 0.35
+      const opacity = Math.sin(progress * Math.PI) * 0.3
       const size = flash.size * (0.5 + progress * 0.5)
 
       const grad = ctx.createRadialGradient(flash.x, flash.y, 0, flash.x, flash.y, size)
-      grad.addColorStop(0, `hsla(${flash.hue}, 75%, 85%, ${opacity})`)
-      grad.addColorStop(0.4, `hsla(${flash.hue}, 65%, 70%, ${opacity * 0.4})`)
-      grad.addColorStop(1, `hsla(${flash.hue}, 60%, 60%, 0)`)
+      grad.addColorStop(0, `hsla(${flash.hue}, 80%, 82%, ${opacity})`)
+      grad.addColorStop(0.4, `hsla(${flash.hue}, 65%, 68%, ${opacity * 0.4})`)
+      grad.addColorStop(1, `hsla(${flash.hue}, 60%, 55%, 0)`)
       ctx.fillStyle = grad
       ctx.beginPath()
       ctx.arc(flash.x, flash.y, size, 0, Math.PI * 2)
@@ -209,19 +208,19 @@ export function Particles() {
           x: Math.random() * canvas!.width,
           y: Math.random() * canvas!.height * 0.8 + canvas!.height * 0.1,
           life: 0,
-          maxLife: 1500,
-          size: 40 + Math.random() * 60,
-          hue: 25 + Math.random() * 20,
+          maxLife: 1800,
+          size: 50 + Math.random() * 80,
+          hue: 22 + Math.random() * 18,
         })
         lastFlashTime = time
-        nextFlashDelay = 4000 + Math.random() * 4000
+        nextFlashDelay = 5000 + Math.random() * 5000
       }
     }
 
     function animate(time: number) {
       ctx.clearRect(0, 0, canvas!.width, canvas!.height)
 
-      // 底层 — 大光斑（极微妙）
+      // 底层 — 大光斑（更明显的黄昏天光）
       ctx.globalCompositeOperation = 'screen'
       orbs.forEach((orb) => drawOrb(orb, time))
       ctx.globalCompositeOperation = 'source-over'
@@ -243,12 +242,12 @@ export function Particles() {
         p.y -= p.speed
         p.rotation += p.rotationSpeed
         p.wobble += p.wobbleSpeed
-        p.pulsePhase += 0.03
+        p.pulsePhase += 0.025
         p.twinklePhase += p.twinkleSpeed
 
         const pulse = 1 + Math.sin(p.pulsePhase) * 0.2
         const twinkle = 0.55 + Math.sin(p.twinklePhase) * 0.35
-        const xOffset = Math.sin(p.wobble) * 15
+        const xOffset = Math.sin(p.wobble) * 12
 
         const fadeZone = 100
         let opacity = p.opacity

@@ -1,9 +1,14 @@
-/* Warm Amber liquid glass theme */
+/* ===「黄昏手账」设计系统 ===
+   暮色琥珀 × 拍立得信纸 × 编辑设计感
+   核心：暖色 OKLCH 多层光斑、玻璃+纸张双质感、邮戳+装订细节
+*/
+
+/* 字体加载 — Cormorant 真正使用 latin 字 + 中文用 Noto Serif SC */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Inter:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 @font-face {
   font-family: 'Cormorant Garamond';
@@ -22,7 +27,8 @@
   }
 
   body {
-    background-color: oklch(30% 0.04 55);
+    /* 深暮底色 — 加深 0.02 让粒子更显层次 */
+    background-color: oklch(22% 0.035 45);
     color: oklch(96% 0.02 70);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -35,7 +41,7 @@
     color-scheme: dark;
   }
 
-  /* 噪点纸张纹理 */
+  /* 暮色光斑层 — 多色 radial gradient 模拟黄昏天光 */
   body::before {
     content: '';
     position: fixed;
@@ -43,19 +49,21 @@
     pointer-events: none;
     z-index: 0;
     background:
-      radial-gradient(ellipse at 20% 10%, oklch(45% 0.08 40 / 0.18) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 90%, oklch(35% 0.06 35 / 0.22) 0%, transparent 55%);
+      radial-gradient(ellipse 60% 50% at 20% 8%, oklch(50% 0.10 40 / 0.22) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 40% at 80% 92%, oklch(40% 0.08 30 / 0.26) 0%, transparent 55%),
+      radial-gradient(ellipse 40% 30% at 50% 50%, oklch(35% 0.06 60 / 0.10) 0%, transparent 70%),
+      linear-gradient(180deg, oklch(24% 0.03 45) 0%, oklch(20% 0.03 40) 50%, oklch(22% 0.035 50) 100%);
   }
 
-  /* 极微噪点 — SVG feTurbulence 模拟纸张颗粒感 */
+  /* 纸张颗粒 — SVG feTurbulence 模拟胶片颗粒 + 微细划痕 */
   body::after {
     content: '';
     position: fixed;
     inset: 0;
     pointer-events: none;
     z-index: 0;
-    opacity: 0.04;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.95 0 0 0 0 0.7 0 0 0 0 0.4 0 0 0 1 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.95 0 0 0 0 0.7 0 0 0 0 0.4 0 0 0 1 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
     mix-blend-mode: overlay;
   }
 
@@ -68,36 +76,100 @@
     font-size: 16px !important;
     border-radius: 0;
   }
+
+  /* 选中色 — 暖色琥珀 */
+  ::selection {
+    background: oklch(68% 0.17 40 / 0.32);
+    color: oklch(96% 0.02 70);
+  }
 }
 
 @layer components {
+  /* === 玻璃卡 — 三档质感 ===
+     默认: 轻浮玻璃 + 暖色边光 + 内描边
+     加强版: 双层模糊 + 顶部反光线 + 邮戳感
+  */
   .glass-card {
     background: oklch(46% 0.035 50 / 0.5);
     backdrop-filter: blur(24px) saturate(1.4);
     -webkit-backdrop-filter: blur(24px) saturate(1.4);
     border: 1px solid oklch(75% 0.08 55 / 0.2);
-    border-top-color: oklch(68% 0.12 45 / 0.5);
+    border-top-color: oklch(80% 0.14 60 / 0.45);
     border-radius: 20px;
+    box-shadow:
+      inset 0 1px 0 oklch(96% 0.02 70 / 0.08),
+      0 8px 32px oklch(15% 0.02 40 / 0.35);
   }
 
   .glass-popup {
-    background: oklch(46% 0.035 50 / 0.65);
+    background: oklch(46% 0.035 50 / 0.7);
     backdrop-filter: blur(28px) saturate(1.6);
     -webkit-backdrop-filter: blur(28px) saturate(1.6);
-    border: 1px solid oklch(75% 0.08 55 / 0.2);
-    border-top-color: oklch(68% 0.12 45 / 0.5);
+    border: 1px solid oklch(75% 0.08 55 / 0.25);
+    border-top-color: oklch(80% 0.14 60 / 0.5);
     border-radius: 24px;
     box-shadow:
       0 24px 64px oklch(15% 0.02 40 / 0.6),
-      inset 0 1px 0 oklch(96% 0.02 70 / 0.1);
+      inset 0 1px 0 oklch(96% 0.02 70 / 0.12);
   }
 
   .glass-nav {
-    background: oklch(46% 0.035 50 / 0.5);
+    background: oklch(46% 0.035 50 / 0.55);
     backdrop-filter: blur(24px) saturate(1.4);
     -webkit-backdrop-filter: blur(24px) saturate(1.4);
-    border: 1px solid oklch(75% 0.08 55 / 0.2);
+    border: 1px solid oklch(75% 0.08 55 / 0.22);
+    border-top-color: oklch(80% 0.14 60 / 0.4);
     border-radius: 20px;
+    box-shadow:
+      0 8px 32px oklch(15% 0.02 40 / 0.4),
+      inset 0 1px 0 oklch(96% 0.02 70 / 0.08);
+  }
+
+  /* === 邮戳印 — 圆形印戳感 ===
+     用于日期标签、章节序号 */
+  .stamp-mark {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: oklch(96% 0.02 70 / 0.85);
+    background: transparent;
+    border: 1.5px solid oklch(52% 0.14 25 / 0.5);
+    border-radius: 4px;
+    transform: rotate(-3deg);
+    box-shadow:
+      inset 0 0 0 1px oklch(52% 0.14 25 / 0.25),
+      0 0 0 1.5px oklch(52% 0.14 25 / 0.18);
+    /* 印戳不规则磨损 */
+    mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100'><filter id='r'><feTurbulence baseFrequency='0.9' numOctaves='2'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0'/></filter><rect width='100' height='100' filter='url(%23r)'/></svg>");
+    mask-mode: luminance;
+    mask-size: 100% 100%;
+  }
+
+  /* 装饰线 — 章节式分割 */
+  .editorial-rule {
+    position: relative;
+    height: 1px;
+    background: linear-gradient(90deg,
+      transparent 0%,
+      oklch(58% 0.13 40 / 0.05) 20%,
+      oklch(58% 0.13 40 / 0.4) 50%,
+      oklch(58% 0.13 40 / 0.05) 80%,
+      transparent 100%
+    );
+  }
+
+  .editorial-rule::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: -2px;
+    transform: translateX(-50%);
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: oklch(68% 0.17 40);
+    box-shadow: 0 0 8px oklch(68% 0.17 40 / 0.5);
   }
 
   .pb-safe {
@@ -146,17 +218,21 @@
     100% { transform: scale(8); opacity: 0; }
   }
 
+  /* 悬浮抬升 — 更克制的边光+抬升 */
   .hover-lift {
-    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   @media (hover: hover) {
     .hover-lift:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 18px 40px oklch(15% 0.02 40 / 0.55),
-                  0 0 0 1px oklch(80% 0.12 70 / 0.4);
+      transform: translateY(-2px);
+      box-shadow:
+        0 16px 48px oklch(15% 0.02 40 / 0.5),
+        0 0 0 1px oklch(80% 0.14 60 / 0.35),
+        inset 0 1px 0 oklch(96% 0.02 70 / 0.15);
+      border-color: oklch(80% 0.14 60 / 0.4);
     }
   }
 
@@ -207,29 +283,71 @@
     }
   }
 
-  /* 拍立得相纸 — 偏暖白底，底部边距可变 */
+  /* 拍立得相纸 — 暖白底 + 顶部胶带粘角 + 厚重阴影 */
   .polaroid-frame {
-    background: oklch(92% 0.01 80);
-    padding: 8px 8px 24px 8px;
+    background: oklch(94% 0.012 80);
+    padding: 10px 10px 32px 10px;
     box-shadow:
-      0 8px 24px oklch(15% 0.02 40 / 0.45),
-      0 0 0 1px oklch(80% 0.12 70 / 0.15);
-    transform: rotate(-1deg);
-    transition: padding 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .polaroid-frame:hover {
-    transform: rotate(0.5deg) translateY(-2px);
-    padding-bottom: 28px;
+      0 12px 32px oklch(15% 0.02 40 / 0.5),
+      0 0 0 1px oklch(80% 0.12 70 / 0.18),
+      inset 0 0 0 1px oklch(80% 0.04 70 / 0.12);
+    transform: rotate(-1.2deg);
+    transition: padding 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
   }
 
-  /* 信纸质感 — 不规则间距横线 */
+  /* 拍立得顶部胶带 — 一小段半透明胶带 */
+  .polaroid-frame::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-2deg);
+    width: 64px;
+    height: 18px;
+    background: oklch(80% 0.05 65 / 0.35);
+    border-left: 1px solid oklch(70% 0.05 60 / 0.25);
+    border-right: 1px solid oklch(70% 0.05 60 / 0.25);
+    box-shadow: 0 1px 2px oklch(15% 0.02 40 / 0.15);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+  }
+
+  .polaroid-frame:hover {
+    transform: rotate(0.3deg) translateY(-3px);
+    padding-bottom: 36px;
+    box-shadow:
+      0 20px 48px oklch(15% 0.02 40 / 0.6),
+      0 0 0 1px oklch(80% 0.14 70 / 0.3),
+      inset 0 0 0 1px oklch(80% 0.04 70 / 0.18);
+  }
+
+  /* 信纸质感 — 不规则间距横线 + 装订孔 */
   .letter-paper {
     background-color: oklch(40% 0.03 45 / 0.4);
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100%25' height='84'><line x1='0' y1='28' x2='100%25' y2='28' stroke='oklch(80%25 0.12 70 / 0.12)' stroke-width='0.5'/><line x1='0' y1='55' x2='100%25' y2='55' stroke='oklch(80%25 0.12 70 / 0.12)' stroke-width='0.8'/><line x1='0' y1='82' x2='100%25' y2='82' stroke='oklch(80%25 0.12 70 / 0.12)' stroke-width='0.5'/></svg>");
+    background-image:
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100%25' height='84'><line x1='0' y1='28' x2='100%25' y2='28' stroke='oklch(80%25 0.12 70 / 0.10)' stroke-width='0.5'/><line x1='0' y1='55' x2='100%25' y2='55' stroke='oklch(80%25 0.12 70 / 0.14)' stroke-width='0.8'/><line x1='0' y1='82' x2='100%25' y2='82' stroke='oklch(80%25 0.12 70 / 0.10)' stroke-width='0.5'/></svg>");
     background-repeat: repeat-y;
     background-position: 0 0;
     background-size: 100% 84px;
+    position: relative;
+  }
+
+  /* 装订孔 — 左侧 3 个圆点 */
+  .letter-paper::before {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 18px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: oklch(68% 0.17 40 / 0.35);
+    box-shadow:
+      0 24px 0 oklch(68% 0.17 40 / 0.25),
+      0 48px 0 oklch(68% 0.17 40 / 0.35);
   }
 
   /* 时间线竖线 — 极简 1px 纯色，不抢眼 */
@@ -240,37 +358,50 @@
     top: 0;
     bottom: 0;
     width: 1px;
-    background: oklch(58% 0.13 40 / 0.15);
+    background: linear-gradient(180deg,
+      transparent 0%,
+      oklch(58% 0.13 40 / 0.2) 8%,
+      oklch(58% 0.13 40 / 0.15) 92%,
+      transparent 100%);
   }
 
-  /* 时间线圆点 — 极小，无发光 */
+  /* 时间线圆点 — 极小，外圈光晕 */
   .timeline-dot {
     position: absolute;
     left: 14.5px;
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background: oklch(58% 0.13 40);
-    box-shadow: 0 0 0 2px oklch(24% 0.03 45 / 0.8);
+    background: oklch(68% 0.17 40);
+    box-shadow:
+      0 0 0 2px oklch(24% 0.03 45 / 0.9),
+      0 0 8px oklch(68% 0.17 40 / 0.5);
     z-index: 2;
   }
 
   .timeline-dot.note {
     background: oklch(52% 0.03 300);
+    box-shadow:
+      0 0 0 2px oklch(24% 0.03 45 / 0.9),
+      0 0 6px oklch(52% 0.03 300 / 0.4);
   }
 
-  /* 便签纸多色 */
+  /* 便签纸多色 — 加深质感 */
   .sticky-yellow {
     background: linear-gradient(135deg, oklch(85% 0.12 85 / 0.4), oklch(75% 0.10 75 / 0.35));
+    box-shadow: inset 0 0 0 1px oklch(85% 0.12 85 / 0.15);
   }
   .sticky-pink {
     background: linear-gradient(135deg, oklch(80% 0.10 15 / 0.38), oklch(72% 0.10 25 / 0.32));
+    box-shadow: inset 0 0 0 1px oklch(80% 0.10 15 / 0.15);
   }
   .sticky-blue {
     background: linear-gradient(135deg, oklch(75% 0.10 220 / 0.36), oklch(68% 0.10 240 / 0.30));
+    box-shadow: inset 0 0 0 1px oklch(75% 0.10 220 / 0.15);
   }
   .sticky-green {
     background: linear-gradient(135deg, oklch(80% 0.10 145 / 0.36), oklch(72% 0.10 160 / 0.30));
+    box-shadow: inset 0 0 0 1px oklch(80% 0.10 145 / 0.15);
   }
 
   /* === 高德地图标记涟漪 === */
@@ -284,7 +415,10 @@
     background: linear-gradient(135deg, oklch(68% 0.17 40), oklch(55% 0.15 35));
     border: 2px solid oklch(96% 0.02 70);
     border-radius: 50%;
-    box-shadow: 0 0 16px oklch(68% 0.17 40 / 0.6), 0 2px 8px rgba(0, 0, 0, 0.3);
+    box-shadow:
+      0 0 16px oklch(68% 0.17 40 / 0.6),
+      0 2px 8px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 oklch(96% 0.02 70 / 0.4);
     transition: transform 0.2s;
     animation: markerBreathe 3s ease-in-out infinite;
     position: relative;
@@ -342,6 +476,33 @@
   }
   @keyframes mapSkeletonShimmer {
     100% { transform: translateX(100%); }
+  }
+
+  /* === 编辑式段落符号 — 章节序号 === */
+  .editorial-chapter {
+    font-family: '"SF Mono", "Cascadia Code", monospace';
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: oklch(68% 0.17 40 / 0.55);
+    text-transform: uppercase;
+  }
+
+  /* === Cormorant 大字标题 — 加重 ascender === */
+  .display-hero {
+    font-family: '"Cormorant Garamond", "Noto Serif SC Variable", serif';
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    line-height: 1.1;
+    font-feature-settings: 'liga' 1, 'kern' 1;
+  }
+
+  /* 微妙金边光 — 用于关键 CTA */
+  .edge-glow-amber {
+    box-shadow:
+      0 8px 24px oklch(15% 0.02 40 / 0.4),
+      0 0 0 1px oklch(80% 0.14 60 / 0.35),
+      inset 0 1px 0 oklch(96% 0.02 70 / 0.2),
+      0 0 32px oklch(68% 0.17 40 / 0.18);
   }
 }
 

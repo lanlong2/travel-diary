@@ -26,10 +26,11 @@ export function TripSelect({ trips, selectedTripId, onSelectTrip, onCreateTrip }
 
   return (
     <div className="mx-7">
-      <label className="block text-[13px] font-medium text-dusk-100/80 mb-3 tracking-[0.02em]">
+      <label className="block text-[13px] font-medium text-dusk-100/80 mb-3 tracking-[0.04em] flex items-center gap-2">
+        <span className="w-1 h-1 rounded-full bg-amber/60" />
         旅行
         {selectedTripId && trips.find(t => t.id === selectedTripId) && (
-          <span className="ml-2 text-[11px] font-normal text-dusk-100/45">已选择</span>
+          <span className="ml-2 text-[11px] font-normal text-amber/70">已选择</span>
         )}
       </label>
 
@@ -40,26 +41,26 @@ export function TripSelect({ trips, selectedTripId, onSelectTrip, onCreateTrip }
             <button
               key={trip.id}
               onClick={() => onSelectTrip(trip.id)}
-              className={`w-full p-4 rounded-[14px] border text-left transition-colors duration-200 ${
+              className={`w-full p-4 rounded-[14px] border text-left transition-all duration-200 active:scale-[0.99] ${
                 isSelected
-                  ? 'border-amber/50 bg-amber/10'
-                  : 'border-dusk-300/20 bg-dusk-600/30 hover:border-dusk-300/40 hover:bg-dusk-600/50'
+                  ? 'border-amber/55 bg-amber/12 shadow-[0_4px_16px_oklch(68%_0.17_40_/_0.12)]'
+                  : 'border-dusk-300/20 bg-dusk-600/30 hover:border-dusk-300/45 hover:bg-dusk-600/55'
               }`}
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3 min-w-0">
                   {isSelected ? (
-                    <div className="w-9 h-9 rounded-[10px] bg-amber/15 flex items-center justify-center flex-shrink-0">
+                    <div className="w-9 h-9 rounded-[10px] bg-amber/15 border border-amber/25 flex items-center justify-center flex-shrink-0">
                       <Check className="w-5 h-5 text-amber" />
                     </div>
                   ) : (
-                    <div className="w-9 h-9 rounded-[10px] bg-white/8 flex items-center justify-center flex-shrink-0">
-                      <BookOpen className="w-5 h-5 text-dusk-100/50" />
+                    <div className="w-9 h-9 rounded-[10px] bg-white/8 border border-dusk-300/15 flex items-center justify-center flex-shrink-0">
+                      <BookOpen className="w-5 h-5 text-dusk-100/55" />
                     </div>
                   )}
-                  <span className="font-serif font-semibold text-[15px] text-dusk-50 truncate tracking-[0.02em]">{trip.title}</span>
+                  <span className="font-serif font-semibold text-[15px] text-dusk-50 truncate tracking-[0.04em]">{trip.title}</span>
                 </div>
-                <span className="text-[11px] text-dusk-100/50 flex-shrink-0 ml-2 font-mono tracking-[0.02em]">
+                <span className="text-[11px] text-dusk-100/55 flex-shrink-0 ml-2 font-mono tracking-[0.04em]">
                   {trip.cities?.length || 0} 城
                 </span>
               </div>
@@ -69,8 +70,13 @@ export function TripSelect({ trips, selectedTripId, onSelectTrip, onCreateTrip }
       </div>
 
       {showNew ? (
-        <div className="p-5 glass-card animate-scale-in">
-          <p className="text-[13px] text-dusk-50 mb-3 font-medium tracking-[0.02em]">新建旅行</p>
+        <div className="p-5 glass-card animate-scale-in relative">
+          {/* 顶部折光线 */}
+          <div className="absolute top-0 left-5 right-5 h-px bg-gradient-to-r from-transparent via-amber/40 to-transparent" />
+          <p className="text-[13px] text-dusk-50 mb-3 font-medium tracking-[0.04em] flex items-center gap-2">
+            <span className="w-1 h-1 rounded-full bg-amber" />
+            新建旅行
+          </p>
           <div className="flex gap-2.5">
             <div className="flex-1">
               <Input
@@ -83,21 +89,21 @@ export function TripSelect({ trips, selectedTripId, onSelectTrip, onCreateTrip }
           </div>
           <div className="flex gap-2.5 mt-2.5">
             <div className="flex-1">
-              <label className="block text-[11px] font-medium text-dusk-100/60 mb-1.5 tracking-[0.02em]">开始日期</label>
+              <label className="block text-[11px] font-medium text-dusk-100/65 mb-1.5 tracking-[0.04em]">开始</label>
               <input
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="w-full px-4 py-3 bg-dusk-600/40 border border-dusk-300/30 rounded-[12px] text-[13px] text-dusk-50 focus:outline-none focus:ring-[1px] focus:ring-amber/25 focus:border-amber/50 transition-colors"
+                className="w-full px-4 py-3 bg-dusk-600/40 border border-dusk-300/30 rounded-[12px] text-[13px] text-dusk-50 focus:outline-none focus:ring-[1px] focus:ring-amber/30 focus:border-amber/55 transition-colors"
               />
             </div>
             <div className="flex-1">
-              <label className="block text-[11px] font-medium text-dusk-100/60 mb-1.5 tracking-[0.02em]">结束日期</label>
+              <label className="block text-[11px] font-medium text-dusk-100/65 mb-1.5 tracking-[0.04em]">结束</label>
               <input
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                className="w-full px-4 py-3 bg-dusk-600/40 border border-dusk-300/30 rounded-[12px] text-[13px] text-dusk-50 focus:outline-none focus:ring-[1px] focus:ring-amber/25 focus:border-amber/50 transition-colors"
+                className="w-full px-4 py-3 bg-dusk-600/40 border border-dusk-300/30 rounded-[12px] text-[13px] text-dusk-50 focus:outline-none focus:ring-[1px] focus:ring-amber/30 focus:border-amber/55 transition-colors"
               />
             </div>
           </div>
@@ -105,13 +111,13 @@ export function TripSelect({ trips, selectedTripId, onSelectTrip, onCreateTrip }
             <button
               onClick={handleCreate}
               disabled={!newTitle.trim()}
-              className="px-6 py-3 bg-gradient-to-br from-amber to-amber text-white rounded-[14px] text-[13px] font-semibold disabled:opacity-40 transition-opacity flex-shrink-0 tracking-[0.02em] active:brightness-95"
+              className="px-6 py-3 bg-gradient-to-br from-amber via-amber to-amber-ember text-white rounded-[14px] text-[13px] font-semibold disabled:opacity-40 transition-opacity flex-shrink-0 tracking-[0.04em] active:brightness-95 active:scale-95 duration-200 edge-glow-amber"
             >
               创建
             </button>
             <button
               onClick={() => { setShowNew(false); setNewTitle('') }}
-              className="px-4 py-3 text-dusk-100/60 text-[13px] flex-shrink-0 hover:text-dusk-50 transition-colors"
+              className="px-4 py-3 text-dusk-100/65 text-[13px] flex-shrink-0 hover:text-dusk-50 transition-colors"
             >
               取消
             </button>
@@ -120,9 +126,9 @@ export function TripSelect({ trips, selectedTripId, onSelectTrip, onCreateTrip }
       ) : (
         <button
           onClick={() => setShowNew(true)}
-          className="w-full py-5 border border-dusk-300/40 rounded-[14px] text-[13px] text-dusk-100/60 hover:border-amber/50 hover:text-amber transition-colors flex items-center justify-center gap-2 hover:bg-amber/5 tracking-[0.02em]"
+          className="w-full py-5 border border-dashed border-dusk-300/40 rounded-[14px] text-[13px] text-dusk-100/65 hover:border-amber/55 hover:text-amber transition-colors flex items-center justify-center gap-2 hover:bg-amber/5 tracking-[0.04em] active:scale-[0.99] duration-200"
         >
-          <div className="w-7 h-7 rounded-[8px] bg-amber/12 flex items-center justify-center">
+          <div className="w-7 h-7 rounded-[8px] bg-amber/12 border border-amber/20 flex items-center justify-center">
             <Plus className="w-4 h-4" />
           </div>
           新建旅行
