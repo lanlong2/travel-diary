@@ -32,7 +32,10 @@ export function Toast({ message, type = 'success', isVisible, onClose, duration 
       className={`fixed bottom-28 left-1/2 -translate-x-1/2 z-[70] flex items-center gap-3 px-5 py-3.5 rounded-[14px] glass-popup border-l-2 transition-all duration-400 ${
         show ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
       }`}
-      style={{ borderLeftColor: isSuccess ? 'oklch(68% 0.17 40)' : 'oklch(60% 0.18 25)' }}
+      style={{
+        borderLeftColor: isSuccess ? 'oklch(68% 0.17 40)' : 'oklch(60% 0.18 25)',
+        boxShadow: `0 16px 48px oklch(15% 0.02 40 / 0.5), 0 0 0 1px oklch(80% 0.14 60 / 0.2)`,
+      }}
     >
       {isSuccess
         ? <CheckCircle className="w-5 h-5 text-amber flex-shrink-0" />

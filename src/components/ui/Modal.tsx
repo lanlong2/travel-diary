@@ -25,12 +25,14 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in-up" style={{ animationDuration: '0.3s' }}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      {/* 背景动画过渡 */}
       <div
-        className="absolute inset-0 bg-black/65 backdrop-blur-md"
+        className="absolute inset-0 bg-black/65 backdrop-blur-md animate-fade-in-up"
+        style={{ animationDuration: '0.25s' }}
         onClick={onClose}
       />
-      <div className="relative glass-popup max-w-lg w-full max-h-[85vh] overflow-auto scrollbar-hide animate-scale-in">
+      <div className="relative glass-popup max-w-lg w-full max-h-[85vh] overflow-auto scrollbar-hide animate-scale-in" style={{ animationDuration: '0.35s' }}>
         {/* 顶部折光线 */}
         <div className="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-amber/40 to-transparent" />
         <div className="flex items-center justify-between p-5 border-b border-dusk-300/30">

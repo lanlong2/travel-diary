@@ -60,14 +60,18 @@ export function PhotoModal({ photo, onClose, onDelete, onUpdate }: PhotoModalPro
 
   return (
     <>
-      <div className="fixed inset-0 z-50 bg-black/95 flex flex-col animate-fade-in-up" style={{ animationDuration: '0.3s' }} onClick={onClose}>
-        <div className="flex-1 flex items-center justify-center p-8" onClick={(e) => e.stopPropagation()}>
+      <div className="fixed inset-0 z-50 bg-black/95 flex flex-col animate-scale-in" style={{ animationDuration: '0.25s' }} onClick={onClose}>
+        {/* 背景渐退效果 */}
+        <div className="absolute inset-0 pointer-events-none" style={{
+          background: 'radial-gradient(ellipse 50% 40% at 50% 50%, oklch(68% 0.17 40 / 0.06) 0%, transparent 70%)'
+        }} />
+        <div className="flex-1 flex items-center justify-center p-4 sm:p-8" onClick={(e) => e.stopPropagation()}>
           {photo.image_url ? (
             <img
               src={photo.image_url}
               alt={photo.note || photo.city_name}
-              className="max-w-full max-h-full object-contain rounded-[4px]"
-              style={{ boxShadow: '0 24px 64px rgba(0,0,0,0.5)' }}
+              className="max-w-full max-h-full object-contain rounded-[4px] animate-reveal-scale"
+              style={{ boxShadow: '0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px oklch(96% 0.02 70 / 0.06)', maxHeight: 'calc(100dvh - 260px)' }}
             />
           ) : (
             <div className="glass-popup max-w-md w-full p-8">

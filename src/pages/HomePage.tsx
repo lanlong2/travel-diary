@@ -90,7 +90,7 @@ export function HomePage() {
       />
 
       {recentPhotos.length > 0 && (
-        <section className="mt-8 mb-2">
+        <section className="mt-8 mb-2 reveal">
           {/* 章节式分割 + 标题 */}
           <div className="flex items-center mx-7 mb-4 gap-3">
             <span className="editorial-chapter">II</span>
@@ -122,7 +122,7 @@ export function HomePage() {
       )}
 
       {trips.length > 0 ? (
-        <section className="mt-8 mb-2">
+        <section className="mt-8 mb-2 reveal" style={{ transitionDelay: '0.15s' }}>
           <div className="flex items-center mx-7 mb-4 gap-3">
             <span className="editorial-chapter">III</span>
             <span className="font-serif text-[15px] font-semibold text-dusk-50 tracking-[0.05em]">

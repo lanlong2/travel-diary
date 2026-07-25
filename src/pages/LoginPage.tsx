@@ -83,6 +83,15 @@ export function LoginPage() {
           <span className="text-[14px] font-bold tracking-[0.05em] text-stamp-ink leading-tight">2025</span>
         </div>
 
+        {/* 顶部淡金光晕 */}
+        <div
+          className="absolute -top-20 left-1/2 -translate-x-1/2 w-64 h-64 pointer-events-none"
+          style={{
+            background: 'radial-gradient(ellipse, oklch(68% 0.17 40 / 0.1) 0%, transparent 70%)',
+          }}
+          aria-hidden="true"
+        />
+
         {/* 标题 + 爱心 */}
         <div className="text-center mb-12">
           {/* 爱心 — 印戳式徽章 */}

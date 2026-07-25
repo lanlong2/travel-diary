@@ -15,7 +15,7 @@ export function DayCounter() {
         <span className="font-mono text-[10px] tracking-[0.12em] text-dusk-100/40">EST. 2025.11.08</span>
       </div>
 
-      <div className="relative px-5 py-6 text-center">
+      <div className="relative px-5 py-6 text-center" style={{ perspective: '1000px' }}>
         {/* 左上角日期戳记 — 胶片感 */}
         <div
           className="absolute top-2 left-2 flex flex-col items-start leading-tight"
@@ -35,7 +35,7 @@ export function DayCounter() {
           <span className="font-mono text-[10px] font-bold tracking-[0.05em] text-stamp-ink leading-tight">No.{String(days).padStart(3, '0')}</span>
         </div>
 
-        <p className="font-serif text-[13px] text-dusk-100/65 tracking-[0.18em]">
+        <p className="font-serif text-[13px] text-dusk-100/75 tracking-[0.18em]">
           在一起的第
         </p>
 

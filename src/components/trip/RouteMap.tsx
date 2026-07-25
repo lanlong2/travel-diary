@@ -166,6 +166,7 @@ export function RouteMap({ cities }: RouteMapProps) {
       <div
         ref={containerRef}
         className="w-full h-56 rounded-[20px] overflow-hidden border border-dusk-300/30 shadow-lg shadow-black/30"
+        style={{ boxShadow: '0 8px 32px oklch(15% 0.02 40 / 0.4), 0 0 0 1px oklch(80% 0.14 60 / 0.12)' }}
       />
 
       <style>{`

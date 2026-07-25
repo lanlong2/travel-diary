@@ -32,7 +32,7 @@ export function Button({
 
   return (
     <button
-      className={`${base} ${variants[variant]} ${sizes[size]} ${className}`}
+      className={`group ${base} ${variants[variant]} ${sizes[size]} ${className}`}
       {...props}
     >
       {/* 高光扫光 — 悬浮时左→右 */}

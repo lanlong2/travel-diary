@@ -57,7 +57,7 @@ export function TripDetailPage() {
       />
 
       {editing && (
-        <div className="mx-6 mb-5 p-6 glass-card animate-scale-in">
+        <div className="mx-6 mb-5 p-6 glass-card-elevated animate-scale-in">
           {/* 顶部折光线 */}
           <div className="absolute top-0 left-5 right-5 h-px bg-gradient-to-r from-transparent via-amber/40 to-transparent" />
           <h3 className="text-sm font-serif font-semibold text-dusk-50 mb-4 tracking-[0.05em] flex items-center gap-2">

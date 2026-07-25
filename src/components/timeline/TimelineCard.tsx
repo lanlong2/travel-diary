@@ -30,17 +30,21 @@ export function TimelineCard({ record, index, isFirstInMonth = false, onClick }:
 
       <button
         onClick={onClick}
-        className="block w-full text-left active:brightness-95 transition-all duration-200"
+        className="block w-full text-left active:brightness-95 transition-all duration-200 group"
       >
         {hasPhoto ? (
-          // 拍立得风格照片卡 — 偏暖白底
-          <div className="polaroid-frame rounded-[2px]">
-            <div className="aspect-[4/3] overflow-hidden bg-dusk-600 rounded-[1px]">
+          // 拍立得风格照片卡 — 偏暖白底，hover 增强
+          <div className="polaroid-frame rounded-[2px] transition-all duration-500 group-hover:shadow-[0_20px_48px_oklch(15%_0.02_40_/_0.6),0_0_0_1px_oklch(80%_0.14_60_/_0.3)]">
+            <div className="aspect-[4/3] overflow-hidden bg-dusk-600 rounded-[1px] relative">
               <img
                 src={record.image_url!}
                 alt={record.note || record.city_name}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 loading="lazy"
+              />
+              {/* hover 彩色叠加 */}
+              <div className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                style={{ background: 'linear-gradient(135deg, oklch(68% 0.17 40 / 0.08), transparent 50%)' }}
               />
             </div>
             {record.note && (
@@ -59,8 +63,8 @@ export function TimelineCard({ record, index, isFirstInMonth = false, onClick }:
             </div>
           </div>
         ) : (
-          // 信纸风格便签 — 不规则横线
-          <div className="glass-card letter-paper rounded-[14px] p-4 sm:p-5 relative overflow-hidden hover-lift">
+          // 信纸风格便签 — 不规则横线，hover 增强
+          <div className="glass-card glass-card-elevated letter-paper rounded-[14px] p-4 sm:p-5 relative overflow-hidden hover-lift transition-all duration-400">
             <span
               className="absolute top-3 left-2 w-[3px] h-[3px] rounded-full bg-amber/45"
               aria-hidden="true"
@@ -76,7 +80,7 @@ export function TimelineCard({ record, index, isFirstInMonth = false, onClick }:
                 <MapPin className="w-3 h-3" />
                 <span className="truncate max-w-[5em]">{record.city_name}</span>
               </span>
-              <span className="text-[10px] sm:text-[11px] text-dusk-100/45 font-mono tracking-[0.04em]">{dateStr}</span>
+              <span className="text-[10px] sm:text-[11px] text-dusk-100/55 font-mono tracking-[0.04em]">{dateStr}</span>
             </div>
           </div>
         )}

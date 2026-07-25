@@ -42,7 +42,8 @@ export function TripCard({ trip, cityCount, onClick, onDelete, index = 0 }: Trip
             <img
               src={trip.cover_photo}
               alt={trip.title}
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:brightness-110"
+              className="absolute inset-0 w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-110 animate-ken-burns"
+              loading="lazy"
             />
           ) : (
             // 无封面：星座连线背景

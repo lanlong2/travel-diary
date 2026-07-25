@@ -90,33 +90,49 @@
      加强版: 双层模糊 + 顶部反光线 + 邮戳感
   */
   .glass-card {
-    background: oklch(46% 0.035 50 / 0.5);
-    backdrop-filter: blur(24px) saturate(1.4);
-    -webkit-backdrop-filter: blur(24px) saturate(1.4);
+    background: oklch(46% 0.035 50 / 0.48);
+    backdrop-filter: blur(20px) saturate(1.5);
+    -webkit-backdrop-filter: blur(20px) saturate(1.5);
     border: 1px solid oklch(75% 0.08 55 / 0.2);
     border-top-color: oklch(80% 0.14 60 / 0.45);
     border-radius: 20px;
     box-shadow:
       inset 0 1px 0 oklch(96% 0.02 70 / 0.08),
       0 8px 32px oklch(15% 0.02 40 / 0.35);
+    transition: box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                background 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .glass-popup {
-    background: oklch(46% 0.035 50 / 0.7);
+  .glass-card-elevated {
+    background: oklch(46% 0.035 50 / 0.55);
     backdrop-filter: blur(28px) saturate(1.6);
     -webkit-backdrop-filter: blur(28px) saturate(1.6);
     border: 1px solid oklch(75% 0.08 55 / 0.25);
     border-top-color: oklch(80% 0.14 60 / 0.5);
+    border-radius: 20px;
+    box-shadow:
+      inset 0 1px 0 oklch(96% 0.02 70 / 0.1),
+      0 16px 48px oklch(15% 0.02 40 / 0.5),
+      0 0 0 1px oklch(80% 0.14 60 / 0.15);
+  }
+
+  .glass-popup {
+    background: oklch(46% 0.035 50 / 0.72);
+    backdrop-filter: blur(32px) saturate(1.7);
+    -webkit-backdrop-filter: blur(32px) saturate(1.7);
+    border: 1px solid oklch(75% 0.08 55 / 0.28);
+    border-top-color: oklch(80% 0.14 60 / 0.55);
     border-radius: 24px;
     box-shadow:
       0 24px 64px oklch(15% 0.02 40 / 0.6),
+      0 0 0 1px oklch(80% 0.14 60 / 0.2),
       inset 0 1px 0 oklch(96% 0.02 70 / 0.12);
   }
 
   .glass-nav {
-    background: oklch(46% 0.035 50 / 0.55);
-    backdrop-filter: blur(24px) saturate(1.4);
-    -webkit-backdrop-filter: blur(24px) saturate(1.4);
+    background: oklch(46% 0.035 50 / 0.52);
+    backdrop-filter: blur(22px) saturate(1.4);
+    -webkit-backdrop-filter: blur(22px) saturate(1.4);
     border: 1px solid oklch(75% 0.08 55 / 0.22);
     border-top-color: oklch(80% 0.14 60 / 0.4);
     border-radius: 20px;
@@ -191,6 +207,84 @@
   .stagger-8 { animation-delay: 0.4s; }
   .stagger-9 { animation-delay: 0.45s; }
   .stagger-10 { animation-delay: 0.5s; }
+  .stagger-11 { animation-delay: 0.55s; }
+  .stagger-12 { animation-delay: 0.6s; }
+  .stagger-13 { animation-delay: 0.65s; }
+  .stagger-14 { animation-delay: 0.7s; }
+  .stagger-15 { animation-delay: 0.75s; }
+
+  /* 滚动触发展示 — 配合 IntersectionObserver */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px) scale(0.98);
+    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  .reveal-left {
+    opacity: 0;
+    transform: translateX(-30px);
+    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal-left.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  .reveal-right {
+    opacity: 0;
+    transform: translateX(30px);
+    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal-right.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  .reveal-scale {
+    opacity: 0;
+    transform: scale(0.92);
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal-scale.visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* 图片加载骨架屏 */
+  .img-skeleton {
+    position: relative;
+    overflow: hidden;
+    background: oklch(36% 0.04 55 / 0.5);
+  }
+  .img-skeleton::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg,
+      transparent 0%,
+      oklch(58% 0.13 40 / 0.15) 50%,
+      transparent 100%
+    );
+    transform: translateX(-100%);
+    animation: imgShimmer 2s ease-in-out infinite;
+  }
+  @keyframes imgShimmer {
+    100% { transform: translateX(100%); }
+  }
+
+  /* 页面过渡 — 平滑渐变 */
+  .page-wrapper {
+    animation: pageIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  @keyframes pageIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 
   .scrollbar-hide {
     -ms-overflow-style: none;

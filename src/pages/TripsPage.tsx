@@ -102,7 +102,7 @@ export function TripsPage() {
               <button
                 key={trip.id}
                 onClick={() => navigate(`/trip/${trip.id}`)}
-                className={`w-full glass-card hover-lift active:brightness-95 transition-all duration-300 overflow-hidden animate-fade-in-up text-left group relative ${radiusClass}`}
+                className={`w-full glass-card-elevated hover-lift active:brightness-95 transition-all duration-300 overflow-hidden animate-fade-in-up text-left group relative ${radiusClass}`}
                 style={{ animationDelay: `${i * 0.08}s`, opacity: 0 }}
               >
                 {/* 顶部装饰线 — 中间一小段 */}

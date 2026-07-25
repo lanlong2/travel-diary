@@ -71,12 +71,12 @@ export function BottomNav() {
                 onClick={() => handleClick(path)}
                 aria-label={label}
                 aria-current={active ? 'page' : undefined}
-                className={`flex flex-col items-center gap-1 min-w-[44px] min-h-[44px] justify-center transition-all duration-300 ${
+                className={`flex flex-col items-center gap-1 min-w-[44px] min-h-[44px] justify-center transition-all duration-300 group ${
                   active ? 'text-amber' : 'text-dusk-100/55 hover:text-amber/80'
                 }`}
               >
-                <div className="relative p-2 transition-transform duration-300 active:scale-90">
-                  <Icon className={`w-6 h-6 relative transition-transform duration-300 ${active ? 'scale-105' : ''}`} />
+                <div className={`relative p-2 transition-all duration-300 active:scale-90 ${active ? 'animate-tab-bounce' : 'group-hover:scale-105'}`}>
+                  <Icon className={`w-6 h-6 relative transition-all duration-300 ${active ? 'scale-105' : ''}`} />
                   {active && (
                     <div
                       className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-5 h-[2px] rounded-full bg-gradient-to-r from-transparent via-amber to-transparent"
@@ -84,7 +84,7 @@ export function BottomNav() {
                     />
                   )}
                 </div>
-                <span className="text-[10px] font-medium tracking-[0.03em]">{label}</span>
+                <span className={`text-[10px] font-medium tracking-[0.03em] transition-all duration-300 ${active ? 'text-amber' : 'text-dusk-100/55 group-hover:text-amber/80'}`}>{label}</span>
               </button>
             )
           })}

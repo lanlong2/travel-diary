@@ -78,9 +78,10 @@ export function TripHeader({ trip, onDelete, onEdit }: TripHeaderProps) {
             <img
               src={trip.cover_photo}
               alt={trip.title}
-              className="absolute inset-0 w-full h-full object-cover"
+              className="absolute inset-0 w-full h-full object-cover animate-ken-burns"
+              loading="lazy"
             />
-            {/* 底部深色渐变 */}
+            {/* 底部深色渐变 — 多层 */}
             <div
               className="absolute inset-0"
               style={{
@@ -102,6 +103,14 @@ export function TripHeader({ trip, onDelete, onEdit }: TripHeaderProps) {
               <span className="font-mono text-[8px] tracking-[0.12em] text-stamp-dim leading-none">JOURNEY</span>
               <span className="font-mono text-[14px] font-bold tracking-[0.04em] text-stamp-ink leading-tight">{startYear}.{startMonth}</span>
             </div>
+
+            {/* 底部柔和光晕 */}
+            <div
+              className="absolute bottom-0 left-0 right-0 h-24 pointer-events-none"
+              style={{
+                background: 'linear-gradient(0deg, oklch(22% 0.035 45 / 0.6) 0%, transparent 100%)',
+              }}
+            />
           </div>
         ) : (
           <div className="w-full flex justify-center pt-12">

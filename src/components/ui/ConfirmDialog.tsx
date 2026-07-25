@@ -27,8 +27,8 @@ export function ConfirmDialog({
   }, [onCancel, loading])
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-6 animate-fade-in-up" style={{ animationDuration: '0.3s' }}>
-      <div className="absolute inset-0 bg-black/65 backdrop-blur-md" onClick={onCancel} />
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-6">
+      <div className="absolute inset-0 bg-black/65 backdrop-blur-md animate-fade-in-up" style={{ animationDuration: '0.2s' }} onClick={onCancel} />
 
       <div className="relative glass-popup max-w-sm w-full p-7 animate-scale-in">
         {/* 顶部折光 */}

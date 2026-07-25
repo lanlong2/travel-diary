@@ -108,11 +108,9 @@ export function PhotoGrid({ photos, onPhotoClick, onDeletePhoto }: PhotoGridProp
             return (
               <div
                 key={photo.id}
-                className="break-inside-avoid animate-fade-in-up"
+                className="break-inside-avoid"
                 style={{
                   gridRow: `span ${rowSpan}`,
-                  animationDelay: `${i * 0.05}s`,
-                  opacity: 0,
                 }}
               >
                 <div
@@ -120,12 +118,18 @@ export function PhotoGrid({ photos, onPhotoClick, onDeletePhoto }: PhotoGridProp
                   style={{ height: '100%' }}
                   onClick={() => onPhotoClick(photo)}
                 >
-                  <img
-                    src={photo.image_url}
-                    alt={photo.note || photo.city_name}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    loading="lazy"
-                  />
+                  {photo.image_url ? (
+                    <img
+                      src={photo.image_url}
+                      alt={photo.note || photo.city_name}
+                      className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="w-full h-full img-skeleton flex items-center justify-center">
+                      <span className="text-[11px] text-dusk-100/40">加载中</span>
+                    </div>
+                  )}
                   {/* 顶部渐变遮罩 — hover 时显示 */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
