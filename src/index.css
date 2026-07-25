@@ -24,6 +24,14 @@
     overflow-x: hidden;
     -webkit-text-size-adjust: 100%;
     overscroll-behavior-y: none;
+    /* 页面统一边距 token */
+    --page-mx: 28px;
+  }
+
+  @media (max-width: 420px) {
+    html {
+      --page-mx: 16px;
+    }
   }
 
   body {
@@ -606,5 +614,61 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* === 安卓/小屏适配 === */
+@media (max-width: 380px) {
+  .display-hero {
+    font-size: clamp(1.5rem, 8vw, 2rem) !important;
+  }
+
+  .glass-card,
+  .glass-card-elevated {
+    border-radius: 16px;
+  }
+
+  .glass-popup {
+    border-radius: 20px;
+  }
+}
+
+@media (max-width: 420px) {
+  .page-mx {
+    @apply mx-4;
+  }
+
+  .page-px {
+    @apply px-4;
+  }
+}
+
+/* 暗色滚动条（桌面端） */
+@media (hover: hover) and (pointer: fine) {
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: oklch(58% 0.13 40 / 0.25);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: oklch(58% 0.13 40 / 0.45);
+  }
+}
+
+/* 触控优化 — 点击元素移除高亮 */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 安全区处理 */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .pb-safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 16px);
   }
 }

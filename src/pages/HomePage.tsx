@@ -42,9 +42,16 @@ export function HomePage() {
 
   const recentPhotos = useMemo(() => {
     return [...photos]
-      .filter((p) => p.entry_type !== 'note' && p.image_url)
+      .filter((p) => p.image_url)
       .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
       .slice(0, 12)
+  }, [photos])
+
+  const recentRecords = useMemo(() => {
+    return [...photos]
+      .filter((p) => !p.image_url && p.note)
+      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+      .slice(0, 6)
   }, [photos])
 
   if (tripsError) {
@@ -121,10 +128,53 @@ export function HomePage() {
         </section>
       )}
 
-      {trips.length > 0 ? (
-        <section className="mt-8 mb-2 reveal" style={{ transitionDelay: '0.15s' }}>
+      {recentRecords.length > 0 && (
+        <section className="mt-6 mb-2 reveal" style={{ transitionDelay: '0.08s' }}>
           <div className="flex items-center mx-7 mb-4 gap-3">
             <span className="editorial-chapter">III</span>
+            <span className="font-serif text-[15px] font-semibold text-dusk-50 tracking-[0.05em]">
+              最近记录
+            </span>
+            <span className="font-mono text-[11px] text-amber/70 tabular-nums">
+              {photos.filter((p) => !p.image_url && p.note).length}
+            </span>
+            <span className="flex-1 h-px bg-gradient-to-r from-amber/35 to-transparent" />
+          </div>
+
+          <div className="mx-7 space-y-2">
+            {recentRecords.map((record, i) => (
+              <button
+                key={record.id}
+                onClick={() => {
+                  const trip = trips.find((t) => t.id === record.trip_id)
+                  if (trip) navigate(`/trip/${trip.id}`)
+                }}
+                className="w-full text-left glass-card p-4 hover-lift active:brightness-95 transition-all duration-300 group animate-fade-in-up"
+                style={{ animationDelay: `${i * 0.05}s`, opacity: 0 }}
+              >
+                <div className="flex items-start gap-3">
+                  <span className="font-serif text-lg text-amber/60 leading-none mt-0.5">"</span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[13px] text-dusk-50/90 leading-relaxed line-clamp-2 italic font-serif">
+                      {record.note}
+                    </p>
+                    <div className="flex items-center gap-2 mt-1.5 text-[10px] text-dusk-100/50 font-mono tracking-[0.03em]">
+                      <span className="truncate">{record.city_name}</span>
+                      <span className="w-1 h-1 rounded-full bg-amber/40" />
+                      <span>{new Date(record.created_at).toLocaleDateString('zh-CN', { month: 'numeric', day: 'numeric' })}</span>
+                    </div>
+                  </div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {trips.length > 0 ? (
+        <section className="mt-6 mb-2 reveal" style={{ transitionDelay: '0.2s' }}>
+          <div className="flex items-center mx-7 mb-4 gap-3">
+            <span className="editorial-chapter">IV</span>
             <span className="font-serif text-[15px] font-semibold text-dusk-50 tracking-[0.05em]">
               最近旅行
             </span>
