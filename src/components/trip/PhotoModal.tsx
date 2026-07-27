@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useRef, useState } from 'react'
 import { X, Trash2, Pencil, MapPin, Calendar } from 'lucide-react'
 import type { Photo } from '../../types'
 import { ConfirmDialog } from '../ui/ConfirmDialog'
+import { useDialogAccessibility } from '../ui/Modal'
 
 interface PhotoModalProps {
   photo: Photo
@@ -11,6 +12,8 @@ interface PhotoModalProps {
 }
 
 export function PhotoModal({ photo, onClose, onDelete, onUpdate }: PhotoModalProps) {
+  const dialogRef = useRef<HTMLDivElement>(null)
+  const closeButtonRef = useRef<HTMLButtonElement>(null)
   const [showDelete, setShowDelete] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [editing, setEditing] = useState(false)
@@ -22,20 +25,18 @@ export function PhotoModal({ photo, onClose, onDelete, onUpdate }: PhotoModalPro
     year: 'numeric', month: 'long', day: 'numeric'
   })
 
-  useEffect(() => {
-    document.body.style.overflow = 'hidden'
-    const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && !showDelete) {
-        if (editing) setEditing(false)
-        else onClose()
-      }
-    }
-    document.addEventListener('keydown', handleEsc)
-    return () => {
-      document.body.style.overflow = ''
-      document.removeEventListener('keydown', handleEsc)
-    }
-  }, [onClose, editing, showDelete])
+  const handleEscape = () => {
+    if (editing) setEditing(false)
+    else onClose()
+  }
+
+  useDialogAccessibility({
+    isOpen: true,
+    onClose: handleEscape,
+    containerRef: dialogRef,
+    initialFocusRef: closeButtonRef,
+    closeOnEscape: !showDelete,
+  })
 
   const handleDelete = async () => {
     if (!onDelete) return
@@ -60,18 +61,18 @@ export function PhotoModal({ photo, onClose, onDelete, onUpdate }: PhotoModalPro
 
   return (
     <>
-      <div className="fixed inset-0 z-50 bg-black/95 flex flex-col animate-scale-in" style={{ animationDuration: '0.25s' }} onClick={onClose}>
+      <div ref={dialogRef} role="dialog" aria-modal="true" aria-label={`查看${photo.city_name}的旅行记录`} tabIndex={-1} className="photo-modal fixed inset-0 z-50 bg-black/95 flex flex-col animate-scale-in" style={{ animationDuration: '0.25s' }} onClick={onClose}>
         {/* 背景渐退效果 */}
         <div className="absolute inset-0 pointer-events-none" style={{
           background: 'radial-gradient(ellipse 50% 40% at 50% 50%, oklch(68% 0.17 40 / 0.06) 0%, transparent 70%)'
         }} />
-        <div className="flex-1 flex items-center justify-center p-4 sm:p-8" onClick={(e) => e.stopPropagation()}>
+        <div className="photo-modal__media min-h-0 flex-1 flex items-center justify-center p-4 sm:p-8" onClick={(e) => e.stopPropagation()}>
           {photo.image_url ? (
             <img
               src={photo.image_url}
               alt={photo.note || photo.city_name}
               className="max-w-full max-h-full object-contain rounded-[4px] animate-reveal-scale"
-              style={{ boxShadow: '0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px oklch(96% 0.02 70 / 0.06)', maxHeight: 'calc(100dvh - 260px)' }}
+              style={{ boxShadow: '0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px oklch(96% 0.02 70 / 0.06)' }}
             />
           ) : (
             <div className="glass-popup max-w-md w-full p-8">
@@ -83,7 +84,7 @@ export function PhotoModal({ photo, onClose, onDelete, onUpdate }: PhotoModalPro
         </div>
 
         <div
-          className="glass-popup rounded-b-none px-6 pt-5 pb-10"
+          className="photo-modal__panel min-h-0 max-h-[58dvh] overflow-y-auto glass-popup rounded-b-none px-5 pt-4 pb-[max(24px,env(safe-area-inset-bottom))] sm:px-6"
           onClick={(e) => e.stopPropagation()}
         >
           {/* 顶部折光线 */}
@@ -96,8 +97,9 @@ export function PhotoModal({ photo, onClose, onDelete, onUpdate }: PhotoModalPro
             <div className="flex items-center gap-2 ml-auto">
               {onUpdate && !editing && (
                 <button
+                  type="button"
                   onClick={() => setEditing(true)}
-                  className="w-9 h-9 bg-white/8 rounded-full flex items-center justify-center text-dusk-100 hover:bg-white/15 transition-all active:scale-90 duration-200"
+                  className="w-11 h-11 bg-white/8 rounded-full flex items-center justify-center text-dusk-100 hover:bg-white/15 transition-all active:scale-90 duration-200"
                   aria-label="编辑"
                 >
                   <Pencil className="w-4 h-4" />
@@ -105,16 +107,19 @@ export function PhotoModal({ photo, onClose, onDelete, onUpdate }: PhotoModalPro
               )}
               {onDelete && !editing && (
                 <button
+                  type="button"
                   onClick={() => setShowDelete(true)}
-                  className="w-9 h-9 bg-white/8 rounded-full flex items-center justify-center text-dusk-100 hover:bg-red-500/40 transition-all active:scale-90 duration-200"
+                  className="w-11 h-11 bg-white/8 rounded-full flex items-center justify-center text-dusk-100 hover:bg-red-500/40 transition-all active:scale-90 duration-200"
                   aria-label="删除"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
               )}
               <button
+                ref={closeButtonRef}
+                type="button"
                 onClick={onClose}
-                className="w-9 h-9 bg-white/8 rounded-full flex items-center justify-center text-dusk-100 hover:bg-white/15 transition-all active:scale-90 duration-200"
+                className="w-11 h-11 bg-white/8 rounded-full flex items-center justify-center text-dusk-100 hover:bg-white/15 transition-all active:scale-90 duration-200"
                 aria-label="关闭"
               >
                 <X className="w-5 h-5" />
@@ -125,11 +130,12 @@ export function PhotoModal({ photo, onClose, onDelete, onUpdate }: PhotoModalPro
           {editing ? (
             <div className="space-y-4">
               <div>
-                <label className="text-[11px] text-dusk-100/65 mb-1.5 block tracking-[0.04em] flex items-center gap-2">
+                <label htmlFor="photo-edit-note" className="text-[11px] text-dusk-100/65 mb-1.5 block tracking-[0.04em] flex items-center gap-2">
                   <span className="w-1 h-1 rounded-full bg-amber/60" />
                   留言
                 </label>
                 <textarea
+                  id="photo-edit-note"
                   value={editNote}
                   onChange={(e) => setEditNote(e.target.value)}
                   className="w-full px-4 py-3 bg-dusk-600/40 border border-dusk-300/30 rounded-[12px] text-[15px] text-dusk-50 placeholder:text-dusk-100/25 focus:outline-none focus:ring-[1px] focus:ring-amber/30 focus:border-amber/60 resize-none"
@@ -138,11 +144,12 @@ export function PhotoModal({ photo, onClose, onDelete, onUpdate }: PhotoModalPro
                 />
               </div>
               <div>
-                <label className="text-[11px] text-dusk-100/65 mb-1.5 block tracking-[0.04em] flex items-center gap-2">
+                <label htmlFor="photo-edit-city" className="text-[11px] text-dusk-100/65 mb-1.5 block tracking-[0.04em] flex items-center gap-2">
                   <span className="w-1 h-1 rounded-full bg-amber/60" />
                   城市
                 </label>
                 <input
+                  id="photo-edit-city"
                   value={editCity}
                   onChange={(e) => setEditCity(e.target.value)}
                   className="w-full px-4 py-2.5 bg-dusk-600/40 border border-dusk-300/30 rounded-[12px] text-[15px] text-dusk-50 placeholder:text-dusk-100/25 focus:outline-none focus:ring-[1px] focus:ring-amber/30 focus:border-amber/60"
@@ -150,11 +157,12 @@ export function PhotoModal({ photo, onClose, onDelete, onUpdate }: PhotoModalPro
                 />
               </div>
               <div>
-                <label className="text-[11px] text-dusk-100/65 mb-1.5 block tracking-[0.04em] flex items-center gap-2">
+                <label htmlFor="photo-edit-date" className="text-[11px] text-dusk-100/65 mb-1.5 block tracking-[0.04em] flex items-center gap-2">
                   <span className="w-1 h-1 rounded-full bg-amber/60" />
                   日期
                 </label>
                 <input
+                  id="photo-edit-date"
                   type="date"
                   value={editDate}
                   onChange={(e) => setEditDate(e.target.value)}

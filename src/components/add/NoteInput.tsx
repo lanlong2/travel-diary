@@ -6,12 +6,13 @@ interface NoteInputProps {
 
 export function NoteInput({ value, onChange, rows = 5 }: NoteInputProps) {
   return (
-    <div className="mx-7">
-      <label className="block text-[13px] font-medium text-dusk-100/80 mb-3 tracking-[0.04em] flex items-center gap-2">
+    <div className="page-mx">
+      <label htmlFor="record-note" className="block text-[13px] font-medium text-dusk-100/80 mb-3 tracking-[0.04em] flex items-center gap-2">
         <span className="w-1 h-1 rounded-full bg-amber/60" />
         想说的话
       </label>
       <textarea
+        id="record-note"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder="写下这一刻的感受…"

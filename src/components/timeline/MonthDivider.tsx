@@ -4,7 +4,7 @@ interface MonthDividerProps {
 
 export function MonthDivider({ label }: MonthDividerProps) {
   return (
-    <div className="flex items-center gap-3 mx-3 sm:mx-6 my-7 ml-[44px] sm:ml-[68px] animate-fade-in-up">
+    <div className="flex items-center gap-3 mr-4 my-7 ml-[48px] animate-fade-in-up">
       {/* 左侧细线 */}
       <div className="flex-1 max-w-[28px] h-px bg-gradient-to-r from-transparent to-amber/40" />
 

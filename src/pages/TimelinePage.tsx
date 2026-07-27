@@ -42,14 +42,14 @@ export function TimelinePage() {
   if (loading) {
     return (
       <PageShell>
-        <Spinner className="min-h-screen" />
+        <Spinner className="min-h-dvh" />
       </PageShell>
     )
   }
 
   return (
     <PageShell>
-      <div className="px-7 pt-8 pb-2">
+      <div className="reading-column page-px pt-8 pb-2">
         {/* 顶部章节标识 */}
         <div className="flex items-center gap-3 mb-3">
           <span className="editorial-chapter">CHAPTER · II</span>
@@ -67,7 +67,7 @@ export function TimelinePage() {
       </div>
 
       {photos.length === 0 ? (
-        <div className="relative mx-7 mt-8 mb-8 py-10">
+        <div className="reading-column page-px relative mt-8 mb-8 py-10">
           <div
             className="absolute left-[18px] top-0 bottom-0 w-px"
             style={{ background: 'linear-gradient(180deg, transparent, oklch(58% 0.13 40 / 0.2), transparent)' }}
@@ -83,7 +83,7 @@ export function TimelinePage() {
           </div>
         </div>
       ) : (
-        <div className="timeline-spine relative py-2">
+        <div className="timeline-spine reading-column relative py-2">
           {groupedByMonth.map((group) => (
             <div key={group.month}>
               <MonthDivider label={group.month} />

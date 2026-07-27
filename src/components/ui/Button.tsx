@@ -9,42 +9,36 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 export function Button({
   variant = 'primary',
   size = 'md',
+  type = 'button',
   className = '',
   children,
   ...props
 }: ButtonProps) {
-  const base = 'inline-flex items-center justify-center gap-2 font-semibold rounded-[14px] transition-all duration-300 active:brightness-95 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed disabled:active:brightness-100 disabled:active:scale-100 tracking-[0.01em] relative overflow-hidden'
+  const base = 'inline-flex min-h-11 items-center justify-center gap-2 rounded-[10px] font-semibold tracking-[0.01em] transition-[background-color,border-color,color,box-shadow,transform] duration-200 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-45 disabled:active:scale-100'
 
   const variants = {
     primary:
-      'bg-gradient-to-br from-amber via-amber to-amber-ember text-white hover:brightness-105 edge-glow-amber hover:shadow-[0_12px_36px_oklch(68%_0.17_40_/_0.35),0_0_0_1px_oklch(80%_0.14_60_/_0.4),inset_0_1px_0_oklch(96%_0.02_70_/_0.25)]',
+      'border border-amber-honey/20 bg-amber text-dusk-950 shadow-[0_8px_22px_oklch(10%_0.01_50_/_0.28)] hover:bg-amber-honey hover:shadow-[0_10px_26px_oklch(10%_0.01_50_/_0.36)]',
     secondary:
-      'glass-nav text-dusk-50 hover:bg-white/10 hover:border-amber-glow/40',
+      'border border-dusk-300/25 bg-dusk-700/80 text-dusk-50 shadow-[0_6px_18px_oklch(10%_0.01_50_/_0.2)] hover:border-dusk-200/35 hover:bg-dusk-600/90',
     ghost:
-      'text-dusk-100/70 hover:bg-white/8 hover:text-amber',
+      'text-dusk-100/80 hover:bg-white/[0.07] hover:text-dusk-50',
   }
 
   const sizes = {
-    sm: 'px-5 py-2.5 text-[13px] rounded-[12px]',
-    md: 'px-7 py-3.5 text-[15px]',
-    lg: 'px-10 py-4 text-[17px] rounded-[14px]',
+    sm: 'px-4 py-2 text-[13px]',
+    md: 'px-6 py-3 text-[15px]',
+    lg: 'min-h-12 px-8 py-3.5 text-base',
   }
 
   return (
     <button
-      className={`group ${base} ${variants[variant]} ${sizes[size]} ${className}`}
+      type={type}
+      className={`${base} ${variants[variant]} ${sizes[size]} ${className}`}
       {...props}
     >
       {/* 高光扫光 — 悬浮时左→右 */}
-      <span
-        className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-        style={{
-          background: 'linear-gradient(120deg, transparent 0%, rgba(255, 255, 255, 0.18) 50%, transparent 100%)',
-          transform: 'translateX(-100%)',
-        }}
-        aria-hidden="true"
-      />
-      <span className="relative flex items-center gap-2">{children}</span>
+      {children}
     </button>
   )
 }

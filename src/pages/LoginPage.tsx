@@ -38,8 +38,8 @@ export function LoginPage() {
 
   return (
     <div
-      className="min-h-screen flex flex-col items-center justify-center px-7 relative overflow-hidden"
-      style={{ backgroundColor: 'oklch(20% 0.04 45)' }}
+      className="login-page min-h-dvh flex flex-col items-center justify-center page-px relative overflow-x-hidden overflow-y-auto"
+      style={{ backgroundColor: 'oklch(17% 0.009 56)' }}
     >
       {/* 暮色光斑层 — 多 radial gradient */}
       <div
@@ -93,11 +93,11 @@ export function LoginPage() {
         />
 
         {/* 标题 + 爱心 */}
-        <div className="text-center mb-12">
+        <div className="login-heading text-center mb-12">
           {/* 爱心 — 印戳式徽章 */}
-          <div className="inline-flex mb-7 relative">
+          <div className="login-mark inline-flex mb-7 relative">
             <div
-              className="relative w-24 h-24 rounded-[1.75rem] bg-gradient-to-br from-amber/25 via-amber/15 to-amber-ember/10 border border-amber/35 flex items-center justify-center animate-breathe"
+              className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-[1.75rem] bg-gradient-to-br from-amber/25 via-amber/15 to-amber-ember/10 border border-amber/35 flex items-center justify-center animate-breathe"
               style={{
                 boxShadow:
                   '0 12px 36px oklch(68% 0.17 40 / 0.25), 0 0 0 1px oklch(80% 0.14 60 / 0.25), inset 0 1px 0 oklch(96% 0.02 70 / 0.15)',
@@ -107,7 +107,7 @@ export function LoginPage() {
               {/* 印戳外环 */}
               <div className="absolute inset-2 rounded-[1.25rem] border border-amber/25 pointer-events-none" />
               <Heart
-                className="w-12 h-12 text-amber"
+                className="w-10 h-10 sm:w-12 sm:h-12 text-amber"
                 fill="currentColor"
                 style={{ filter: 'drop-shadow(0 0 24px oklch(58% 0.13 40 / 0.4))' }}
               />
@@ -118,7 +118,7 @@ export function LoginPage() {
           <h1
             className="display-hero text-[36px] text-dusk-50 tracking-[0.04em] leading-tight"
             style={{
-              animation: 'fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) both',
+              animation: 'fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both',
             }}
           >
             <span className="italic">Cui Hao</span>
@@ -130,7 +130,7 @@ export function LoginPage() {
           <div
             className="flex items-center justify-center gap-3 mt-4"
             style={{
-              animation: 'fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both',
+              animation: 'fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both',
             }}
           >
             <span className="w-1 h-1 rounded-full bg-amber/50" />
@@ -143,24 +143,26 @@ export function LoginPage() {
           {/* 引语 */}
           <p
             className="font-serif italic text-[12px] text-dusk-100/40 mt-3 tracking-[0.05em]"
-            style={{ animation: 'fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1s both' }}
+            style={{ animation: 'fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both' }}
           >
             旅途回忆 · 共同书写
           </p>
         </div>
 
-        {/* 表单 — 1.5s 后淡入 */}
+        {/* 表单 — 0.7s 后淡入 */}
         <form
           onSubmit={handleSubmit}
           className="space-y-5"
           style={{
-            animation: 'fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 1.5s both',
+            animation: 'fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.7s both',
           }}
         >
           <Input
             label="邮箱"
             icon={Mail}
             type="email"
+            name="email"
+            autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className={emailFilled ? 'border-amber/40' : ''}
@@ -169,13 +171,15 @@ export function LoginPage() {
             label="密码"
             icon={Lock}
             type="password"
+            name="password"
+            autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className={pwdFilled ? 'border-amber/40' : ''}
           />
 
           {error && (
-            <div className="p-4 rounded-[14px] bg-red-500/15 border border-red-400/30 text-red-300 text-[13px] text-center animate-scale-in flex items-center justify-center gap-2">
+            <div role="alert" className="p-4 rounded-[10px] bg-red-500/15 border border-red-400/30 text-red-300 text-[13px] text-center animate-scale-in flex items-center justify-center gap-2">
               <span className="w-1 h-1 rounded-full bg-red-400" />
               {error}
             </div>
@@ -203,8 +207,8 @@ export function LoginPage() {
 
         {/* 底部 — 极淡极小，几乎融入背景 */}
         <div
-          className="flex items-center justify-center gap-3 mt-12"
-          style={{ animation: 'fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) 2s both' }}
+          className="login-footer flex items-center justify-center gap-3 mt-12"
+          style={{ animation: 'fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 1.1s both' }}
         >
           <span className="h-px w-12 bg-gradient-to-r from-transparent to-amber/30" />
           <p className="text-[10px] text-dusk-100/35 tracking-[0.15em] font-mono">

@@ -7,7 +7,7 @@ export function DayCounter() {
   const months = Math.floor(days / 30)
 
   return (
-    <div className="mx-7 mt-7 mb-10 animate-fade-in-down relative">
+    <div className="page-mx mt-7 mb-10 animate-fade-in-down relative">
       {/* 顶部章节标识 */}
       <div className="flex items-center gap-3 mb-5">
         <span className="editorial-chapter">CHAPTER · I</span>
@@ -42,8 +42,9 @@ export function DayCounter() {
         <div className="my-3 flex items-end justify-center gap-2 relative">
           {/* 数字 — Cormorant 大字 */}
           <span
-            className="display-hero text-[96px] leading-none text-amber tracking-tight animate-count-pulse"
+            className="display-hero leading-none text-amber tracking-tight animate-count-pulse"
             style={{
+              fontSize: 'clamp(3.5rem, 18vw, 6rem)',
               textShadow: '0 0 48px oklch(68% 0.17 40 / 0.45)',
             }}
           >

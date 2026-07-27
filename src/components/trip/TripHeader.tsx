@@ -38,7 +38,7 @@ export function TripHeader({ trip, onDelete, onEdit }: TripHeaderProps) {
 
   return (
     <>
-      <div className="relative pt-5 pb-10">
+      <div className="relative pt-5 pb-10 safe-top">
         <div className="absolute top-6 left-5 right-5 flex justify-between z-20">
           <button
             onClick={() => navigate(-1)}
@@ -127,12 +127,12 @@ export function TripHeader({ trip, onDelete, onEdit }: TripHeaderProps) {
         )}
 
         {/* 标题 — 在封面下方 */}
-        <div className={`relative px-7 text-center ${trip.cover_photo ? 'mt-8' : ''}`}>
+        <div className={`relative page-px text-center ${trip.cover_photo ? 'mt-8' : ''}`}>
           <h1 className="display-hero text-[32px] text-dusk-50 tracking-[0.04em] mb-4">
             {trip.title}
           </h1>
 
-          <div className="inline-flex items-center gap-2.5 text-[11px] text-dusk-100/65 glass-nav px-4 py-2 rounded-full tracking-[0.04em]">
+          <div className="inline-flex max-w-full flex-wrap items-center justify-center gap-2.5 text-[11px] text-dusk-100/65 glass-nav px-4 py-2 rounded-full tracking-[0.04em]">
             <Calendar className="w-3.5 h-3.5 text-amber" />
             <span className="font-mono">{startStr}</span>
             <span className="text-amber/60">→</span>

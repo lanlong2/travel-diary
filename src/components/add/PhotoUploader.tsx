@@ -18,7 +18,7 @@ export function PhotoUploader({ onFileSelect }: PhotoUploaderProps) {
   }
 
   return (
-    <div className="mx-7">
+    <div className="page-mx">
       <label className="block text-[13px] font-medium text-dusk-100/80 mb-3 tracking-[0.04em] flex items-center gap-2">
         <span className="w-1 h-1 rounded-full bg-amber/60" />
         照片

@@ -25,7 +25,7 @@ export function TripSelect({ trips, selectedTripId, onSelectTrip, onCreateTrip }
   }
 
   return (
-    <div className="mx-7">
+    <div className="page-mx">
       <label className="block text-[13px] font-medium text-dusk-100/80 mb-3 tracking-[0.04em] flex items-center gap-2">
         <span className="w-1 h-1 rounded-full bg-amber/60" />
         旅行
@@ -40,6 +40,8 @@ export function TripSelect({ trips, selectedTripId, onSelectTrip, onCreateTrip }
           return (
             <button
               key={trip.id}
+              type="button"
+              aria-pressed={isSelected}
               onClick={() => onSelectTrip(trip.id)}
               className={`w-full p-4 rounded-[14px] border text-left transition-all duration-200 active:scale-[0.99] ${
                 isSelected
@@ -80,17 +82,19 @@ export function TripSelect({ trips, selectedTripId, onSelectTrip, onCreateTrip }
           <div className="flex gap-2.5">
             <div className="flex-1">
               <Input
-                placeholder="旅行标题"
+                label="旅行标题"
+                placeholder="例如：杭州周末"
                 value={newTitle}
                 onChange={(e) => setNewTitle(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleCreate()}
               />
             </div>
           </div>
-          <div className="flex gap-2.5 mt-2.5">
+          <div className="grid grid-cols-1 gap-2.5 mt-2.5 sm:grid-cols-2">
             <div className="flex-1">
-              <label className="block text-[11px] font-medium text-dusk-100/65 mb-1.5 tracking-[0.04em]">开始</label>
+              <label htmlFor="new-trip-start" className="block text-[11px] font-medium text-dusk-100/65 mb-1.5 tracking-[0.04em]">开始</label>
               <input
+                id="new-trip-start"
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
@@ -98,8 +102,9 @@ export function TripSelect({ trips, selectedTripId, onSelectTrip, onCreateTrip }
               />
             </div>
             <div className="flex-1">
-              <label className="block text-[11px] font-medium text-dusk-100/65 mb-1.5 tracking-[0.04em]">结束</label>
+              <label htmlFor="new-trip-end" className="block text-[11px] font-medium text-dusk-100/65 mb-1.5 tracking-[0.04em]">结束</label>
               <input
+                id="new-trip-end"
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
@@ -109,6 +114,7 @@ export function TripSelect({ trips, selectedTripId, onSelectTrip, onCreateTrip }
           </div>
           <div className="flex gap-2.5 mt-3">
             <button
+              type="button"
               onClick={handleCreate}
               disabled={!newTitle.trim()}
               className="px-6 py-3 bg-gradient-to-br from-amber via-amber to-amber-ember text-white rounded-[14px] text-[13px] font-semibold disabled:opacity-40 transition-opacity flex-shrink-0 tracking-[0.04em] active:brightness-95 active:scale-95 duration-200 edge-glow-amber"
@@ -116,6 +122,7 @@ export function TripSelect({ trips, selectedTripId, onSelectTrip, onCreateTrip }
               创建
             </button>
             <button
+              type="button"
               onClick={() => { setShowNew(false); setNewTitle('') }}
               className="px-4 py-3 text-dusk-100/65 text-[13px] flex-shrink-0 hover:text-dusk-50 transition-colors"
             >
@@ -125,6 +132,7 @@ export function TripSelect({ trips, selectedTripId, onSelectTrip, onCreateTrip }
         </div>
       ) : (
         <button
+          type="button"
           onClick={() => setShowNew(true)}
           className="w-full py-5 border border-dashed border-dusk-300/40 rounded-[14px] text-[13px] text-dusk-100/65 hover:border-amber/55 hover:text-amber transition-colors flex items-center justify-center gap-2 hover:bg-amber/5 tracking-[0.04em] active:scale-[0.99] duration-200"
         >

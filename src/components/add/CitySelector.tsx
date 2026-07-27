@@ -68,7 +68,7 @@ export function CitySelector({ onCitySelect, selectedCity }: CitySelectorProps) 
   }
 
   return (
-    <div className="mx-7">
+    <div className="page-mx">
       <label className="block text-[13px] font-medium text-dusk-100/80 mb-3 tracking-[0.04em] flex items-center gap-2">
         <span className="w-1 h-1 rounded-full bg-amber/60" />
         城市
@@ -95,8 +95,9 @@ export function CitySelector({ onCitySelect, selectedCity }: CitySelectorProps) 
             </div>
             <button
               onClick={() => onCitySelect(null)}
-              className="w-9 h-9 rounded-full bg-white/8 flex items-center justify-center hover:bg-red-500/30 transition-colors active:scale-90 duration-200"
-              aria-label="清除"
+              className="w-11 h-11 rounded-full bg-white/8 flex items-center justify-center hover:bg-red-500/30 transition-colors active:scale-90 duration-200"
+              type="button"
+              aria-label={`清除城市：${selectedCity.name}`}
             >
               <X className="w-5 h-5 text-dusk-100/70" />
             </button>
@@ -106,9 +107,10 @@ export function CitySelector({ onCitySelect, selectedCity }: CitySelectorProps) 
         <>
           <div className="flex gap-2.5">
             <div className="flex-1">
-              <Input icon={Search} placeholder="搜索城市" value={query} onChange={(e) => setQuery(e.target.value)} />
+              <Input aria-label="搜索城市" icon={Search} placeholder="搜索城市" value={query} onChange={(e) => setQuery(e.target.value)} />
             </div>
             <button
+              type="button"
               onClick={locateMe}
               disabled={locating}
               className="relative glass-nav rounded-[14px] text-amber hover:bg-white/10 transition-colors disabled:opacity-60 flex-shrink-0 group px-5 active:scale-95 duration-200"

@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { CheckCircle, AlertCircle, X } from 'lucide-react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { AlertCircle, CheckCircle, X } from 'lucide-react'
 
 interface ToastProps {
   message: string
@@ -11,17 +11,35 @@ interface ToastProps {
 
 export function Toast({ message, type = 'success', isVisible, onClose, duration = 3000 }: ToastProps) {
   const [show, setShow] = useState(false)
+  const onCloseRef = useRef(onClose)
+  const closeTimerRef = useRef<number | null>(null)
+
+  onCloseRef.current = onClose
+
+  const beginClose = useCallback(() => {
+    setShow(false)
+    if (closeTimerRef.current !== null) window.clearTimeout(closeTimerRef.current)
+    closeTimerRef.current = window.setTimeout(() => onCloseRef.current(), 180)
+  }, [])
 
   useEffect(() => {
-    if (isVisible) {
-      setShow(true)
-      const timer = setTimeout(() => {
-        setShow(false)
-        setTimeout(onClose, 300)
-      }, duration)
-      return () => clearTimeout(timer)
+    if (!isVisible) {
+      setShow(false)
+      return
     }
-  }, [isVisible, duration, onClose])
+
+    const enterFrame = window.requestAnimationFrame(() => setShow(true))
+    const hideTimer = window.setTimeout(beginClose, Math.max(0, duration))
+
+    return () => {
+      window.cancelAnimationFrame(enterFrame)
+      window.clearTimeout(hideTimer)
+      if (closeTimerRef.current !== null) {
+        window.clearTimeout(closeTimerRef.current)
+        closeTimerRef.current = null
+      }
+    }
+  }, [beginClose, duration, isVisible])
 
   if (!isVisible && !show) return null
 
@@ -29,23 +47,37 @@ export function Toast({ message, type = 'success', isVisible, onClose, duration 
 
   return (
     <div
-      className={`fixed bottom-28 left-1/2 -translate-x-1/2 z-[70] flex items-center gap-3 px-5 py-3.5 rounded-[14px] glass-popup border-l-2 transition-all duration-400 ${
-        show ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-      }`}
+      className="pointer-events-none fixed inset-x-0 bottom-[calc(6.75rem+env(safe-area-inset-bottom,0px))] z-[70] flex justify-center px-4 md:bottom-6"
       style={{
-        borderLeftColor: isSuccess ? 'oklch(68% 0.17 40)' : 'oklch(60% 0.18 25)',
-        boxShadow: `0 16px 48px oklch(15% 0.02 40 / 0.5), 0 0 0 1px oklch(80% 0.14 60 / 0.2)`,
+        paddingLeft: 'max(1rem, env(safe-area-inset-left, 0px))',
+        paddingRight: 'max(1rem, env(safe-area-inset-right, 0px))',
       }}
     >
-      {isSuccess
-        ? <CheckCircle className="w-5 h-5 text-amber flex-shrink-0" />
-        : <AlertCircle className="w-5 h-5 text-red-300 flex-shrink-0" />}
-      <span className={`text-[13px] font-medium tracking-[0.02em] ${isSuccess ? 'text-dusk-50' : 'text-red-200'}`}>
-        {message}
-      </span>
-      <button onClick={onClose} className="ml-1 p-1 rounded-lg hover:bg-white/10 transition-colors flex-shrink-0 active:scale-90 duration-200" aria-label="关闭">
-        <X className="w-3.5 h-3.5 text-dusk-100/60" />
-      </button>
+      <div
+        role={isSuccess ? 'status' : 'alert'}
+        aria-live={isSuccess ? 'polite' : 'assertive'}
+        aria-atomic="true"
+        className={`pointer-events-auto flex w-full max-w-sm items-center gap-3 rounded-xl border bg-dusk-800/95 py-2.5 pl-4 pr-2 shadow-[0_16px_42px_oklch(8%_0.01_50_/_0.48)] backdrop-blur-xl transition-[opacity,transform] duration-200 ${
+          show ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'
+        } ${isSuccess ? 'border-amber/25' : 'border-red-400/35'}`}
+      >
+        {isSuccess ? (
+          <CheckCircle aria-hidden="true" className="h-5 w-5 flex-shrink-0 text-amber" />
+        ) : (
+          <AlertCircle aria-hidden="true" className="h-5 w-5 flex-shrink-0 text-red-300" />
+        )}
+        <span className={`min-w-0 flex-1 text-sm font-medium leading-5 ${isSuccess ? 'text-dusk-50' : 'text-red-200'}`}>
+          {message}
+        </span>
+        <button
+          type="button"
+          onClick={beginClose}
+          className="grid h-11 w-11 flex-shrink-0 place-items-center rounded-lg text-dusk-100/70 transition-colors hover:bg-white/[0.07] hover:text-dusk-50 active:scale-95"
+          aria-label={'\u5173\u95ed\u63d0\u793a'}
+        >
+          <X aria-hidden="true" className="h-4 w-4" />
+        </button>
+      </div>
     </div>
   )
 }

@@ -126,14 +126,14 @@ export function RouteMap({ cities }: RouteMapProps) {
 
   if (cities.length === 0) {
     return (
-      <div className="mx-7 p-6 glass-card text-center text-[13px] text-dusk-100/55 tracking-[0.04em]">
+      <div className="page-mx p-6 glass-card text-center text-[13px] text-dusk-100/55 tracking-[0.04em]">
         暂无路线信息
       </div>
     )
   }
 
   return (
-    <div className="mx-7">
+    <div className="page-mx">
       {/* 章节式标题 */}
       <div className="flex items-center gap-3 mb-3">
         <span className="editorial-chapter">I</span>
@@ -145,9 +145,9 @@ export function RouteMap({ cities }: RouteMapProps) {
       </div>
 
       {/* 城市胶囊条 — 编辑式时间线 */}
-      <div className="flex gap-2 mb-3 overflow-x-auto scrollbar-hide pb-1 items-center">
+      <div className="snap-row flex gap-2 mb-3 overflow-x-auto scrollbar-hide pb-1 items-center">
         {cities.map((city, i) => (
-          <div key={city.id} className="flex items-center gap-2 flex-shrink-0">
+          <div key={city.id} className="snap-item flex items-center gap-2 flex-shrink-0">
             <span
               className="inline-flex items-center gap-1.5 text-[11px] px-2.5 py-1.5 bg-white/8 border border-dusk-300/20 rounded-[6px] text-dusk-100/85 font-medium tracking-[0.04em] flex-shrink-0"
             >
@@ -165,7 +165,7 @@ export function RouteMap({ cities }: RouteMapProps) {
 
       <div
         ref={containerRef}
-        className="w-full h-56 rounded-[20px] overflow-hidden border border-dusk-300/30 shadow-lg shadow-black/30"
+        className="route-map-canvas w-full rounded-[8px] overflow-hidden border border-dusk-300/30 shadow-lg shadow-black/30"
         style={{ boxShadow: '0 8px 32px oklch(15% 0.02 40 / 0.4), 0 0 0 1px oklch(80% 0.14 60 / 0.12)' }}
       />
 

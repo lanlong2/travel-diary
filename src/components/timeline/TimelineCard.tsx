@@ -19,7 +19,7 @@ export function TimelineCard({ record, index, isFirstInMonth = false, onClick }:
 
   return (
     <div
-      className={`relative pl-[44px] sm:pl-[68px] pr-3 sm:pr-6 ${marginClass} animate-fade-in-up`}
+      className={`relative pl-[48px] pr-4 sm:pr-6 ${marginClass} animate-fade-in-up`}
       style={{ opacity: 0, animationDelay: `${index * 0.06}s` }}
     >
       <span

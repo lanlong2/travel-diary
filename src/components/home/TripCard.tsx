@@ -33,12 +33,12 @@ export function TripCard({ trip, cityCount, onClick, onDelete, index = 0 }: Trip
   return (
     <>
       <div
-        onClick={onClick}
-        className={`min-w-[220px] glass-card overflow-hidden hover-lift active:brightness-95 transition-all duration-300 cursor-pointer flex-shrink-0 relative group ${staggerClass}`}
+        className={`trip-card snap-item min-w-[220px] glass-card overflow-hidden hover-lift active:brightness-95 transition-all duration-300 flex-shrink-0 relative group ${staggerClass}`}
         style={{ opacity: 0 }}
       >
-        <div className="relative h-36 overflow-hidden">
-          {trip.cover_photo ? (
+        <button type="button" onClick={onClick} aria-label={`查看旅行：${trip.title}`} className="block w-full text-left">
+          <div className="relative h-36 overflow-hidden">
+            {trip.cover_photo ? (
             <img
               src={trip.cover_photo}
               alt={trip.title}
@@ -73,9 +73,9 @@ export function TripCard({ trip, cityCount, onClick, onDelete, index = 0 }: Trip
                 {trip.title.slice(0, 2)}
               </span>
             </div>
-          )}
+            )}
 
-          {/* 底部渐变 */}
+            {/* 底部渐变 */}
           <div className="absolute inset-0 bg-gradient-to-t from-dusk-950/85 via-dusk-900/15 to-transparent" />
 
           {/* 暖色叠加 */}
@@ -83,15 +83,6 @@ export function TripCard({ trip, cityCount, onClick, onDelete, index = 0 }: Trip
             className="absolute inset-0 pointer-events-none"
             style={{ background: 'rgba(196, 115, 90, 0.06)' }}
           />
-
-          <button
-            onClick={(e) => { e.stopPropagation(); setShowDelete(true) }}
-            className="absolute top-2.5 right-2.5 w-8 h-8 rounded-[10px] bg-black/35 backdrop-blur-md flex items-center justify-center hover:bg-red-500/50 hover:text-white text-dusk-50/80 z-10 transition-colors duration-200 max-sm:opacity-100 sm:opacity-0 sm:group-hover:opacity-100 active:scale-90"
-            aria-label="删除旅行"
-          >
-            <Trash2 className="w-4 h-4" />
-          </button>
-
           {/* 标题底部 */}
           <div className="absolute bottom-3 left-3.5 right-3.5">
             <h4 className="font-serif font-semibold text-[17px] text-dusk-50 leading-tight tracking-[0.03em] text-balance drop-shadow-lg">
@@ -115,8 +106,19 @@ export function TripCard({ trip, cityCount, onClick, onDelete, index = 0 }: Trip
           </div>
         </div>
 
+        </button>
+
+        <button
+            type="button"
+            onClick={() => setShowDelete(true)}
+            className="absolute top-2 right-2 w-11 h-11 rounded-[10px] bg-black/35 backdrop-blur-md flex items-center justify-center hover:bg-red-500/50 hover:text-white text-dusk-50/80 z-10 transition-colors duration-200 max-sm:opacity-100 sm:opacity-0 sm:group-hover:opacity-100 active:scale-90"
+            aria-label={`删除旅行：${trip.title}`}
+          >
+            <Trash2 className="w-4 h-4" />
+        </button>
+
         {/* 底部信息条 — 双圆点分隔 */}
-        <div className="px-4 py-3 flex items-center gap-3 text-[11px] text-dusk-100/65 tracking-[0.03em] font-mono">
+        <button type="button" onClick={onClick} className="w-full px-4 py-3 flex text-left items-center gap-3 text-[11px] text-dusk-100/65 tracking-[0.03em] font-mono">
           <span className="text-amber font-bold">{cityCount} 城</span>
           <span className="w-1 h-1 rounded-full bg-amber/60" />
           <span className="text-amber font-bold">{duration} 天</span>
@@ -124,7 +126,7 @@ export function TripCard({ trip, cityCount, onClick, onDelete, index = 0 }: Trip
           <span className="text-dusk-100/45">
             {new Date(trip.start_date).toLocaleDateString('zh-CN', { month: 'numeric', day: 'numeric' })}
           </span>
-        </div>
+        </button>
       </div>
 
       {showDelete && (

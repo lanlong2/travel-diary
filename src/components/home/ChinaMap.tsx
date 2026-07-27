@@ -151,11 +151,9 @@ export function ChinaMap({ cities, photos, onCityClick }: ChinaMapProps) {
     if (status === 'loaded') updateMarkers()
   }, [cities, status, updateMarkers])
 
-  const mapHeight = '48vh'
-
   if (status === 'error') {
     return (
-      <div className="mx-7 mt-4 glass-card flex flex-col items-center justify-center px-6 text-center" style={{ height: mapHeight }}>
+      <div className="map-frame page-mx mt-4 glass-card flex flex-col items-center justify-center px-6 text-center">
         <p className="text-[13px] text-amber font-medium tracking-[0.04em] mb-2">地图加载失败</p>
         <p className="text-[11px] text-dusk-100/50 mb-3">{errorMsg}</p>
         <p className="text-[11px] text-dusk-100/40">
@@ -168,8 +166,8 @@ export function ChinaMap({ cities, photos, onCityClick }: ChinaMapProps) {
   return (
     <div className="mt-4">
       {/* 章节式标题 */}
-      <div className="flex items-center mx-7 mb-3 gap-3">
-        <span className="editorial-chapter">I</span>
+      <div className="page-mx flex items-center mb-3 gap-3">
+        <span className="editorial-chapter">II</span>
         <span className="font-serif text-[15px] font-semibold text-dusk-50 tracking-[0.05em]">
           足迹地图
         </span>
@@ -178,8 +176,7 @@ export function ChinaMap({ cities, photos, onCityClick }: ChinaMapProps) {
       </div>
 
       <div
-        className="mx-7 rounded-[20px] overflow-hidden border border-dusk-300/30 shadow-lg shadow-black/30 relative"
-        style={{ height: mapHeight }}
+        className="map-frame page-mx rounded-[8px] overflow-hidden border border-dusk-300/30 shadow-lg shadow-black/30 relative"
       >
         <div ref={containerRef} className="w-full h-full" />
 

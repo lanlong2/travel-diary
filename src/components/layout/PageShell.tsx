@@ -29,12 +29,13 @@ export function PageShell({ children, hideNav = false }: PageShellProps) {
   }, [])
 
   return (
-    <div className="min-h-screen relative overflow-hidden page-wrapper" style={{ backgroundColor: 'oklch(22% 0.035 45)' }}>
+    <div className="app-shell min-h-dvh relative overflow-x-clip page-wrapper">
+      <a href="#main-content" className="skip-link">跳到主要内容</a>
       <Particles />
-      <div className="max-w-[640px] mx-auto pb-28 relative z-10">
-        {children}
-      </div>
       {!hideNav && <BottomNav />}
+      <main id="main-content" className={`app-main relative z-10 ${hideNav ? 'app-main--focused' : ''}`}>
+        {children}
+      </main>
     </div>
   )
 }

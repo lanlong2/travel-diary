@@ -1,4 +1,4 @@
-import { InputHTMLAttributes, forwardRef } from 'react'
+import { InputHTMLAttributes, forwardRef, useId } from 'react'
 import type { LucideIcon } from 'lucide-react'
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -8,40 +8,70 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, icon: Icon, error, className = '', ...props }, ref) => {
+  (
+    {
+      label,
+      icon: Icon,
+      error,
+      className = '',
+      id,
+      'aria-describedby': ariaDescribedBy,
+      'aria-invalid': ariaInvalid,
+      ...props
+    },
+    ref,
+  ) => {
+    const generatedId = useId()
+    const inputId = id ?? `input-${generatedId}`
+    const errorId = `${inputId}-error`
+    const describedBy = [ariaDescribedBy, error ? errorId : undefined]
+      .filter(Boolean)
+      .join(' ') || undefined
+
     return (
       <div className="w-full">
         {label && (
-          <label className="block text-[13px] font-medium text-dusk-100/80 mb-2 tracking-[0.02em] flex items-center gap-2">
-            <span className="w-1 h-1 rounded-full bg-amber/60" aria-hidden="true" />
+          <label
+            htmlFor={inputId}
+            className="mb-2 block text-sm font-medium text-dusk-100/85"
+          >
             {label}
           </label>
         )}
-        <div className="relative group">
+        <div className="group relative">
           {Icon && (
-            <Icon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-amber/60 transition-colors group-focus-within:text-amber" />
+            <Icon
+              aria-hidden="true"
+              className="pointer-events-none absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-dusk-100/50 transition-colors group-focus-within:text-amber"
+            />
           )}
           <input
             ref={ref}
-            className={`w-full bg-dusk-600/40 backdrop-blur-sm border rounded-[14px] py-3.5 transition-all duration-200
-              ${Icon ? 'pl-11' : 'pl-4'} pr-4 text-[15px]
-              text-dusk-50 placeholder:text-dusk-100/25
-              focus:outline-none focus:ring-[1px] focus:ring-amber/30 focus:border-amber/60
-              focus:bg-dusk-600/55 focus:shadow-[inset_0_1px_0_oklch(80%_0.14_60_/_0.1),0_4px_16px_oklch(68%_0.17_40_/_0.08)]
-              ${error ? 'border-red-400/60 focus:ring-red-400/25' : 'border-dusk-300/30'}
+            id={inputId}
+            aria-describedby={describedBy}
+            aria-errormessage={error ? errorId : undefined}
+            aria-invalid={error ? true : ariaInvalid}
+            className={`min-h-12 w-full rounded-[10px] border bg-dusk-700/65 py-3 transition-[background-color,border-color,box-shadow] duration-200
+              ${Icon ? 'pl-11' : 'pl-4'} pr-4 text-base
+              text-dusk-50 placeholder:text-dusk-100/40
+              focus:border-amber/70 focus:bg-dusk-700 focus:outline-none focus:ring-2 focus:ring-amber/20
+              ${error ? 'border-red-400/70 focus:border-red-400 focus:ring-red-400/20' : 'border-dusk-300/35'}
               ${className}`}
             {...props}
           />
         </div>
         {error && (
-          <p className="mt-1.5 text-[13px] text-red-400 flex items-center gap-1.5">
-            <span className="w-1 h-1 rounded-full bg-red-400/60" aria-hidden="true" />
+          <p
+            id={errorId}
+            role="alert"
+            className="mt-2 text-[13px] leading-5 text-red-300"
+          >
             {error}
           </p>
         )}
       </div>
     )
-  }
+  },
 )
 
 Input.displayName = 'Input'

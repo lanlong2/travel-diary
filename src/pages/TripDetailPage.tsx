@@ -27,7 +27,7 @@ export function TripDetailPage() {
   const [editEndDate, setEditEndDate] = useState(trip?.end_date || '')
 
   if (loading) {
-    return <PageShell><Spinner className="min-h-screen" /></PageShell>
+    return <PageShell><Spinner className="min-h-dvh" /></PageShell>
   }
 
   if (!trip) {
@@ -57,7 +57,7 @@ export function TripDetailPage() {
       />
 
       {editing && (
-        <div className="mx-6 mb-5 p-6 glass-card-elevated animate-scale-in">
+        <div className="page-mx mb-5 p-6 glass-card-elevated animate-scale-in">
           {/* 顶部折光线 */}
           <div className="absolute top-0 left-5 right-5 h-px bg-gradient-to-r from-transparent via-amber/40 to-transparent" />
           <h3 className="text-sm font-serif font-semibold text-dusk-50 mb-4 tracking-[0.05em] flex items-center gap-2">
@@ -66,13 +66,15 @@ export function TripDetailPage() {
           </h3>
           <div className="space-y-3">
             <Input
+              label="旅行标题"
               placeholder="旅行标题"
               value={editTitle}
               onChange={(e) => setEditTitle(e.target.value)}
             />
-            <div className="flex gap-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div className="flex-1">
                 <Input
+                  label="开始日期"
                   type="date"
                   value={editStartDate}
                   onChange={(e) => setEditStartDate(e.target.value)}
@@ -80,6 +82,7 @@ export function TripDetailPage() {
               </div>
               <div className="flex-1">
                 <Input
+                  label="结束日期"
                   type="date"
                   value={editEndDate}
                   onChange={(e) => setEditEndDate(e.target.value)}
@@ -105,8 +108,10 @@ export function TripDetailPage() {
                       </span>
                       {city.city_name}
                       <button
+                        type="button"
+                        aria-label={`移除城市：${city.city_name}`}
                         onClick={() => removeCity(city.id).then(() => refresh())}
-                        className="w-5 h-5 rounded-full bg-white/8 hover:bg-red-500/40 flex items-center justify-center transition-colors active:scale-90 duration-200"
+                        className="w-11 h-11 rounded-full bg-white/8 hover:bg-red-500/40 flex items-center justify-center transition-colors active:scale-90 duration-200"
                       >
                         <X className="w-3 h-3 text-dusk-100/70" />
                       </button>
@@ -161,7 +166,7 @@ export function TripDetailPage() {
       </div>
 
       {photos.length > 0 && (
-        <div className="mx-6 mt-6">
+        <div className="page-mx mt-6">
           <div className="flex items-center gap-2.5 text-xs text-dusk-100/65 glass-card rounded-2xl px-5 py-3 tracking-[0.05em]">
             <Camera className="w-4 h-4 text-amber" />
             <span>共 <span className="text-amber font-bold tabular-nums">{photos.length}</span> 条记录</span>
@@ -177,7 +182,7 @@ export function TripDetailPage() {
         />
       </div>
 
-      <div className="mx-6 mt-7 mb-2">
+      <div className="page-mx mt-7 mb-2">
         <Button className="w-full" size="lg" onClick={() => navigate(`/add?trip=${trip.id}`)}>
           <Camera className="w-5 h-5" />
           添加照片

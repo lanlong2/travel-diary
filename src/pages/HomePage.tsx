@@ -58,7 +58,7 @@ export function HomePage() {
     return (
       <PageShell>
         <DayCounter />
-        <div className="mx-7 mt-4 glass-card p-10 text-center animate-fade-in-up">
+        <div className="page-mx mt-4 glass-card p-10 text-center animate-fade-in-up">
           <p className="font-serif text-[17px] text-amber tracking-[0.04em] mb-2">加载失败</p>
           <p className="text-[13px] text-dusk-100/60">{tripsError}</p>
         </div>
@@ -70,7 +70,7 @@ export function HomePage() {
     return (
       <PageShell>
         <DayCounter />
-        <div className="mx-7 mt-4 glass-card flex items-center justify-center" style={{ height: '48vh' }}>
+        <div className="page-mx mt-4 glass-card flex min-h-[320px] items-center justify-center md:min-h-[420px]">
           <div className="text-center animate-scale-in">
             <div className="relative w-10 h-10 mx-auto mb-4">
               <div className="absolute inset-0 border-2 border-dusk-400/20 rounded-full" />
@@ -85,22 +85,23 @@ export function HomePage() {
 
   return (
     <PageShell>
-      <DayCounter />
-
-      <ChinaMap
-        cities={citySummaries}
-        photos={photos}
-        onCityClick={(city) => {
-          const trip = trips.find((t) => t.cities.some((c) => c.city_name === city.city_name))
-          if (trip) navigate(`/trip/${trip.id}`)
-        }}
-      />
+      <div className="home-intro-grid">
+        <DayCounter />
+        <ChinaMap
+          cities={citySummaries}
+          photos={photos}
+          onCityClick={(city) => {
+            const trip = trips.find((t) => t.cities.some((c) => c.city_name === city.city_name))
+            if (trip) navigate(`/trip/${trip.id}`)
+          }}
+        />
+      </div>
 
       {recentPhotos.length > 0 && (
         <section className="mt-8 mb-2 reveal">
           {/* 章节式分割 + 标题 */}
-          <div className="flex items-center mx-7 mb-4 gap-3">
-            <span className="editorial-chapter">II</span>
+          <div className="page-mx flex items-center mb-4 gap-3">
+            <span className="editorial-chapter">III</span>
             <span className="font-serif text-[15px] font-semibold text-dusk-50 tracking-[0.05em]">
               最近照片
             </span>
@@ -110,8 +111,7 @@ export function HomePage() {
 
           {/* 照片横滚 — 重叠 8px 模拟桌上摊开 */}
           <div
-            className="flex overflow-x-auto px-7 pb-3 scrollbar-hide"
-            style={{ gap: '8px' }}
+            className="home-photo-row snap-row overflow-x-auto page-px pb-4 scrollbar-hide"
           >
             {recentPhotos.map((photo, i) => (
               <PhotoThumb
@@ -130,8 +130,8 @@ export function HomePage() {
 
       {recentRecords.length > 0 && (
         <section className="mt-6 mb-2 reveal" style={{ transitionDelay: '0.08s' }}>
-          <div className="flex items-center mx-7 mb-4 gap-3">
-            <span className="editorial-chapter">III</span>
+          <div className="page-mx flex items-center mb-4 gap-3">
+            <span className="editorial-chapter">IV</span>
             <span className="font-serif text-[15px] font-semibold text-dusk-50 tracking-[0.05em]">
               最近记录
             </span>
@@ -141,7 +141,7 @@ export function HomePage() {
             <span className="flex-1 h-px bg-gradient-to-r from-amber/35 to-transparent" />
           </div>
 
-          <div className="mx-7 space-y-2">
+          <div className="page-mx grid gap-3 md:grid-cols-2">
             {recentRecords.map((record, i) => (
               <button
                 key={record.id}
@@ -149,7 +149,7 @@ export function HomePage() {
                   const trip = trips.find((t) => t.id === record.trip_id)
                   if (trip) navigate(`/trip/${trip.id}`)
                 }}
-                className="w-full text-left glass-card p-4 hover-lift active:brightness-95 transition-all duration-300 group animate-fade-in-up"
+                className="min-h-[108px] w-full text-left glass-card p-4 hover-lift active:brightness-95 transition-all duration-300 group animate-fade-in-up"
                 style={{ animationDelay: `${i * 0.05}s`, opacity: 0 }}
               >
                 <div className="flex items-start gap-3">
@@ -158,7 +158,7 @@ export function HomePage() {
                     <p className="text-[13px] text-dusk-50/90 leading-relaxed line-clamp-2 italic font-serif">
                       {record.note}
                     </p>
-                    <div className="flex items-center gap-2 mt-1.5 text-[10px] text-dusk-100/50 font-mono tracking-[0.03em]">
+                    <div className="flex items-center gap-2 mt-1.5 text-xs text-dusk-100/55 font-mono">
                       <span className="truncate">{record.city_name}</span>
                       <span className="w-1 h-1 rounded-full bg-amber/40" />
                       <span>{new Date(record.created_at).toLocaleDateString('zh-CN', { month: 'numeric', day: 'numeric' })}</span>
@@ -173,15 +173,15 @@ export function HomePage() {
 
       {trips.length > 0 ? (
         <section className="mt-6 mb-2 reveal" style={{ transitionDelay: '0.2s' }}>
-          <div className="flex items-center mx-7 mb-4 gap-3">
-            <span className="editorial-chapter">IV</span>
+          <div className="page-mx flex items-center mb-4 gap-3">
+            <span className="editorial-chapter">V</span>
             <span className="font-serif text-[15px] font-semibold text-dusk-50 tracking-[0.05em]">
               最近旅行
             </span>
             <span className="font-mono text-[11px] text-amber/70 tabular-nums">{trips.length}</span>
             <span className="flex-1 h-px bg-gradient-to-r from-amber/35 to-transparent" />
           </div>
-          <div className="flex gap-4 overflow-x-auto px-7 pb-3 scrollbar-hide">
+          <div className="home-trip-row snap-row overflow-x-auto page-px pb-4 scrollbar-hide">
             {trips.slice(0, 8).map((trip, i) => (
               <TripCard
                 key={trip.id}
@@ -195,7 +195,7 @@ export function HomePage() {
           </div>
         </section>
       ) : (
-        <div className="mx-7 mt-6 mb-8 animate-fade-in-up">
+        <div className="page-mx mt-6 mb-8 animate-fade-in-up">
           <div className="glass-card p-12 text-center">
             <p className="font-serif text-[15px] text-dusk-50/85 tracking-[0.04em]">
               这里还空着 · 等待第一段旅程
@@ -214,11 +214,12 @@ function PhotoThumb({ photo, index, onClick }: { photo: Photo; index: number; on
   return (
     <button
       onClick={onClick}
-      className={`flex-shrink-0 group ${staggerClass}`}
+      type="button"
+      className={`snap-item group ${staggerClass}`}
       style={{ opacity: 0, marginTop: `${tilt * 3}px` }}
       aria-label={photo.city_name}
     >
-      <div className="w-[80px]">
+      <div className="w-[124px] sm:w-[148px] md:w-full">
         <div
           className="w-full rounded-[6px] overflow-hidden bg-dusk-600 border border-dusk-300/20"
           style={{
@@ -234,7 +235,7 @@ function PhotoThumb({ photo, index, onClick }: { photo: Photo; index: number; on
             loading="lazy"
           />
         </div>
-        <p className="text-center text-[11px] text-dusk-100/75 mt-2 font-medium tracking-[0.03em] truncate font-mono">
+        <p className="text-center text-xs text-dusk-100/75 mt-2 font-medium truncate font-mono">
           {photo.city_name}
         </p>
       </div>

@@ -1,5 +1,6 @@
-import { useEffect } from 'react'
+import { useId, useRef } from 'react'
 import { AlertTriangle } from 'lucide-react'
+import { useDialogAccessibility } from './Modal'
 
 interface ConfirmDialogProps {
   title: string
@@ -13,51 +14,83 @@ interface ConfirmDialogProps {
 export function ConfirmDialog({
   title,
   message,
-  confirmLabel = '确认删除',
+  confirmLabel = '\u786e\u8ba4\u5220\u9664',
   onConfirm,
   onCancel,
   loading = false,
 }: ConfirmDialogProps) {
-  useEffect(() => {
-    const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && !loading) onCancel()
-    }
-    document.addEventListener('keydown', handleEsc)
-    return () => document.removeEventListener('keydown', handleEsc)
-  }, [onCancel, loading])
+  const dialogRef = useRef<HTMLDivElement>(null)
+  const cancelButtonRef = useRef<HTMLButtonElement>(null)
+  const titleId = useId()
+  const messageId = useId()
+
+  useDialogAccessibility({
+    isOpen: true,
+    onClose: onCancel,
+    containerRef: dialogRef,
+    initialFocusRef: cancelButtonRef,
+    closeOnEscape: !loading,
+  })
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-6">
-      <div className="absolute inset-0 bg-black/65 backdrop-blur-md animate-fade-in-up" style={{ animationDuration: '0.2s' }} onClick={onCancel} />
+    <div
+      className="fixed inset-0 z-[60] flex items-center justify-center p-4"
+      style={{
+        paddingTop: 'max(1rem, env(safe-area-inset-top, 0px))',
+        paddingRight: 'max(1rem, env(safe-area-inset-right, 0px))',
+        paddingBottom: 'max(1rem, env(safe-area-inset-bottom, 0px))',
+        paddingLeft: 'max(1rem, env(safe-area-inset-left, 0px))',
+      }}
+    >
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-black/70 backdrop-blur-sm animate-fade-in-up"
+        style={{ animationDuration: '0.18s' }}
+        onClick={loading ? undefined : onCancel}
+      />
 
-      <div className="relative glass-popup max-w-sm w-full p-7 animate-scale-in">
-        {/* 顶部折光 */}
-        <div className="absolute top-2 left-7 right-7 h-px bg-gradient-to-r from-transparent via-red-400/40 to-transparent" />
-
-        <div className="w-14 h-14 mx-auto mb-5 rounded-full bg-red-500/12 border-2 border-red-400/30 flex items-center justify-center animate-stamp-press">
-          <AlertTriangle className="w-6 h-6 text-red-300" />
+      <div
+        ref={dialogRef}
+        role="alertdialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        aria-describedby={messageId}
+        tabIndex={-1}
+        className="glass-popup relative max-h-[min(88dvh,640px)] w-full max-w-sm overflow-y-auto overscroll-contain rounded-2xl p-5 scrollbar-hide animate-scale-in sm:p-7"
+        style={{ animationDuration: '0.2s' }}
+      >
+        <div className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-xl border border-red-400/25 bg-red-500/10">
+          <AlertTriangle aria-hidden="true" className="h-5 w-5 text-red-300" />
         </div>
 
-        <h3 className="text-[17px] font-serif font-semibold text-dusk-50 text-center mb-2 tracking-[0.04em]">{title}</h3>
-        <p className="text-[13px] text-dusk-100/65 text-center leading-relaxed mb-7 tracking-[0.01em]">{message}</p>
+        <h2 id={titleId} className="mb-2 text-center font-serif text-lg font-semibold text-dusk-50">
+          {title}
+        </h2>
+        <p id={messageId} className="mb-6 text-center text-sm leading-6 text-dusk-100/75">
+          {message}
+        </p>
 
-        <div className="flex gap-3">
+        <div className="grid grid-cols-2 gap-3">
           <button
+            ref={cancelButtonRef}
+            type="button"
             onClick={onCancel}
             disabled={loading}
-            className="flex-1 py-3.5 rounded-2xl text-[13px] font-medium text-dusk-100/70 bg-white/8 border border-dusk-300/20 hover:bg-white/12 transition-colors disabled:opacity-50 active:scale-[0.98] duration-200"
+            className="min-h-12 rounded-[10px] border border-dusk-300/25 bg-white/[0.06] px-3 py-3 text-sm font-medium text-dusk-100/85 transition-colors hover:bg-white/[0.1] hover:text-dusk-50 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-45"
           >
-            取消
+            {'\u53d6\u6d88'}
           </button>
           <button
+            type="button"
             onClick={onConfirm}
             disabled={loading}
-            className="flex-1 py-3.5 rounded-2xl text-[13px] font-semibold text-white bg-red-500/85 hover:bg-red-500 transition-all active:scale-[0.98] duration-200 disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg shadow-red-500/30"
+            aria-busy={loading}
+            className="flex min-h-12 items-center justify-center gap-2 rounded-[10px] border border-red-300/15 bg-red-500/85 px-3 py-3 text-sm font-semibold text-white shadow-[0_8px_20px_oklch(30%_0.12_25_/_0.25)] transition-colors hover:bg-red-500 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-55"
           >
             {loading ? (
               <>
-                <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                删除中
+                <span aria-hidden="true" className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                {'\u5220\u9664\u4e2d'}
               </>
             ) : (
               confirmLabel

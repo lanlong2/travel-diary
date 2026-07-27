@@ -121,7 +121,7 @@ export function AddRecordPage() {
 
   return (
     <PageShell hideNav>
-      <div className="flex items-center gap-4 px-7 py-5">
+      <div className="flex items-center gap-4 page-px py-5">
         <button
           onClick={() => navigate(-1)}
           className="w-11 h-11 rounded-[14px] glass-nav flex items-center justify-center hover:bg-white/10 transition-all active:scale-90 duration-200"
@@ -136,7 +136,7 @@ export function AddRecordPage() {
       </div>
 
       {/* 进度条 — 邮戳式 */}
-      <div className="mx-7 mb-7 animate-fade-in-down">
+      <div className="page-mx mb-7 animate-fade-in-down">
         <div className="flex items-center justify-between mb-2">
           <span className="text-[11px] text-dusk-100/65 tracking-[0.04em] font-mono">
             正在{STEP_LABELS[activeStep]}…
@@ -155,12 +155,12 @@ export function AddRecordPage() {
 
       <div className="space-y-7 pb-10">
         {/* 记录类型 — 分段控制器 */}
-        <div className="mx-7">
+        <div className="page-mx">
           <label className="block text-[13px] font-medium text-dusk-100/80 mb-3 tracking-[0.04em] flex items-center gap-2">
             <span className="w-1 h-1 rounded-full bg-amber/60" />
             类型
           </label>
-          <div className="relative inline-flex p-1 rounded-full bg-dusk-600/40 border border-dusk-300/25">
+          <div role="group" aria-label="记录类型" className="relative inline-flex p-1 rounded-full bg-dusk-600/40 border border-dusk-300/25">
             <div
               className="absolute top-1 bottom-1 rounded-full bg-gradient-to-r from-amber to-amber-ember transition-transform duration-300"
               style={{
@@ -170,6 +170,8 @@ export function AddRecordPage() {
               }}
             />
             <button
+              type="button"
+              aria-pressed={entryType === 'photo'}
               onClick={() => { setEntryType('photo'); setFile(null) }}
               className={`relative z-10 px-6 py-2 text-[13px] font-medium tracking-[0.04em] transition-colors ${
                 entryType === 'photo' ? 'text-white' : 'text-dusk-100/65'
@@ -178,6 +180,8 @@ export function AddRecordPage() {
               照片
             </button>
             <button
+              type="button"
+              aria-pressed={entryType === 'note'}
               onClick={() => setEntryType('note')}
               className={`relative z-10 px-6 py-2 text-[13px] font-medium tracking-[0.04em] transition-colors ${
                 entryType === 'note' ? 'text-white' : 'text-dusk-100/65'
@@ -205,12 +209,13 @@ export function AddRecordPage() {
           rows={entryType === 'note' ? 8 : 5}
         />
 
-        <div className="mx-7">
-          <label className="block text-[13px] font-medium text-dusk-100/80 mb-3 tracking-[0.04em] flex items-center gap-2">
+        <div className="page-mx">
+          <label htmlFor="record-date" className="block text-[13px] font-medium text-dusk-100/80 mb-3 tracking-[0.04em] flex items-center gap-2">
             <span className="w-1 h-1 rounded-full bg-amber/60" />
             日期
           </label>
           <input
+            id="record-date"
             type="date"
             value={recordDate}
             onChange={(e) => setRecordDate(e.target.value)}
@@ -218,7 +223,7 @@ export function AddRecordPage() {
           />
         </div>
 
-        <div className="mx-7 pt-3">
+        <div className="page-mx pt-3">
           <Button
             className={`w-full transition-opacity duration-500 ${isComplete ? 'opacity-100' : 'opacity-40'}`}
             size="lg"

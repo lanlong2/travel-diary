@@ -1,95 +1,84 @@
 import { useLocation, useNavigate } from 'react-router-dom'
-import { Map, PlusCircle, Compass, ScrollText } from 'lucide-react'
+import { Map, Plus, Compass, ScrollText, Heart } from 'lucide-react'
 
-type TabItem = { path: string; icon: typeof Map; label: string; isFab?: boolean }
+type TabItem = { path: string; icon: typeof Map; label: string; isPrimary?: boolean }
+
 const TABS: TabItem[] = [
   { path: '/', icon: Map, label: '足迹' },
   { path: '/timeline', icon: ScrollText, label: '时光' },
-  { path: '/add', icon: PlusCircle, label: '记录', isFab: true },
-  { path: '/trips', icon: Compass, label: '我们' },
+  { path: '/add', icon: Plus, label: '记录', isPrimary: true },
+  { path: '/trips', icon: Compass, label: '旅行' },
 ]
 
 export function BottomNav() {
   const location = useLocation()
   const navigate = useNavigate()
 
-  const isActive = (path: string) => {
-    if (path === '/') return location.pathname === '/'
-    return location.pathname.startsWith(path)
-  }
-
-  const handleClick = (path: string) => {
-    navigate(path)
-  }
+  const isActive = (path: string) => path === '/'
+    ? location.pathname === '/'
+    : location.pathname.startsWith(path)
 
   return (
-    <nav
-      aria-label="主导航"
-      className="fixed bottom-0 left-0 right-0 z-40 px-4 pointer-events-none"
-      style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 1rem)' }}
-    >
-      <div className="glass-nav max-w-[640px] mx-auto px-3 pt-2.5 pb-2.5 pointer-events-auto relative">
-        {/* 顶部细金线 — 反光感 */}
-        <div className="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-amber/30 to-transparent" />
+    <>
+      <nav aria-label="桌面主导航" className="desktop-nav">
+        <button type="button" className="desktop-brand" onClick={() => navigate('/')} aria-label="回到足迹首页">
+          <span className="desktop-brand__mark" aria-hidden="true">
+            <Heart className="h-4 w-4" fill="currentColor" />
+          </span>
+          <span className="desktop-brand__text">
+            <strong>Our Journey</strong>
+            <small>共同旅行手账</small>
+          </span>
+        </button>
 
-        <div className="flex justify-around items-end">
-          {TABS.map(({ path, icon: Icon, label, isFab }) => {
+        <div className="desktop-nav__links">
+          {TABS.map(({ path, icon: Icon, label, isPrimary }) => {
             const active = isActive(path)
-
-            if (isFab) {
-              return (
-                <button
-                  key={path}
-                  onClick={() => handleClick(path)}
-                  className="flex flex-col items-center gap-1 -mt-3 group"
-                  aria-label={label}
-                >
-                  <div
-                    className="relative w-[54px] h-[54px] bg-gradient-to-br from-amber via-amber to-amber-ember rounded-[16px] flex items-center justify-center transition-all duration-300 active:brightness-95 active:scale-95 group-hover:scale-105 group-hover:rotate-[-2deg]"
-                    style={{
-                      boxShadow:
-                        '0 8px 24px oklch(68% 0.17 40 / 0.35), 0 0 0 1px oklch(80% 0.14 60 / 0.4), inset 0 1px 0 oklch(96% 0.02 70 / 0.25), inset 0 -2px 4px oklch(50% 0.15 35 / 0.3)',
-                    }}
-                  >
-                    {/* 邮戳外环 */}
-                    <div
-                      className="absolute inset-1 rounded-[12px] border border-white/20 pointer-events-none"
-                      aria-hidden="true"
-                    />
-                    <Icon className="w-7 h-7 text-white relative" fill="white" />
-                  </div>
-                  <span className="text-[10px] font-semibold text-amber tracking-[0.05em]">
-                    {label}
-                  </span>
-                </button>
-              )
-            }
-
             return (
               <button
+                type="button"
                 key={path}
-                onClick={() => handleClick(path)}
-                aria-label={label}
+                onClick={() => navigate(path)}
                 aria-current={active ? 'page' : undefined}
-                className={`flex flex-col items-center gap-1 min-w-[44px] min-h-[44px] justify-center transition-all duration-300 group ${
-                  active ? 'text-amber' : 'text-dusk-100/55 hover:text-amber/80'
-                }`}
+                className={`desktop-nav__item ${active ? 'is-active' : ''} ${isPrimary ? 'is-primary' : ''}`}
               >
-                <div className={`relative p-2 transition-all duration-300 active:scale-90 ${active ? 'animate-tab-bounce' : 'group-hover:scale-105'}`}>
-                  <Icon className={`w-6 h-6 relative transition-all duration-300 ${active ? 'scale-105' : ''}`} />
-                  {active && (
-                    <div
-                      className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-5 h-[2px] rounded-full bg-gradient-to-r from-transparent via-amber to-transparent"
-                      style={{ boxShadow: '0 0 6px oklch(68% 0.17 40 / 0.5)' }}
-                    />
-                  )}
-                </div>
-                <span className={`text-[10px] font-medium tracking-[0.03em] transition-all duration-300 ${active ? 'text-amber' : 'text-dusk-100/55 group-hover:text-amber/80'}`}>{label}</span>
+                <Icon className="h-[18px] w-[18px]" />
+                <span>{label}</span>
               </button>
             )
           })}
         </div>
-      </div>
-    </nav>
+      </nav>
+
+      <nav
+        aria-label="移动端主导航"
+        className="mobile-nav fixed bottom-0 left-0 right-0 z-40 px-3 pointer-events-none"
+        style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 10px)' }}
+      >
+        <div className="glass-nav mx-auto max-w-[620px] px-2 py-2 pointer-events-auto relative">
+          <div className="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-amber/30 to-transparent" />
+          <div className="grid grid-cols-4 items-end">
+            {TABS.map(({ path, icon: Icon, label, isPrimary }) => {
+              const active = isActive(path)
+              return (
+                <button
+                  type="button"
+                  key={path}
+                  onClick={() => navigate(path)}
+                  aria-label={label}
+                  aria-current={active ? 'page' : undefined}
+                  className={`mobile-nav__item ${active ? 'is-active' : ''} ${isPrimary ? 'is-primary' : ''}`}
+                >
+                  <span className={isPrimary ? 'mobile-nav__primary-icon' : 'mobile-nav__icon'}>
+                    <Icon className={isPrimary ? 'h-6 w-6' : 'h-[22px] w-[22px]'} strokeWidth={isPrimary ? 2.4 : 2} />
+                  </span>
+                  <span>{label}</span>
+                </button>
+              )
+            })}
+          </div>
+        </div>
+      </nav>
+    </>
   )
 }

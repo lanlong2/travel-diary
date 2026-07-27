@@ -9,8 +9,8 @@ import { useMemo } from 'react'
 
 // 三种圆角模式交替 — 编辑设计常用手法
 const RADIUS_PATTERNS = [
-  'rounded-tl-[24px] rounded-br-[24px] rounded-tr-[8px] rounded-bl-[8px]',
-  'rounded-tr-[24px] rounded-bl-[24px] rounded-tl-[8px] rounded-br-[8px]',
+  'rounded-[16px] sm:rounded-tl-[24px] sm:rounded-br-[24px] sm:rounded-tr-[8px] sm:rounded-bl-[8px]',
+  'rounded-[16px] sm:rounded-tr-[24px] sm:rounded-bl-[24px] sm:rounded-tl-[8px] sm:rounded-br-[8px]',
   'rounded-[16px]',
 ]
 
@@ -38,14 +38,14 @@ export function TripsPage() {
   if (loading) {
     return (
       <PageShell>
-        <Spinner className="min-h-screen" />
+        <Spinner className="min-h-dvh" />
       </PageShell>
     )
   }
 
   return (
     <PageShell>
-      <div className="px-7 pt-8 pb-2">
+      <div className="page-px pt-8 pb-2">
         {/* 顶部章节标识 */}
         <div className="flex items-center gap-3 mb-3">
           <span className="editorial-chapter">CHAPTER · III</span>
@@ -59,7 +59,7 @@ export function TripsPage() {
         </h1>
 
         {/* 统计数据 — 编辑式三段 */}
-        <div className="flex items-center gap-3 mt-3 text-[11px] text-dusk-100/60 tracking-[0.04em] font-mono">
+        <div className="flex items-center gap-3 mt-3 text-xs text-dusk-100/60 tracking-[0.04em] font-mono">
           <span className="inline-flex items-center gap-1">
             <span className="text-amber text-[14px] font-bold tabular-nums">{animatedTrips}</span>
             <span>次</span>
@@ -78,11 +78,11 @@ export function TripsPage() {
       </div>
 
       {trips.length === 0 ? (
-        <div className="mx-7 mt-8 glass-card p-12 text-center">
+        <div className="page-mx mt-8 glass-card p-12 text-center">
           <p className="font-serif text-[15px] text-dusk-50/85 tracking-[0.04em]">暂无旅行 · 等待第一次出发</p>
         </div>
       ) : (
-        <div className="px-7 py-4 space-y-3">
+        <div className="journey-grid page-px py-5">
           {trips.map((trip, i) => {
             const photoCount = photoCountByTrip.get(trip.id) || 0
             const startStr = new Date(trip.start_date).toLocaleDateString('zh-CN', {
@@ -117,9 +117,9 @@ export function TripsPage() {
                   />
                 </div>
 
-                <div className="flex">
+                <div className="journey-card-layout">
                   {trip.cover_photo && coverLeft && (
-                    <div className="w-[80px] flex-shrink-0 relative overflow-hidden">
+                    <div className="journey-cover relative overflow-hidden">
                       <img
                         src={trip.cover_photo}
                         alt={trip.title}
@@ -140,20 +140,20 @@ export function TripsPage() {
                         <h3 className="font-serif font-semibold text-dusk-50 text-[19px] truncate tracking-[0.03em]">
                           {trip.title}
                         </h3>
-                        <div className="flex items-center gap-3 mt-2 text-[11px] text-dusk-100/60">
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mt-2 text-xs text-dusk-100/60">
                           <span className="flex items-center gap-1 font-mono">
                             <Calendar className="w-3.5 h-3.5 text-amber/70" />
                             {startStr} → {endStr}
                           </span>
                           <span className="text-amber/85 font-semibold">{duration} 天</span>
                         </div>
-                        <div className="flex items-center gap-3 mt-1.5">
-                          <span className="flex items-center gap-1 text-[11px] text-dusk-100/60">
+                        <div className="flex flex-wrap items-center gap-3 mt-2">
+                          <span className="flex items-center gap-1 text-xs text-dusk-100/60">
                             <MapPin className="w-3.5 h-3.5 text-amber/70" />
                             {trip.cities.length} 座城市
                           </span>
                           {photoCount > 0 && (
-                            <span className="flex items-center gap-1 text-[11px] text-amber/85">
+                            <span className="flex items-center gap-1 text-xs text-amber/85">
                               <Camera className="w-3.5 h-3.5" />
                               {photoCount} 张
                             </span>
@@ -165,7 +165,7 @@ export function TripsPage() {
                   </div>
 
                   {trip.cover_photo && !coverLeft && (
-                    <div className="w-[80px] flex-shrink-0 relative overflow-hidden">
+                    <div className="journey-cover relative overflow-hidden">
                       <img
                         src={trip.cover_photo}
                         alt={trip.title}

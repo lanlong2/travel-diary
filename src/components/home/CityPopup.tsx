@@ -19,16 +19,16 @@ export function CityPopup({ city, photos, x, y }: CityTooltipProps) {
 
   return (
     <div
-      className="absolute z-30"
+      className="city-popup absolute z-30"
       style={{
         left: x,
         top: y - 28,
         transform: 'translate(-50%, -100%)',
       }}
     >
-      <div className="absolute left-1/2 -bottom-[6px] -translate-x-1/2 w-3 h-3 bg-glass-popup rotate-45 border-r border-b border-dusk-300/30" />
+      <div className="city-popup__arrow absolute left-1/2 -bottom-[6px] -translate-x-1/2 w-3 h-3 bg-glass-popup rotate-45 border-r border-b border-dusk-300/30" />
 
-      <div className="glass-popup w-[290px] overflow-hidden animate-scale-in" style={{ animationDuration: '0.2s', boxShadow: '0 24px 64px oklch(15% 0.02 40 / 0.6), 0 0 0 1px oklch(80% 0.14 60 / 0.2), inset 0 1px 0 oklch(96% 0.02 70 / 0.12)' }}>
+      <div className="city-popup__panel glass-popup w-[290px] overflow-hidden animate-scale-in" style={{ animationDuration: '0.2s', boxShadow: '0 24px 64px oklch(15% 0.02 40 / 0.6), 0 0 0 1px oklch(80% 0.14 60 / 0.2), inset 0 1px 0 oklch(96% 0.02 70 / 0.12)' }}>
         {/* 顶部折光线 */}
         <div className="absolute top-0 left-5 right-5 h-px bg-gradient-to-r from-transparent via-amber/40 to-transparent" />
         <div className="p-4">

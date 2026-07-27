@@ -16,7 +16,7 @@ export class ErrorBoundary extends Component<Props, State> {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen flex flex-col items-center justify-center p-8 text-center" style={{ backgroundColor: 'oklch(22% 0.035 45)' }}>
+        <div className="min-h-dvh flex flex-col items-center justify-center p-8 text-center" style={{ backgroundColor: 'oklch(17% 0.009 56)' }}>
           <div className="glass-card p-10 max-w-sm">
             <div className="w-14 h-14 mx-auto mb-5 rounded-full bg-amber/15 border-2 border-amber/30 flex items-center justify-center animate-stamp-press">
               <span className="font-display italic text-2xl text-amber">!</span>
