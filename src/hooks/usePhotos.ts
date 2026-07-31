@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { supabase } from '../lib/supabase'
 import type { Photo } from '../types'
 
@@ -6,14 +6,20 @@ export function usePhotos(tripId?: string) {
   const [photos, setPhotos] = useState<Photo[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const requestIdRef = useRef(0)
 
   const fetchPhotos = useCallback(async () => {
+    const requestId = ++requestIdRef.current
+    setLoading(true)
+
     try {
       let query = supabase.from('photos').select('*').order('created_at', { ascending: false })
       if (tripId) {
         query = query.eq('trip_id', tripId)
       }
       const { data, error: queryError } = await query
+      if (requestId !== requestIdRef.current) return
+
       if (queryError) {
         setError(queryError.message || '照片加载失败')
       } else {
@@ -21,12 +27,19 @@ export function usePhotos(tripId?: string) {
         setError(null)
       }
     } catch (err) {
+      if (requestId !== requestIdRef.current) return
       setError(err instanceof Error ? err.message : '照片加载失败')
+    } finally {
+      if (requestId === requestIdRef.current) setLoading(false)
     }
-    setLoading(false)
   }, [tripId])
 
-  useEffect(() => { fetchPhotos() }, [fetchPhotos])
+  useEffect(() => {
+    void fetchPhotos()
+    return () => {
+      requestIdRef.current += 1
+    }
+  }, [fetchPhotos])
 
   const uploadPhoto = async (
     file: File | null, tripId: string, cityName: string,

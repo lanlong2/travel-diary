@@ -12,19 +12,28 @@ import { CitySelector } from '../components/add/CitySelector'
 import { useTrip, useTrips } from '../hooks/useTrips'
 import { usePhotos } from '../hooks/usePhotos'
 import { Camera, X } from 'lucide-react'
-import type { Photo } from '../types'
 
 export function TripDetailPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const { trip, loading, refresh } = useTrip(id!)
-  const { photos, updatePhoto, deletePhoto } = usePhotos(id)
+  const {
+    photos,
+    loading: photosLoading,
+    error: photosError,
+    refresh: refreshPhotos,
+    updatePhoto,
+    deletePhoto,
+  } = usePhotos(id)
   const { deleteTrip, updateTrip, addCity, removeCity } = useTrips()
-  const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null)
+  const [selectedPhotoId, setSelectedPhotoId] = useState<string | null>(null)
   const [editing, setEditing] = useState(false)
   const [editTitle, setEditTitle] = useState(trip?.title || '')
   const [editStartDate, setEditStartDate] = useState(trip?.start_date || '')
   const [editEndDate, setEditEndDate] = useState(trip?.end_date || '')
+  const selectedPhoto = selectedPhotoId
+    ? photos.find((photo) => photo.id === selectedPhotoId) ?? null
+    : null
 
   if (loading) {
     return <PageShell><Spinner className="min-h-dvh" /></PageShell>
@@ -177,7 +186,10 @@ export function TripDetailPage() {
       <div className="mt-6">
         <PhotoGrid
           photos={photos}
-          onPhotoClick={setSelectedPhoto}
+          loading={photosLoading}
+          error={photosError}
+          onRetry={refreshPhotos}
+          onPhotoClick={(photo) => setSelectedPhotoId(photo.id)}
           onDeletePhoto={deletePhoto}
         />
       </div>
@@ -192,7 +204,7 @@ export function TripDetailPage() {
       {selectedPhoto && (
         <PhotoModal
           photo={selectedPhoto}
-          onClose={() => setSelectedPhoto(null)}
+          onClose={() => setSelectedPhotoId(null)}
           onDelete={deletePhoto}
           onUpdate={updatePhoto}
         />

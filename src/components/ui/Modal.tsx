@@ -22,6 +22,10 @@ const openDialogs: symbol[] = []
 let scrollLockCount = 0
 let originalBodyOverflow = ''
 let originalBodyPaddingRight = ''
+let originalBodyPosition = ''
+let originalBodyTop = ''
+let originalBodyWidth = ''
+let lockedScrollY = 0
 
 const focusableSelector = [
   'a[href]',
@@ -44,6 +48,10 @@ function lockBodyScroll() {
     const body = document.body
     originalBodyOverflow = body.style.overflow
     originalBodyPaddingRight = body.style.paddingRight
+    originalBodyPosition = body.style.position
+    originalBodyTop = body.style.top
+    originalBodyWidth = body.style.width
+    lockedScrollY = window.scrollY
 
     const scrollbarWidth = Math.max(0, window.innerWidth - document.documentElement.clientWidth)
     if (scrollbarWidth > 0) {
@@ -51,6 +59,11 @@ function lockBodyScroll() {
       body.style.paddingRight = `${currentPadding + scrollbarWidth}px`
     }
     body.style.overflow = 'hidden'
+    // iOS Safari ignores overflow:hidden on body while its browser chrome is moving.
+    // Fixing the body preserves the reading position and prevents background scrolling.
+    body.style.position = 'fixed'
+    body.style.top = `-${lockedScrollY}px`
+    body.style.width = '100%'
   }
 
   scrollLockCount += 1
@@ -63,6 +76,10 @@ function lockBodyScroll() {
     if (scrollLockCount === 0) {
       document.body.style.overflow = originalBodyOverflow
       document.body.style.paddingRight = originalBodyPaddingRight
+      document.body.style.position = originalBodyPosition
+      document.body.style.top = originalBodyTop
+      document.body.style.width = originalBodyWidth
+      window.scrollTo(0, lockedScrollY)
     }
   }
 }
