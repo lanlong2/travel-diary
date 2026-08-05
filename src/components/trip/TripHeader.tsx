@@ -3,6 +3,7 @@ import { ArrowLeft, Calendar, Pencil, Trash2 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import type { Trip } from '../../types'
 import { ConfirmDialog } from '../ui/ConfirmDialog'
+import { parseDateOnly } from '../../lib/dates'
 
 interface TripHeaderProps {
   trip: Trip
@@ -14,26 +15,34 @@ export function TripHeader({ trip, onDelete, onEdit }: TripHeaderProps) {
   const navigate = useNavigate()
   const [showDelete, setShowDelete] = useState(false)
   const [deleting, setDeleting] = useState(false)
-  const startStr = new Date(trip.start_date).toLocaleDateString('zh-CN', {
+  const [deleteError, setDeleteError] = useState<string | null>(null)
+  const startStr = parseDateOnly(trip.start_date).toLocaleDateString('zh-CN', {
     year: 'numeric', month: 'long', day: 'numeric'
   })
-  const endStr = new Date(trip.end_date).toLocaleDateString('zh-CN', {
+  const endStr = parseDateOnly(trip.end_date).toLocaleDateString('zh-CN', {
     year: 'numeric', month: 'long', day: 'numeric'
   })
   const duration = Math.ceil(
-    (new Date(trip.end_date).getTime() - new Date(trip.start_date).getTime()) / (1000 * 60 * 60 * 24)
+    (parseDateOnly(trip.end_date).getTime() - parseDateOnly(trip.start_date).getTime()) / (1000 * 60 * 60 * 24)
   ) + 1
 
-  const startYear = new Date(trip.start_date).getFullYear()
-  const startMonth = String(new Date(trip.start_date).getMonth() + 1).padStart(2, '0')
+  const startDate = parseDateOnly(trip.start_date)
+  const startYear = startDate.getFullYear()
+  const startMonth = String(startDate.getMonth() + 1).padStart(2, '0')
 
   const handleDelete = async () => {
     if (!onDelete) return
     setDeleting(true)
-    await onDelete()
-    setDeleting(false)
-    setShowDelete(false)
-    navigate('/')
+    setDeleteError(null)
+    try {
+      await onDelete()
+      setShowDelete(false)
+      navigate('/')
+    } catch (error) {
+      setDeleteError(error instanceof Error ? error.message : '删除失败，请稍后重试')
+    } finally {
+      setDeleting(false)
+    }
   }
 
   return (
@@ -59,7 +68,7 @@ export function TripHeader({ trip, onDelete, onEdit }: TripHeaderProps) {
             )}
             {onDelete && (
               <button
-                onClick={() => setShowDelete(true)}
+                onClick={() => { setDeleteError(null); setShowDelete(true) }}
                 className="w-11 h-11 glass-nav rounded-full flex items-center justify-center hover:bg-red-500/40 transition-all active:scale-90 duration-200"
                 aria-label="删除"
               >
@@ -146,9 +155,9 @@ export function TripHeader({ trip, onDelete, onEdit }: TripHeaderProps) {
       {showDelete && (
         <ConfirmDialog
           title="删除旅行"
-          message={`确定要删除「${trip.title}」吗？所有照片也会被一并删除。`}
-          confirmLabel="确认删除"
-          onConfirm={handleDelete}
+          message={deleteError ? `删除失败：${deleteError}` : `确定要删除「${trip.title}」吗？所有照片也会被一并删除。`}
+          confirmLabel={deleteError ? '重试删除' : '确认删除'}
+          onConfirm={() => { void handleDelete() }}
           onCancel={() => setShowDelete(false)}
           loading={deleting}
         />

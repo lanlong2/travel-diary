@@ -1,26 +1,41 @@
 import { useState } from 'react'
 import { Plus, Check, BookOpen } from 'lucide-react'
 import { Input } from '../ui/Input'
-import type { Trip, TripCity } from '../../types'
+import type { TripWithCities } from '../../types'
+import { getLocalDateString, isValidDateRange } from '../../lib/dates'
 
 interface TripSelectProps {
-  trips: (Trip & { cities: TripCity[] })[]
+  trips: TripWithCities[]
   selectedTripId: string | null
   onSelectTrip: (id: string) => void
-  onCreateTrip: (title: string, startDate: string, endDate: string) => void
+  onCreateTrip: (title: string, startDate: string, endDate: string) => void | Promise<void>
 }
 
 export function TripSelect({ trips, selectedTripId, onSelectTrip, onCreateTrip }: TripSelectProps) {
   const [showNew, setShowNew] = useState(false)
   const [newTitle, setNewTitle] = useState('')
-  const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0])
-  const [endDate, setEndDate] = useState(new Date().toISOString().split('T')[0])
+  const [startDate, setStartDate] = useState(getLocalDateString)
+  const [endDate, setEndDate] = useState(getLocalDateString)
+  const [dateError, setDateError] = useState<string | null>(null)
+  const [creating, setCreating] = useState(false)
 
-  const handleCreate = () => {
-    if (newTitle.trim()) {
-      onCreateTrip(newTitle.trim(), startDate, endDate)
+  const handleCreate = async () => {
+    if (!newTitle.trim()) return
+    if (!isValidDateRange(startDate, endDate)) {
+      setDateError('结束日期不能早于开始日期')
+      return
+    }
+
+    setCreating(true)
+    setDateError(null)
+    try {
+      await onCreateTrip(newTitle.trim(), startDate, endDate)
       setNewTitle('')
       setShowNew(false)
+    } catch (error) {
+      setDateError(error instanceof Error ? error.message : '创建旅行失败，请稍后重试')
+    } finally {
+      setCreating(false)
     }
   }
 
@@ -86,7 +101,12 @@ export function TripSelect({ trips, selectedTripId, onSelectTrip, onCreateTrip }
                 placeholder="例如：杭州周末"
                 value={newTitle}
                 onChange={(e) => setNewTitle(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleCreate()}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault()
+                    void handleCreate()
+                  }
+                }}
               />
             </div>
           </div>
@@ -97,7 +117,8 @@ export function TripSelect({ trips, selectedTripId, onSelectTrip, onCreateTrip }
                 id="new-trip-start"
                 type="date"
                 value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
+                onChange={(e) => { setStartDate(e.target.value); setDateError(null) }}
+                max={endDate}
                 className="w-full px-4 py-3 bg-dusk-600/40 border border-dusk-300/30 rounded-[12px] text-[13px] text-dusk-50 focus:outline-none focus:ring-[1px] focus:ring-amber/30 focus:border-amber/55 transition-colors"
               />
             </div>
@@ -107,23 +128,28 @@ export function TripSelect({ trips, selectedTripId, onSelectTrip, onCreateTrip }
                 id="new-trip-end"
                 type="date"
                 value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
+                onChange={(e) => { setEndDate(e.target.value); setDateError(null) }}
+                min={startDate}
                 className="w-full px-4 py-3 bg-dusk-600/40 border border-dusk-300/30 rounded-[12px] text-[13px] text-dusk-50 focus:outline-none focus:ring-[1px] focus:ring-amber/30 focus:border-amber/55 transition-colors"
               />
             </div>
           </div>
+          {dateError && (
+            <p role="alert" className="mt-2 text-[11px] text-red-300/80">{dateError}</p>
+          )}
           <div className="flex gap-2.5 mt-3">
             <button
               type="button"
-              onClick={handleCreate}
-              disabled={!newTitle.trim()}
+              onClick={() => { void handleCreate() }}
+              disabled={!newTitle.trim() || creating}
+              aria-busy={creating}
               className="px-6 py-3 bg-gradient-to-br from-amber via-amber to-amber-ember text-white rounded-[14px] text-[13px] font-semibold disabled:opacity-40 transition-opacity flex-shrink-0 tracking-[0.04em] active:brightness-95 active:scale-95 duration-200 edge-glow-amber"
             >
-              创建
+              {creating ? '创建中…' : '创建'}
             </button>
             <button
               type="button"
-              onClick={() => { setShowNew(false); setNewTitle('') }}
+              onClick={() => { setShowNew(false); setNewTitle(''); setDateError(null) }}
               className="px-4 py-3 text-dusk-100/65 text-[13px] flex-shrink-0 hover:text-dusk-50 transition-colors"
             >
               取消

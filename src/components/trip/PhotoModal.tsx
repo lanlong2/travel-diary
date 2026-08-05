@@ -1,15 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Calendar, MapPin, Pencil, Trash2, X } from 'lucide-react'
-import type { Photo } from '../../types'
+import type { Photo, PhotoUpdate } from '../../types'
 import { ConfirmDialog } from '../ui/ConfirmDialog'
 import { useDialogAccessibility } from '../ui/Modal'
+import { formatRecordDate } from '../../lib/dates'
 
 interface PhotoModalProps {
   photo: Photo
   onClose: () => void
   onDelete?: (id: string) => Promise<void>
-  onUpdate?: (id: string, updates: { note?: string; city_name?: string; record_date?: string | null }) => Promise<void>
+  onUpdate?: (id: string, updates: PhotoUpdate) => Promise<void>
 }
 
 function getErrorMessage(error: unknown) {
@@ -17,12 +18,7 @@ function getErrorMessage(error: unknown) {
 }
 
 function formatPhotoDate(photo: Photo) {
-  const value = photo.record_date || photo.created_at
-  const date = new Date(photo.record_date ? `${value}T00:00:00` : value)
-
-  if (Number.isNaN(date.getTime())) return value
-
-  return date.toLocaleDateString('zh-CN', {
+  return formatRecordDate(photo.record_date, photo.created_at, {
     year: 'numeric',
     month: 'long',
     day: 'numeric',

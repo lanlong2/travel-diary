@@ -9,6 +9,7 @@ const photo: Photo = {
   city_name: '杭州',
   image_url: 'https://example.com/photo.jpg',
   note: '西湖边的傍晚',
+  author: '我',
   entry_type: 'photo',
   record_date: '2026-06-15',
   created_at: '2026-06-15T10:00:00Z',

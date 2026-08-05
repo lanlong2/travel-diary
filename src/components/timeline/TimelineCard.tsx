@@ -1,5 +1,6 @@
 import type { Photo } from '../../types'
 import { MapPin } from 'lucide-react'
+import { formatRecordDate } from '../../lib/dates'
 
 interface TimelineCardProps {
   record: Photo
@@ -9,7 +10,7 @@ interface TimelineCardProps {
 }
 
 export function TimelineCard({ record, index, isFirstInMonth = false, onClick }: TimelineCardProps) {
-  const dateStr = new Date(record.created_at).toLocaleDateString('zh-CN', {
+  const dateStr = formatRecordDate(record.record_date, record.created_at, {
     month: 'long', day: 'numeric', weekday: 'short',
   })
 

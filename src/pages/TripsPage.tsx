@@ -6,6 +6,7 @@ import { useCountUp } from '../hooks/useCountUp'
 import { Spinner } from '../components/ui/Spinner'
 import { Compass, MapPin, Calendar, ChevronRight, Camera } from 'lucide-react'
 import { useMemo } from 'react'
+import { parseDateOnly } from '../lib/dates'
 
 // 三种圆角模式交替 — 编辑设计常用手法
 const RADIUS_PATTERNS = [
@@ -16,8 +17,8 @@ const RADIUS_PATTERNS = [
 
 export function TripsPage() {
   const navigate = useNavigate()
-  const { trips, loading } = useTrips()
-  const { photos } = usePhotos()
+  const { trips, loading, error: tripsError, refresh: refreshTrips } = useTrips()
+  const { photos, error: photosError, refresh: refreshPhotos } = usePhotos()
 
   const photoCountByTrip = useMemo(() => {
     const map = new Map<string, number>()
@@ -39,6 +40,24 @@ export function TripsPage() {
     return (
       <PageShell>
         <Spinner className="min-h-dvh" />
+      </PageShell>
+    )
+  }
+
+  if (tripsError) {
+    return (
+      <PageShell>
+        <div className="page-mx flex min-h-[60vh] flex-col items-center justify-center text-center">
+          <p className="font-serif text-[17px] text-amber">旅行加载失败</p>
+          <p className="mt-2 max-w-sm text-[13px] leading-5 text-dusk-100/60">{tripsError}</p>
+          <button
+            type="button"
+            onClick={() => { void refreshTrips() }}
+            className="mt-5 min-h-11 rounded-full border border-amber/30 bg-amber/10 px-5 py-2 text-[12px] font-medium text-amber transition-colors hover:bg-amber/20 active:scale-95"
+          >
+            重试
+          </button>
+        </div>
       </PageShell>
     )
   }
@@ -77,6 +96,15 @@ export function TripsPage() {
         </div>
       </div>
 
+      {photosError && (
+        <div className="page-mx mt-3 flex items-center justify-between gap-3 rounded-xl border border-red-400/25 bg-red-500/10 px-4 py-3 text-[12px] text-red-200" role="alert">
+          <span>照片统计加载失败：{photosError}</span>
+          <button type="button" onClick={() => { void refreshPhotos() }} className="min-h-11 flex-shrink-0 rounded-lg px-3 text-amber hover:bg-amber/10">
+            重试
+          </button>
+        </div>
+      )}
+
       {trips.length === 0 ? (
         <div className="page-mx mt-8 glass-card p-12 text-center">
           <p className="font-serif text-[15px] text-dusk-50/85 tracking-[0.04em]">暂无旅行 · 等待第一次出发</p>
@@ -85,14 +113,14 @@ export function TripsPage() {
         <div className="journey-grid page-px py-5">
           {trips.map((trip, i) => {
             const photoCount = photoCountByTrip.get(trip.id) || 0
-            const startStr = new Date(trip.start_date).toLocaleDateString('zh-CN', {
+            const startStr = parseDateOnly(trip.start_date).toLocaleDateString('zh-CN', {
               year: 'numeric', month: 'long', day: 'numeric',
             })
-            const endStr = new Date(trip.end_date).toLocaleDateString('zh-CN', {
+            const endStr = parseDateOnly(trip.end_date).toLocaleDateString('zh-CN', {
               month: 'long', day: 'numeric',
             })
             const duration = Math.ceil(
-              (new Date(trip.end_date).getTime() - new Date(trip.start_date).getTime()) / (1000 * 60 * 60 * 24)
+              (parseDateOnly(trip.end_date).getTime() - parseDateOnly(trip.start_date).getTime()) / (1000 * 60 * 60 * 24)
             ) + 1
 
             const radiusClass = RADIUS_PATTERNS[i % 3]

@@ -1,56 +1,66 @@
 const AMAP_KEY = import.meta.env.VITE_AMAP_KEY
-// _AMapSecurityConfig is set in index.html before any scripts load
+const AMAP_SECRET = import.meta.env.VITE_AMAP_SECRET
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AMapNS = any
 
-type OnLoadCallback = (AMap: AMapNS) => void
-
 declare global {
   interface Window {
     AMap: AMapNS
-    _AMapSecurityConfig: { securityJsCode: string }
-    _amap_callbacks: OnLoadCallback[]
+    _AMapSecurityConfig?: { securityJsCode: string }
     _amap_ready: boolean
   }
 }
 
+let amapPromise: Promise<AMapNS> | null = null
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function loadAMap(): Promise<any> {
-  return new Promise((resolve, reject) => {
-    if (window._amap_ready && window.AMap) {
-      resolve(window.AMap)
-      return
+  if (typeof window === 'undefined' || typeof document === 'undefined') {
+    return Promise.reject(new Error('地图只能在浏览器环境中加载'))
+  }
+
+  if (!AMAP_KEY) {
+    return Promise.reject(new Error('地图服务未配置，请联系管理员'))
+  }
+
+  if (window._amap_ready && window.AMap) {
+    return Promise.resolve(window.AMap)
+  }
+
+  if (amapPromise) return amapPromise
+
+  amapPromise = new Promise((resolve, reject) => {
+    if (AMAP_SECRET) {
+      window._AMapSecurityConfig = { securityJsCode: AMAP_SECRET }
     }
+    window._amap_ready = false
 
-    if (!window._amap_callbacks) {
-      window._amap_callbacks = []
-      window._amap_ready = false
-
-      const script = document.createElement('script')
-      script.src = `https://webapi.amap.com/maps?v=2.0&key=${AMAP_KEY}`
-      script.async = true
-      script.onerror = () => reject(new Error('高德地图 JS 加载失败'))
-      script.onload = () => {
-        let attempts = 0
-        const check = () => {
-          if (window.AMap) {
-            window._amap_ready = true
-            while (window._amap_callbacks.length) {
-              window._amap_callbacks.shift()!(window.AMap)
-            }
-          } else if (attempts < 50) {
-            attempts++
-            setTimeout(check, 100)
-          } else {
-            reject(new Error('高德地图初始化超时'))
-          }
+    const script = document.createElement('script')
+    script.src = 'https://webapi.amap.com/maps?v=2.0&key=' + AMAP_KEY
+    script.async = true
+    script.onerror = () => {
+      amapPromise = null
+      reject(new Error('高德地图 JS 加载失败'))
+    }
+    script.onload = () => {
+      let attempts = 0
+      const check = () => {
+        if (window.AMap) {
+          window._amap_ready = true
+          resolve(window.AMap)
+        } else if (attempts < 50) {
+          attempts++
+          window.setTimeout(check, 100)
+        } else {
+          amapPromise = null
+          reject(new Error('高德地图初始化超时'))
         }
-        check()
       }
-      document.head.appendChild(script)
+      check()
     }
-
-    window._amap_callbacks.push((AMap) => resolve(AMap))
+    document.head.appendChild(script)
   })
+
+  return amapPromise
 }

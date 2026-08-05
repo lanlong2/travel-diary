@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { Trip } from '../../types'
 import { Trash2, Calendar } from 'lucide-react'
 import { ConfirmDialog } from '../ui/ConfirmDialog'
+import { parseDateOnly } from '../../lib/dates'
 
 interface TripCardProps {
   trip: Trip
@@ -15,20 +16,28 @@ export function TripCard({ trip, cityCount, onClick, onDelete, index = 0 }: Trip
   const staggerClass = index < 5 ? `animate-fade-in-up stagger-${index + 1}` : ''
   const [showDelete, setShowDelete] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const [deleteError, setDeleteError] = useState<string | null>(null)
 
   const duration = Math.ceil(
-    (new Date(trip.end_date).getTime() - new Date(trip.start_date).getTime()) / (1000 * 60 * 60 * 24)
+    (parseDateOnly(trip.end_date).getTime() - parseDateOnly(trip.start_date).getTime()) / (1000 * 60 * 60 * 24)
   ) + 1
 
   const handleDelete = async () => {
     setDeleting(true)
-    await onDelete(trip.id)
-    setDeleting(false)
-    setShowDelete(false)
+    setDeleteError(null)
+    try {
+      await onDelete(trip.id)
+      setShowDelete(false)
+    } catch (error) {
+      setDeleteError(error instanceof Error ? error.message : '删除失败，请稍后重试')
+    } finally {
+      setDeleting(false)
+    }
   }
 
-  const startYear = new Date(trip.start_date).getFullYear()
-  const startMonth = String(new Date(trip.start_date).getMonth() + 1).padStart(2, '0')
+  const startDate = parseDateOnly(trip.start_date)
+  const startYear = startDate.getFullYear()
+  const startMonth = String(startDate.getMonth() + 1).padStart(2, '0')
 
   return (
     <>
@@ -110,7 +119,7 @@ export function TripCard({ trip, cityCount, onClick, onDelete, index = 0 }: Trip
 
         <button
             type="button"
-            onClick={() => setShowDelete(true)}
+          onClick={() => { setDeleteError(null); setShowDelete(true) }}
             className="absolute top-2 right-2 w-11 h-11 rounded-[10px] bg-black/35 backdrop-blur-md flex items-center justify-center hover:bg-red-500/50 hover:text-white text-dusk-50/80 z-10 transition-colors duration-200 max-sm:opacity-100 sm:opacity-0 sm:group-hover:opacity-100 active:scale-90"
             aria-label={`删除旅行：${trip.title}`}
           >
@@ -124,7 +133,7 @@ export function TripCard({ trip, cityCount, onClick, onDelete, index = 0 }: Trip
           <span className="text-amber font-bold">{duration} 天</span>
           <span className="flex-1" />
           <span className="text-dusk-100/45">
-            {new Date(trip.start_date).toLocaleDateString('zh-CN', { month: 'numeric', day: 'numeric' })}
+            {startDate.toLocaleDateString('zh-CN', { month: 'numeric', day: 'numeric' })}
           </span>
         </button>
       </div>
@@ -132,9 +141,9 @@ export function TripCard({ trip, cityCount, onClick, onDelete, index = 0 }: Trip
       {showDelete && (
         <ConfirmDialog
           title="删除旅行"
-          message={`确定要删除「${trip.title}」吗？这次旅行的所有照片也会被删除，此操作无法撤销。`}
-          confirmLabel="确认删除"
-          onConfirm={handleDelete}
+          message={deleteError ? `删除失败：${deleteError}` : `确定要删除「${trip.title}」吗？这次旅行的所有照片也会被删除，此操作无法撤销。`}
+          confirmLabel={deleteError ? '重试删除' : '确认删除'}
+          onConfirm={() => { void handleDelete() }}
           onCancel={() => setShowDelete(false)}
           loading={deleting}
         />

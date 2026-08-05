@@ -18,33 +18,47 @@ export function CitySelector({ onCitySelect, selectedCity }: CitySelectorProps) 
   const [query, setQuery] = useState('')
   const [suggestions, setSuggestions] = useState<SelectedCity[]>([])
   const [locating, setLocating] = useState(false)
+  const [searchError, setSearchError] = useState<string | null>(null)
+  const [locationError, setLocationError] = useState<string | null>(null)
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined)
+  const searchRequestRef = useRef(0)
 
   const searchCity = async (keyword: string) => {
-    if (!keyword.trim()) { setSuggestions([]); return }
+    const requestId = searchRequestRef.current
+    if (!keyword.trim()) {
+      setSuggestions([])
+      setSearchError(null)
+      return
+    }
     try {
       const AMap = await loadAMap()
       AMap.plugin('AMap.AutoComplete', () => {
         const auto = new AMap.AutoComplete({ citylimit: false })
         auto.search(keyword, (_status: string, result: { tips: { name: string; location: { lat: number; lng: number } }[] }) => {
-          if (result?.tips) {
-            const cities = result.tips
-              .filter((t) => t.location)
-              .map((t) => ({ name: t.name, lat: t.location.lat, lng: t.location.lng }))
-            setSuggestions(cities)
-          }
+          if (requestId !== searchRequestRef.current) return
+          const cities = (result?.tips || [])
+            .filter((t) => t.location)
+            .map((t) => ({ name: t.name, lat: t.location.lat, lng: t.location.lng }))
+          setSuggestions(cities)
+          setSearchError(null)
         })
       })
-    } catch { /* ignore */ }
+    } catch {
+      if (requestId !== searchRequestRef.current) return
+      setSuggestions([])
+      setSearchError('地图服务暂时不可用，请稍后重试')
+    }
   }
 
   useEffect(() => {
+    searchRequestRef.current += 1
     if (timeoutRef.current) clearTimeout(timeoutRef.current)
     timeoutRef.current = setTimeout(() => searchCity(query), 400)
     return () => { if (timeoutRef.current) clearTimeout(timeoutRef.current) }
   }, [query])
 
   const locateMe = () => {
+    setLocationError(null)
     setLocating(true)
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(
@@ -55,15 +69,30 @@ export function CitySelector({ onCitySelect, selectedCity }: CitySelectorProps) 
             AMap.plugin('AMap.Geocoder', () => {
               const geocoder = new AMap.Geocoder()
               geocoder.getAddress([longitude, latitude], (_status: string, result: { regeocode: { addressComponent: { city: string } } }) => {
-                const cityName = (result.regeocode.addressComponent.city || '未知城市').replace('市', '')
+                const cityName = result?.regeocode?.addressComponent?.city
+                if (!cityName) {
+                  setLocating(false)
+                  setLocationError('无法识别当前位置，请手动搜索城市')
+                  return
+                }
                 onCitySelect({ name: cityName, lat: latitude, lng: longitude })
                 setLocating(false)
               })
             })
-          } catch { setLocating(false) }
+          } catch {
+            setLocating(false)
+            setLocationError('定位服务暂时不可用，请手动搜索城市')
+          }
         },
-        () => setLocating(false)
+        () => {
+          setLocating(false)
+          setLocationError('无法获取当前位置，请检查浏览器定位权限')
+        },
+        { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 }
       )
+    } else {
+      setLocating(false)
+      setLocationError('当前设备不支持定位')
     }
   }
 
@@ -115,6 +144,7 @@ export function CitySelector({ onCitySelect, selectedCity }: CitySelectorProps) 
               disabled={locating}
               className="relative glass-nav rounded-[14px] text-amber hover:bg-white/10 transition-colors disabled:opacity-60 flex-shrink-0 group px-5 active:scale-95 duration-200"
               aria-label="自动定位"
+              aria-busy={locating}
             >
               <Navigation className={`w-6 h-6 ${locating ? 'animate-pulse' : 'group-hover:scale-110 transition-transform'}`} />
             </button>
@@ -125,6 +155,7 @@ export function CitySelector({ onCitySelect, selectedCity }: CitySelectorProps) 
               {suggestions.map((s, i) => (
                 <button
                   key={i}
+                  type="button"
                   onClick={() => { onCitySelect(s); setQuery(''); setSuggestions([]) }}
                   className="w-full px-5 py-3.5 flex items-center gap-3 text-left hover:bg-white/8 transition-colors border-b border-dusk-300/15 last:border-0 active:bg-white/12"
                 >
@@ -137,7 +168,19 @@ export function CitySelector({ onCitySelect, selectedCity }: CitySelectorProps) 
             </div>
           )}
 
-          {query && suggestions.length === 0 && (
+          {locationError && (
+            <p role="alert" className="mt-2 text-center text-[11px] text-red-300/80 py-3 tracking-[0.04em]">
+              {locationError}
+            </p>
+          )}
+
+          {searchError && (
+            <p role="alert" className="mt-2 text-center text-[11px] text-red-300/80 py-3 tracking-[0.04em]">
+              {searchError}
+            </p>
+          )}
+
+          {query && suggestions.length === 0 && !searchError && (
             <p className="mt-2 text-center text-[11px] text-dusk-100/40 py-3 tracking-[0.04em]">未找到匹配的城市</p>
           )}
         </>

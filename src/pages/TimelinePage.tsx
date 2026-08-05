@@ -8,18 +8,19 @@ import { useTrips } from '../hooks/useTrips'
 import { Spinner } from '../components/ui/Spinner'
 import { ScrollText } from 'lucide-react'
 import type { Photo } from '../types'
+import { getRecordTimestamp, parseDateOnly } from '../lib/dates'
 
 export function TimelinePage() {
   const navigate = useNavigate()
-  const { photos, loading } = usePhotos()
-  const { trips } = useTrips()
+  const { photos, loading, error: photosError, refresh: refreshPhotos } = usePhotos()
+  const { trips, error: tripsError } = useTrips()
 
   const groupedByMonth = useMemo(() => {
     const groups: { month: string; records: Photo[] }[] = []
     const monthMap = new Map<string, Photo[]>()
 
     photos.forEach((p) => {
-      const d = new Date(p.record_date || p.created_at)
+      const d = p.record_date ? parseDateOnly(p.record_date) : new Date(p.created_at)
       const key = `${d.getFullYear()}年${d.getMonth() + 1}月`
       const arr = monthMap.get(key)
       if (arr) arr.push(p)
@@ -33,7 +34,10 @@ export function TimelinePage() {
     })
 
     sortedKeys.forEach((key) => {
-      groups.push({ month: key, records: monthMap.get(key)! })
+        const records = [...(monthMap.get(key) || [])].sort(
+          (a, b) => getRecordTimestamp(b.record_date, b.created_at) - getRecordTimestamp(a.record_date, a.created_at),
+        )
+        groups.push({ month: key, records })
     })
 
     return groups
@@ -43,6 +47,24 @@ export function TimelinePage() {
     return (
       <PageShell>
         <Spinner className="min-h-dvh" />
+      </PageShell>
+    )
+  }
+
+  if (photosError) {
+    return (
+      <PageShell>
+        <div className="page-mx flex min-h-[60vh] flex-col items-center justify-center text-center">
+          <p className="font-serif text-[17px] text-amber">日记加载失败</p>
+          <p className="mt-2 max-w-sm text-[13px] leading-5 text-dusk-100/60">{photosError}</p>
+          <button
+            type="button"
+            onClick={() => { void refreshPhotos() }}
+            className="mt-5 min-h-11 rounded-full border border-amber/30 bg-amber/10 px-5 py-2 text-[12px] font-medium text-amber transition-colors hover:bg-amber/20 active:scale-95"
+          >
+            重试
+          </button>
+        </div>
       </PageShell>
     )
   }
@@ -65,6 +87,12 @@ export function TimelinePage() {
           {photos.length} 条记录 · 共 {groupedByMonth.length} 个月份
         </p>
       </div>
+
+      {tripsError && (
+        <div className="page-mx mt-3 rounded-xl border border-amber/25 bg-amber/10 px-4 py-3 text-[12px] text-amber" role="status">
+          旅行链接暂时不可用，但日记仍可浏览。
+        </div>
+      )}
 
       {photos.length === 0 ? (
         <div className="reading-column page-px relative mt-8 mb-8 py-10">
