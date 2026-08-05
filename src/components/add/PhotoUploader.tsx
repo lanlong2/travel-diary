@@ -1,8 +1,8 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Camera, RefreshCw } from 'lucide-react'
 
 interface PhotoUploaderProps {
-  onFileSelect: (file: File) => void
+  onFileSelect: (file: File | null) => void
 }
 
 export function PhotoUploader({ onFileSelect }: PhotoUploaderProps) {
@@ -10,11 +10,20 @@ export function PhotoUploader({ onFileSelect }: PhotoUploaderProps) {
   const [preview, setPreview] = useState<string | null>(null)
   const [dragging, setDragging] = useState(false)
 
+  useEffect(() => {
+    return () => {
+      if (preview) URL.revokeObjectURL(preview)
+    }
+  }, [preview])
+
   const handleFile = (file: File) => {
+    if (!file.type.startsWith('image/')) return
     onFileSelect(file)
-    const reader = new FileReader()
-    reader.onload = () => setPreview(reader.result as string)
-    reader.readAsDataURL(file)
+    setPreview(URL.createObjectURL(file))
+  }
+
+  const resetInput = () => {
+    if (inputRef.current) inputRef.current.value = ''
   }
 
   return (
@@ -27,7 +36,9 @@ export function PhotoUploader({ onFileSelect }: PhotoUploaderProps) {
       <input
         ref={inputRef}
         type="file"
-        accept="image/png,image/jpeg,image/webp,image/heic"
+        accept="image/*"
+        capture="environment"
+        aria-label="选择照片"
         className="hidden"
         onChange={(e) => {
           const file = e.target.files?.[0]
@@ -45,7 +56,8 @@ export function PhotoUploader({ onFileSelect }: PhotoUploaderProps) {
             />
           </div>
           <button
-            onClick={(e) => { e.stopPropagation(); setPreview(null); inputRef.current?.click() }}
+            type="button"
+            onClick={(e) => { e.stopPropagation(); resetInput(); inputRef.current?.click() }}
             className="absolute -bottom-1 right-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber/15 border border-amber/30 backdrop-blur-md text-[12px] text-amber font-medium tracking-[0.04em] hover:bg-amber/25 transition-colors active:scale-95 duration-200"
           >
             <RefreshCw className="w-3 h-3" />
@@ -54,6 +66,7 @@ export function PhotoUploader({ onFileSelect }: PhotoUploaderProps) {
         </div>
       ) : (
         <button
+          type="button"
           onClick={() => inputRef.current?.click()}
           onDragOver={(e) => { e.preventDefault(); setDragging(true) }}
           onDragLeave={() => setDragging(false)}

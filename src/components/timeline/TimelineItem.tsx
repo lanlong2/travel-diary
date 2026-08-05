@@ -1,4 +1,5 @@
 import type { Photo } from '../../types'
+import { formatRecordDate } from '../../lib/dates'
 
 interface TimelineItemProps {
   record: Photo
@@ -11,7 +12,7 @@ interface TimelineItemProps {
 const EMOJI_POOL = ['🌿', '🌊', '🍵', '🌙', '☕', '🍂', '🌸', '🍃', '⛰️', '🌸']
 
 export function TimelineItem({ record, index, isFirstInMonth = false, onClick }: TimelineItemProps) {
-  const dateStr = new Date(record.created_at).toLocaleDateString('zh-CN', {
+  const dateStr = formatRecordDate(record.record_date, record.created_at, {
     month: 'long', day: 'numeric', weekday: 'short',
   })
 

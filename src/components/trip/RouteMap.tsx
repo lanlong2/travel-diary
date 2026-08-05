@@ -21,29 +21,36 @@ export function RouteMap({ cities }: RouteMapProps) {
   const mapRef = useRef<{ destroy: () => void; add: (o: unknown) => void; setFitView: (...a: unknown[]) => void; clearMap: () => void } | null>(null)
   const initializedRef = useRef(false)
   const [loaded, setLoaded] = useState(false)
+  const hasCities = cities.length > 0
 
   useEffect(() => {
-    if (cities.length === 0 || !containerRef.current || initializedRef.current) return
+    if (!hasCities || !containerRef.current || initializedRef.current) return
     initializedRef.current = true
 
     let cancelled = false
 
-    loadAMap().then((AMap) => {
-      if (cancelled || !containerRef.current) return
+    void loadAMap()
+      .then((AMap) => {
+        if (cancelled || !containerRef.current) return
 
-      const map = new AMap.Map(containerRef.current, {
-        zoom: 8,
-        center: [cities[0].lng, cities[0].lat],
-        mapStyle: 'amap://styles/dark',
-        resizeEnable: true,
-        dragEnable: true,
-        zoomEnable: true,
-        scrollWheel: false,
+        const map = new AMap.Map(containerRef.current, {
+          zoom: 8,
+          center: [cities[0].lng, cities[0].lat],
+          mapStyle: 'amap://styles/dark',
+          resizeEnable: true,
+          dragEnable: true,
+          zoomEnable: true,
+          scrollWheel: false,
+        })
+
+        mapRef.current = map
+        setLoaded(true)
       })
-
-      mapRef.current = map
-      setLoaded(true)
-    })
+      .catch(() => {
+        if (cancelled) return
+        initializedRef.current = false
+        setLoaded(false)
+      })
 
     return () => {
       cancelled = true
@@ -52,14 +59,19 @@ export function RouteMap({ cities }: RouteMapProps) {
         mapRef.current = null
         initializedRef.current = false
       }
+      setLoaded(false)
     }
-  }, [])
+  }, [hasCities])
 
   useEffect(() => {
     if (!mapRef.current || !loaded || cities.length === 0) return
 
+    let cancelled = false
+    let activeInterval: ReturnType<typeof setInterval> | null = null
+
     const drawRoute = async () => {
       const AMap = await loadAMap()
+      if (cancelled || !mapRef.current) return
       const map = mapRef.current as { clearMap: () => void; add: (o: unknown) => void; setFitView: (...a: unknown[]) => void }
 
       try { map.clearMap() } catch { /* ignore */ }
@@ -82,10 +94,10 @@ export function RouteMap({ cities }: RouteMapProps) {
 
         let progress = 0
         const totalSteps = 45
-        const animInterval = setInterval(() => {
+        activeInterval = setInterval(() => {
           progress += 1
           if (progress >= totalSteps) {
-            clearInterval(animInterval)
+            if (activeInterval) clearInterval(activeInterval)
             try {
               polyline.setOptions({
                 strokeDasharray: [pathLength, 0],
@@ -104,11 +116,22 @@ export function RouteMap({ cities }: RouteMapProps) {
 
       cities.forEach((city, i) => {
         const el = document.createElement('div')
-        el.innerHTML = `<div class="route-marker" style="animation-delay:${i * 0.5}s">
-          <span class="route-marker-halo" style="animation-delay:${i * 0.5}s"></span>
-          <div class="route-marker-inner">${i + 1}</div>
-          <div class="route-marker-label">${city.city_name}</div>
-        </div>`
+        el.className = 'route-marker'
+        el.style.animationDelay = `${i * 0.5}s`
+
+        const halo = document.createElement('span')
+        halo.className = 'route-marker-halo'
+        halo.style.animationDelay = `${i * 0.5}s`
+
+        const markerInner = document.createElement('div')
+        markerInner.className = 'route-marker-inner'
+        markerInner.textContent = String(i + 1)
+
+        const label = document.createElement('div')
+        label.className = 'route-marker-label'
+        label.textContent = city.city_name
+
+        el.append(halo, markerInner, label)
 
         const marker = new AMap.Marker({
           position: [city.lng, city.lat],
@@ -121,7 +144,11 @@ export function RouteMap({ cities }: RouteMapProps) {
       map.setFitView(undefined, false, [80, 80, 80, 80])
     }
 
-    drawRoute()
+    void drawRoute().catch(() => undefined)
+    return () => {
+      cancelled = true
+      if (activeInterval) clearInterval(activeInterval)
+    }
   }, [cities, loaded])
 
   if (cities.length === 0) {

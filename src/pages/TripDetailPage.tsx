@@ -8,23 +8,34 @@ import { PhotoModal } from '../components/trip/PhotoModal'
 import { Button } from '../components/ui/Button'
 import { Input } from '../components/ui/Input'
 import { Spinner } from '../components/ui/Spinner'
+import { Toast } from '../components/ui/Toast'
 import { CitySelector } from '../components/add/CitySelector'
 import { useTrip, useTrips } from '../hooks/useTrips'
 import { usePhotos } from '../hooks/usePhotos'
 import { Camera, X } from 'lucide-react'
-import type { Photo } from '../types'
 
 export function TripDetailPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const { trip, loading, refresh } = useTrip(id!)
-  const { photos, updatePhoto, deletePhoto } = usePhotos(id)
+  const { trip, loading, error: tripError, refresh } = useTrip(id!)
+  const {
+    photos,
+    loading: photosLoading,
+    error: photosError,
+    refresh: refreshPhotos,
+    updatePhoto,
+    deletePhoto,
+  } = usePhotos(id)
   const { deleteTrip, updateTrip, addCity, removeCity } = useTrips()
-  const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null)
+  const [selectedPhotoId, setSelectedPhotoId] = useState<string | null>(null)
   const [editing, setEditing] = useState(false)
   const [editTitle, setEditTitle] = useState(trip?.title || '')
   const [editStartDate, setEditStartDate] = useState(trip?.start_date || '')
   const [editEndDate, setEditEndDate] = useState(trip?.end_date || '')
+  const [operationError, setOperationError] = useState<string | null>(null)
+  const selectedPhoto = selectedPhotoId
+    ? photos.find((photo) => photo.id === selectedPhotoId) ?? null
+    : null
 
   if (loading) {
     return <PageShell><Spinner className="min-h-dvh" /></PageShell>
@@ -35,8 +46,18 @@ export function TripDetailPage() {
       <PageShell>
         <div className="flex flex-col items-center justify-center min-h-[60vh] p-8 animate-fade-in-up">
           <div className="glass-card p-10 text-center">
-            <p className="font-serif text-[17px] text-amber tracking-[0.04em] mb-2">找不到这次旅行</p>
-            <Button variant="ghost" onClick={() => navigate('/')}>返回首页</Button>
+            <p className="font-serif text-[17px] text-amber tracking-[0.04em] mb-2">
+              {tripError ? '旅行加载失败' : '找不到这次旅行'}
+            </p>
+            {tripError && (
+              <p className="mb-4 max-w-xs text-center text-xs leading-5 text-dusk-100/55">{tripError}</p>
+            )}
+            <div className="flex items-center justify-center gap-2">
+              {tripError && (
+                <Button variant="ghost" onClick={() => { void refresh() }}>重试</Button>
+              )}
+              <Button variant="ghost" onClick={() => navigate('/')}>返回首页</Button>
+            </div>
           </div>
         </div>
       </PageShell>
@@ -110,7 +131,15 @@ export function TripDetailPage() {
                       <button
                         type="button"
                         aria-label={`移除城市：${city.city_name}`}
-                        onClick={() => removeCity(city.id).then(() => refresh())}
+                        onClick={async () => {
+                          setOperationError(null)
+                          try {
+                            await removeCity(city.id)
+                            await refresh()
+                          } catch (error) {
+                            setOperationError(error instanceof Error ? error.message : '移除城市失败，请稍后重试')
+                          }
+                        }}
                         className="w-11 h-11 rounded-full bg-white/8 hover:bg-red-500/40 flex items-center justify-center transition-colors active:scale-90 duration-200"
                       >
                         <X className="w-3 h-3 text-dusk-100/70" />
@@ -123,13 +152,18 @@ export function TripDetailPage() {
               <CitySelector
                 onCitySelect={async (city) => {
                   if (!city) return
-                  await addCity(trip.id, {
-                    city_name: city.name,
-                    lat: city.lat,
-                    lng: city.lng,
-                    sort_order: trip.cities.length,
-                  })
-                  refresh()
+                  setOperationError(null)
+                  try {
+                    await addCity(trip.id, {
+                      city_name: city.name,
+                      lat: city.lat,
+                      lng: city.lng,
+                      sort_order: trip.cities.length,
+                    })
+                    await refresh()
+                  } catch (error) {
+                    setOperationError(error instanceof Error ? error.message : '添加城市失败，请稍后重试')
+                  }
                 }}
                 selectedCity={null}
               />
@@ -138,13 +172,18 @@ export function TripDetailPage() {
           <div className="flex gap-2.5 mt-5">
             <button
               onClick={async () => {
-                await updateTrip(trip.id, {
-                  title: editTitle,
-                  start_date: editStartDate,
-                  end_date: editEndDate,
-                })
-                refresh()
-                setEditing(false)
+                setOperationError(null)
+                try {
+                  await updateTrip(trip.id, {
+                    title: editTitle,
+                    start_date: editStartDate,
+                    end_date: editEndDate,
+                  })
+                  await refresh()
+                  setEditing(false)
+                } catch (error) {
+                  setOperationError(error instanceof Error ? error.message : '保存旅行失败，请稍后重试')
+                }
               }}
               disabled={!editTitle.trim()}
               className="px-6 py-3 bg-gradient-to-br from-amber via-amber to-amber-ember text-white rounded-[14px] text-[13px] font-semibold disabled:opacity-40 transition-all tracking-[0.04em] active:brightness-95 active:scale-95 duration-200 edge-glow-amber"
@@ -177,7 +216,10 @@ export function TripDetailPage() {
       <div className="mt-6">
         <PhotoGrid
           photos={photos}
-          onPhotoClick={setSelectedPhoto}
+          loading={photosLoading}
+          error={photosError}
+          onRetry={refreshPhotos}
+          onPhotoClick={(photo) => setSelectedPhotoId(photo.id)}
           onDeletePhoto={deletePhoto}
         />
       </div>
@@ -192,9 +234,18 @@ export function TripDetailPage() {
       {selectedPhoto && (
         <PhotoModal
           photo={selectedPhoto}
-          onClose={() => setSelectedPhoto(null)}
+          onClose={() => setSelectedPhotoId(null)}
           onDelete={deletePhoto}
           onUpdate={updatePhoto}
+        />
+      )}
+
+      {operationError && (
+        <Toast
+          message={operationError}
+          type="error"
+          isVisible={!!operationError}
+          onClose={() => setOperationError(null)}
         />
       )}
     </PageShell>

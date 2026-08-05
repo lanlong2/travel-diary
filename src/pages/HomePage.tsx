@@ -7,18 +7,21 @@ import { TripCard } from '../components/home/TripCard'
 import { useTrips } from '../hooks/useTrips'
 import { usePhotos } from '../hooks/usePhotos'
 import type { CitySummary, Photo } from '../types'
+import { formatRecordDate, getRecordTimestamp } from '../lib/dates'
 
 export function HomePage() {
   const navigate = useNavigate()
-  const { trips, loading: tripsLoading, error: tripsError, deleteTrip } = useTrips()
-  const { photos, loading: photosLoading } = usePhotos()
+  const { trips, loading: tripsLoading, error: tripsError, deleteTrip, refresh: refreshTrips } = useTrips()
+  const { photos, loading: photosLoading, error: photosError, refresh: refreshPhotos } = usePhotos()
 
   const citySummaries = useMemo((): CitySummary[] => {
     const map = new Map<string, CitySummary>()
     trips.forEach((trip) => {
       trip.cities.forEach((city) => {
         const existing = map.get(city.city_name)
-        const cityPhotos = photos.filter((p) => p.city_name === city.city_name)
+        const cityPhotos = photos
+          .filter((p) => p.city_name === city.city_name && p.image_url)
+          .sort((a, b) => getRecordTimestamp(b.record_date, b.created_at) - getRecordTimestamp(a.record_date, a.created_at))
         if (existing) {
           existing.visit_count++
           existing.photo_count += cityPhotos.length
@@ -43,14 +46,14 @@ export function HomePage() {
   const recentPhotos = useMemo(() => {
     return [...photos]
       .filter((p) => p.image_url)
-      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+      .sort((a, b) => getRecordTimestamp(b.record_date, b.created_at) - getRecordTimestamp(a.record_date, a.created_at))
       .slice(0, 12)
   }, [photos])
 
   const recentRecords = useMemo(() => {
     return [...photos]
       .filter((p) => !p.image_url && p.note)
-      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+      .sort((a, b) => getRecordTimestamp(b.record_date, b.created_at) - getRecordTimestamp(a.record_date, a.created_at))
       .slice(0, 6)
   }, [photos])
 
@@ -61,6 +64,13 @@ export function HomePage() {
         <div className="page-mx mt-4 glass-card p-10 text-center animate-fade-in-up">
           <p className="font-serif text-[17px] text-amber tracking-[0.04em] mb-2">加载失败</p>
           <p className="text-[13px] text-dusk-100/60">{tripsError}</p>
+          <button
+            type="button"
+            onClick={() => { void refreshTrips() }}
+            className="mt-5 min-h-11 rounded-full border border-amber/30 bg-amber/10 px-5 py-2 text-[12px] font-medium text-amber transition-colors hover:bg-amber/20 active:scale-95"
+          >
+            重试
+          </button>
         </div>
       </PageShell>
     )
@@ -128,6 +138,15 @@ export function HomePage() {
         </section>
       )}
 
+      {photosError && (
+        <div className="page-mx mt-5 flex items-center justify-between gap-3 rounded-xl border border-red-400/25 bg-red-500/10 px-4 py-3 text-[12px] text-red-200" role="alert">
+          <span>照片加载失败：{photosError}</span>
+          <button type="button" onClick={() => { void refreshPhotos() }} className="min-h-11 flex-shrink-0 rounded-lg px-3 text-amber hover:bg-amber/10">
+            重试
+          </button>
+        </div>
+      )}
+
       {recentRecords.length > 0 && (
         <section className="mt-6 mb-2 reveal" style={{ transitionDelay: '0.08s' }}>
           <div className="page-mx flex items-center mb-4 gap-3">
@@ -161,7 +180,7 @@ export function HomePage() {
                     <div className="flex items-center gap-2 mt-1.5 text-xs text-dusk-100/55 font-mono">
                       <span className="truncate">{record.city_name}</span>
                       <span className="w-1 h-1 rounded-full bg-amber/40" />
-                      <span>{new Date(record.created_at).toLocaleDateString('zh-CN', { month: 'numeric', day: 'numeric' })}</span>
+                      <span>{formatRecordDate(record.record_date, record.created_at, { month: 'numeric', day: 'numeric' })}</span>
                     </div>
                   </div>
                 </div>

@@ -15,6 +15,43 @@ interface HoveredCity {
   y: number
 }
 
+function createCityMarkerContent(cityName: string, phase: number): HTMLDivElement {
+  const root = document.createElement('div')
+  root.className = 'map-marker-wrap'
+
+  for (const className of ['map-marker-ripple', 'map-marker-ripple delay-1', 'map-marker-ripple delay-2']) {
+    const ripple = document.createElement('span')
+    ripple.className = className
+    root.appendChild(ripple)
+  }
+
+  const dot = document.createElement('div')
+  dot.className = 'map-marker-dot'
+  dot.style.animationDelay = `${phase}s`
+  root.appendChild(dot)
+
+  const label = document.createElement('div')
+  label.style.position = 'absolute'
+  label.style.top = '-22px'
+  label.style.left = '50%'
+  label.style.transform = 'translateX(-50%)'
+  label.style.background = 'oklch(24% 0.03 45 / 0.9)'
+  label.style.backdropFilter = 'blur(12px)'
+  label.style.padding = '2px 10px'
+  label.style.borderRadius = '10px'
+  label.style.fontSize = '11px'
+  label.style.color = 'oklch(96% 0.02 70)'
+  label.style.whiteSpace = 'nowrap'
+  label.style.fontWeight = '600'
+  label.style.pointerEvents = 'none'
+  label.style.letterSpacing = '0.05em'
+  label.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3), inset 0 1px 0 oklch(96% 0.02 70 / 0.12)'
+  label.textContent = cityName
+  root.appendChild(label)
+
+  return root
+}
+
 export function ChinaMap({ cities, photos, onCityClick }: ChinaMapProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -28,19 +65,14 @@ export function ChinaMap({ cities, photos, onCityClick }: ChinaMapProps) {
     if (!mapRef.current) return
     try {
       const AMap = await loadAMap()
-      mapRef.current.clearMap()
+      const map = mapRef.current
+      if (!map) return
+      map.clearMap()
       if (cities.length === 0) return
 
       const markers = cities.map((city: CitySummary, idx: number) => {
-        const el = document.createElement('div')
         const phase = (idx % 4) * 0.6
-        el.innerHTML = `<div class="map-marker-wrap">
-          <span class="map-marker-ripple"></span>
-          <span class="map-marker-ripple delay-1"></span>
-          <span class="map-marker-ripple delay-2"></span>
-          <div class="map-marker-dot" style="animation-delay:${phase}s"></div>
-          <div style="position:absolute;top:-22px;left:50%;transform:translateX(-50%);background:oklch(24% 0.03 45 / 0.9);backdrop-filter:blur(12px);padding:2px 10px;border-radius:10px;font-size:11px;color:oklch(96% 0.02 70);white-space:nowrap;font-weight:600;pointer-events:none;letter-spacing:0.05em;box-shadow:0 2px 8px rgba(0,0,0,0.3), inset 0 1px 0 oklch(96% 0.02 70 / 0.12)">${city.city_name}</div>
-        </div>`
+        const el = createCityMarkerContent(city.city_name, phase)
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const marker = new (AMap as any).Marker({
@@ -60,7 +92,9 @@ export function ChinaMap({ cities, photos, onCityClick }: ChinaMapProps) {
             dot.style.transform = 'scale(1.35)'
             dot.style.animationPlayState = 'paused'
           }
-          const pixel = mapRef.current.lngLatToContainer([city.lng, city.lat])
+          const currentMap = mapRef.current
+          if (!currentMap) return
+          const pixel = currentMap.lngLatToContainer([city.lng, city.lat])
           setHoveredCity({ city, x: pixel.x, y: pixel.y })
         }
 
@@ -98,8 +132,8 @@ export function ChinaMap({ cities, photos, onCityClick }: ChinaMapProps) {
         return marker
       })
 
-      markers.forEach((m: unknown) => mapRef.current.add(m))
-      mapRef.current.setFitView(markers, false, [100, 100, 100, 100])
+      markers.forEach((m: unknown) => map.add(m))
+      map.setFitView(markers, false, [100, 100, 100, 100])
     } catch {
       // 标记更新失败，静默处理
     }

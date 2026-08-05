@@ -856,13 +856,46 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
   .login-mark { margin-bottom: 16px; }
   .login-footer { margin-top: 24px; }
 }
-.photo-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 12px; }
-@media (min-width: 640px) { .photo-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; } }
-@media (min-width: 1024px) { .photo-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.photo-grid { columns: 2; column-gap: 12px; }
+.photo-grid > * { width: 100%; margin-bottom: 12px; }
+@media (min-width: 640px) {
+  .photo-grid { columns: 3; column-gap: 16px; }
+  .photo-grid > * { margin-bottom: 16px; }
+}
+@media (min-width: 1024px) { .photo-grid { columns: 4; } }
 
 .trip-cover-hero { width: 100vw; height: 240px; margin-left: calc(50% - 50vw); }
 .route-map-canvas { height: 240px; }
 .safe-top { padding-top: max(20px, env(safe-area-inset-top)); }
 @media (min-width: 768px) { .trip-cover-hero { width: auto; height: 360px; margin-inline: var(--page-gutter); border-radius: 8px; } .route-map-canvas { height: 360px; } }
 
-@media (min-width: 900px) { .photo-modal { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(340px, .65fr); } .photo-modal__media { height: 100dvh; } .photo-modal__panel { max-height: 100dvh; height: 100dvh; border-radius: 0; padding-top: max(28px, env(safe-area-inset-top)); } }
+.photo-modal { height: 100dvh; min-height: 100dvh; }
+@media (max-width: 899px) {
+  .photo-modal__media { flex: 1 1 0%; min-height: 0; }
+  .photo-modal__panel {
+    width: 100%;
+    flex: 0 1 auto;
+    max-height: min(58dvh, 520px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+  }
+}
+@media (min-width: 900px) {
+  .photo-modal {
+    display: grid;
+    grid-template-columns: minmax(0, 1.55fr) minmax(340px, .65fr);
+    grid-template-rows: minmax(0, 1fr);
+  }
+  .photo-modal__media { height: auto; min-height: 0; }
+  .photo-modal__panel {
+    display: flex;
+    min-height: 0;
+    height: auto;
+    max-height: none;
+    flex-direction: column;
+    border-radius: 0;
+    padding-top: max(28px, env(safe-area-inset-top));
+  }
+}
