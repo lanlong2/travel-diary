@@ -3,6 +3,7 @@ import { Plus, Check, BookOpen } from 'lucide-react'
 import { Input } from '../ui/Input'
 import type { TripWithCities } from '../../types'
 import { getLocalDateString, isValidDateRange } from '../../lib/dates'
+import { getErrorMessage } from '../../lib/errors'
 
 interface TripSelectProps {
   trips: TripWithCities[]
@@ -33,7 +34,7 @@ export function TripSelect({ trips, selectedTripId, onSelectTrip, onCreateTrip }
       setNewTitle('')
       setShowNew(false)
     } catch (error) {
-      setDateError(error instanceof Error ? error.message : '创建旅行失败，请稍后重试')
+      setDateError(getErrorMessage(error, '创建旅行失败，请稍后重试'))
     } finally {
       setCreating(false)
     }

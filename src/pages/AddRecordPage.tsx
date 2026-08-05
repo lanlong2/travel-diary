@@ -11,6 +11,7 @@ import { Toast } from '../components/ui/Toast'
 import { useTrips } from '../hooks/useTrips'
 import { usePhotos } from '../hooks/usePhotos'
 import { getLocalDateString } from '../lib/dates'
+import { getErrorMessage } from '../lib/errors'
 import { completeRecordSetup } from '../lib/recordWorkflow'
 import type { Author } from '../types'
 import { ArrowLeft, Camera, FileText } from 'lucide-react'
@@ -96,7 +97,7 @@ export function AddRecordPage() {
       }
       // eslint-disable-next-line no-console
       console.error('保存失败:', err)
-      const msg = err instanceof Error ? err.message : '未知错误'
+      const msg = getErrorMessage(err)
       setToast({ message: `保存失败：${msg}`, type: 'error' })
     } finally {
       setSubmitting(false)
@@ -120,7 +121,7 @@ export function AddRecordPage() {
     } catch (err) {
       // eslint-disable-next-line no-console
       console.error('创建旅行失败:', err)
-      const msg = err instanceof Error ? err.message : '未知错误'
+      const msg = getErrorMessage(err)
       setToast({ message: `创建旅行失败：${msg}`, type: 'error' })
       throw err
     }
