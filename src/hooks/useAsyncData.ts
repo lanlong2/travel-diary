@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { getErrorMessage as formatErrorMessage } from '../lib/errors'
 
 export interface AsyncDataState<T> {
   data: T
@@ -8,7 +9,7 @@ export interface AsyncDataState<T> {
 }
 
 function getErrorMessage(error: unknown) {
-  return error instanceof Error ? error.message : '未知错误'
+  return formatErrorMessage(error)
 }
 
 /**
