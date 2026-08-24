@@ -3,8 +3,9 @@ import { createPortal } from 'react-dom'
 import { Calendar, MapPin, Pencil, Trash2, X } from 'lucide-react'
 import type { Photo, PhotoUpdate } from '../../types'
 import { ConfirmDialog } from '../ui/ConfirmDialog'
-import { useDialogAccessibility } from '../ui/Modal'
+import { useDialogAccessibility } from '../ui/dialogAccessibility'
 import { formatRecordDate } from '../../lib/dates'
+import { reportPrivatePhotoLoadError } from '../../lib/privatePhotoEvents'
 
 interface PhotoModalProps {
   photo: Photo
@@ -123,9 +124,14 @@ export function PhotoModal({ photo, onClose, onDelete, onUpdate }: PhotoModalPro
               src={photo.image_url}
               alt={photo.note || photo.city_name}
               className="max-h-full max-w-full rounded-[4px] object-contain animate-reveal-scale"
-              style={{ boxShadow: '0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px oklch(96% 0.02 70 / 0.06)' }}
+              style={{
+                boxShadow: '0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px oklch(96% 0.02 70 / 0.06)',
+              }}
               onClick={(event) => event.stopPropagation()}
-              onError={() => setImageError(true)}
+              onError={() => {
+                if (photo.image_url) reportPrivatePhotoLoadError(photo.image_url)
+                setImageError(true)
+              }}
             />
           ) : (
             <div
@@ -193,7 +199,10 @@ export function PhotoModal({ photo, onClose, onDelete, onUpdate }: PhotoModalPro
           {editing ? (
             <div className="space-y-4">
               <div>
-                <label htmlFor="photo-edit-note" className="mb-1.5 flex items-center gap-2 text-[11px] tracking-[0.04em] text-dusk-100/65">
+                <label
+                  htmlFor="photo-edit-note"
+                  className="mb-1.5 flex items-center gap-2 text-[11px] tracking-[0.04em] text-dusk-100/65"
+                >
                   <span className="h-1 w-1 rounded-full bg-amber/60" />
                   留言
                 </label>
@@ -207,7 +216,10 @@ export function PhotoModal({ photo, onClose, onDelete, onUpdate }: PhotoModalPro
                 />
               </div>
               <div>
-                <label htmlFor="photo-edit-city" className="mb-1.5 flex items-center gap-2 text-[11px] tracking-[0.04em] text-dusk-100/65">
+                <label
+                  htmlFor="photo-edit-city"
+                  className="mb-1.5 flex items-center gap-2 text-[11px] tracking-[0.04em] text-dusk-100/65"
+                >
                   <span className="h-1 w-1 rounded-full bg-amber/60" />
                   城市
                 </label>
@@ -220,7 +232,10 @@ export function PhotoModal({ photo, onClose, onDelete, onUpdate }: PhotoModalPro
                 />
               </div>
               <div>
-                <label htmlFor="photo-edit-date" className="mb-1.5 flex items-center gap-2 text-[11px] tracking-[0.04em] text-dusk-100/65">
+                <label
+                  htmlFor="photo-edit-date"
+                  className="mb-1.5 flex items-center gap-2 text-[11px] tracking-[0.04em] text-dusk-100/65"
+                >
                   <span className="h-1 w-1 rounded-full bg-amber/60" />
                   日期
                 </label>
@@ -274,7 +289,12 @@ export function PhotoModal({ photo, onClose, onDelete, onUpdate }: PhotoModalPro
 
               {photo.note ? (
                 <div className="relative border-l-2 border-amber/50 pl-3">
-                  <span className="absolute -left-1 -top-1 font-serif text-xl text-amber/65" aria-hidden="true">&quot;</span>
+                  <span
+                    className="absolute -left-1 -top-1 font-serif text-xl text-amber/65"
+                    aria-hidden="true"
+                  >
+                    &quot;
+                  </span>
                   <p className="font-serif text-[15px] italic leading-relaxed text-dusk-50">
                     {photo.note}
                   </p>
@@ -290,11 +310,12 @@ export function PhotoModal({ photo, onClose, onDelete, onUpdate }: PhotoModalPro
       {showDelete && (
         <ConfirmDialog
           title="删除照片"
-          message={deleteError
-            ? `删除失败：${deleteError}`
-            : photo.note
-              ? `确定要删除「${photo.note}」这张照片吗？`
-              : '确定要删除这张照片吗？'
+          message={
+            deleteError
+              ? `删除失败：${deleteError}`
+              : photo.note
+                ? `确定要删除「${photo.note}」这张照片吗？`
+                : '确定要删除这张照片吗？'
           }
           confirmLabel={deleteError ? '重试删除' : '确认删除'}
           onConfirm={handleDelete}

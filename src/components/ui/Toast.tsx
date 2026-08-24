@@ -9,7 +9,13 @@ interface ToastProps {
   duration?: number
 }
 
-export function Toast({ message, type = 'success', isVisible, onClose, duration = 3000 }: ToastProps) {
+export function Toast({
+  message,
+  type = 'success',
+  isVisible,
+  onClose,
+  duration = 3000,
+}: ToastProps) {
   const [show, setShow] = useState(false)
   const onCloseRef = useRef(onClose)
   const closeTimerRef = useRef<number | null>(null)
@@ -66,7 +72,9 @@ export function Toast({ message, type = 'success', isVisible, onClose, duration 
         ) : (
           <AlertCircle aria-hidden="true" className="h-5 w-5 flex-shrink-0 text-red-300" />
         )}
-        <span className={`min-w-0 flex-1 text-sm font-medium leading-5 ${isSuccess ? 'text-dusk-50' : 'text-red-200'}`}>
+        <span
+          className={`min-w-0 flex-1 text-sm font-medium leading-5 ${isSuccess ? 'text-dusk-50' : 'text-red-200'}`}
+        >
           {message}
         </span>
         <button

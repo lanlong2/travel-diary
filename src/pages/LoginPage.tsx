@@ -29,11 +29,14 @@ export function LoginPage() {
     setError('')
     setLoading(true)
 
-    const { error: signInError } = await signIn(email, password)
-    if (signInError) {
-      setError(signInError)
+    try {
+      const { error: signInError } = await signIn(email, password)
+      if (signInError) {
+        setError(signInError)
+      }
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
   }
 
   return (
@@ -80,7 +83,9 @@ export function LoginPage() {
           aria-hidden="true"
         >
           <span className="text-[8px] tracking-[0.12em] text-stamp-dim">EST.</span>
-          <span className="text-[14px] font-bold tracking-[0.05em] text-stamp-ink leading-tight">2025</span>
+          <span className="text-[14px] font-bold tracking-[0.05em] text-stamp-ink leading-tight">
+            2025
+          </span>
         </div>
 
         {/* 顶部淡金光晕 */}
@@ -179,18 +184,16 @@ export function LoginPage() {
           />
 
           {error && (
-            <div role="alert" className="p-4 rounded-[10px] bg-red-500/15 border border-red-400/30 text-red-300 text-[13px] text-center animate-scale-in flex items-center justify-center gap-2">
+            <div
+              role="alert"
+              className="p-4 rounded-[10px] bg-red-500/15 border border-red-400/30 text-red-300 text-[13px] text-center animate-scale-in flex items-center justify-center gap-2"
+            >
               <span className="w-1 h-1 rounded-full bg-red-400" />
               {error}
             </div>
           )}
 
-          <Button
-            type="submit"
-            size="lg"
-            className="w-full mt-3"
-            disabled={loading}
-          >
+          <Button type="submit" size="lg" className="w-full mt-3" disabled={loading}>
             {loading ? (
               <span className="flex items-center justify-center gap-2">
                 <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />

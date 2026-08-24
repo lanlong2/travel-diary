@@ -14,15 +14,15 @@ export function Button({
   children,
   ...props
 }: ButtonProps) {
-  const base = 'inline-flex min-h-11 items-center justify-center gap-2 rounded-[10px] font-semibold tracking-[0.01em] transition-[background-color,border-color,color,box-shadow,transform] duration-200 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-45 disabled:active:scale-100'
+  const base =
+    'inline-flex min-h-11 items-center justify-center gap-2 rounded-[10px] font-semibold tracking-[0.01em] transition-[background-color,border-color,color,box-shadow,transform] duration-200 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-45 disabled:active:scale-100'
 
   const variants = {
     primary:
       'border border-amber-honey/20 bg-amber text-dusk-950 shadow-[0_8px_22px_oklch(10%_0.01_50_/_0.28)] hover:bg-amber-honey hover:shadow-[0_10px_26px_oklch(10%_0.01_50_/_0.36)]',
     secondary:
       'border border-dusk-300/25 bg-dusk-700/80 text-dusk-50 shadow-[0_6px_18px_oklch(10%_0.01_50_/_0.2)] hover:border-dusk-200/35 hover:bg-dusk-600/90',
-    ghost:
-      'text-dusk-100/80 hover:bg-white/[0.07] hover:text-dusk-50',
+    ghost: 'text-dusk-100/80 hover:bg-white/[0.07] hover:text-dusk-50',
   }
 
   const sizes = {

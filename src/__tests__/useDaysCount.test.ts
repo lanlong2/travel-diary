@@ -8,10 +8,6 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
 import { useDaysCount, TOGETHER_START_DATE } from '../hooks/useDaysCount'
 
-function daysBetween(start: Date, end: Date): number {
-  return Math.floor((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1
-}
-
 function futureDate(offsetDays: number): Date {
   const d = new Date(TOGETHER_START_DATE)
   d.setDate(d.getDate() + offsetDays)

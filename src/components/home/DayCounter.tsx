@@ -12,7 +12,9 @@ export function DayCounter() {
       <div className="flex items-center gap-3 mb-5">
         <span className="editorial-chapter">CHAPTER · I</span>
         <span className="flex-1 h-px bg-gradient-to-r from-amber/40 to-transparent" />
-        <span className="font-mono text-[10px] tracking-[0.12em] text-dusk-100/40">EST. 2025.11.08</span>
+        <span className="font-mono text-[10px] tracking-[0.12em] text-dusk-100/40">
+          EST. 2025.11.08
+        </span>
       </div>
 
       <div className="relative px-5 py-6 text-center" style={{ perspective: '1000px' }}>
@@ -22,7 +24,9 @@ export function DayCounter() {
           aria-hidden="true"
         >
           <span className="font-mono text-[9px] tracking-[0.12em] text-amber/55">EST.</span>
-          <span className="font-mono text-[14px] font-bold tracking-[0.05em] text-stamp-ink">2025</span>
+          <span className="font-mono text-[14px] font-bold tracking-[0.05em] text-stamp-ink">
+            2025
+          </span>
         </div>
 
         {/* 右上角邮戳 — 不规则磨损 */}
@@ -31,13 +35,15 @@ export function DayCounter() {
           style={{ transform: 'rotate(4deg)' }}
           aria-hidden="true"
         >
-          <span className="font-mono text-[8px] tracking-[0.12em] text-stamp-dim leading-none">DIARY</span>
-          <span className="font-mono text-[10px] font-bold tracking-[0.05em] text-stamp-ink leading-tight">No.{String(days).padStart(3, '0')}</span>
+          <span className="font-mono text-[8px] tracking-[0.12em] text-stamp-dim leading-none">
+            DIARY
+          </span>
+          <span className="font-mono text-[10px] font-bold tracking-[0.05em] text-stamp-ink leading-tight">
+            No.{String(days).padStart(3, '0')}
+          </span>
         </div>
 
-        <p className="font-serif text-[13px] text-dusk-100/75 tracking-[0.18em]">
-          在一起的第
-        </p>
+        <p className="font-serif text-[13px] text-dusk-100/75 tracking-[0.18em]">在一起的第</p>
 
         <div className="my-3 flex items-end justify-center gap-2 relative">
           {/* 数字 — Cormorant 大字 */}
@@ -77,7 +83,8 @@ export function DayCounter() {
           className="absolute bottom-0 left-1/2 -translate-x-1/2 h-px"
           style={{
             width: '30%',
-            background: 'linear-gradient(90deg, transparent 0%, oklch(68% 0.17 40 / 0.55) 30%, oklch(55% 0.15 35 / 0.7) 50%, oklch(68% 0.17 40 / 0.55) 70%, transparent 100%)',
+            background:
+              'linear-gradient(90deg, transparent 0%, oklch(68% 0.17 40 / 0.55) 30%, oklch(55% 0.15 35 / 0.7) 50%, oklch(68% 0.17 40 / 0.55) 70%, transparent 100%)',
           }}
           aria-hidden="true"
         />

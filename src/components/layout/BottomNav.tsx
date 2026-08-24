@@ -14,14 +14,18 @@ export function BottomNav() {
   const location = useLocation()
   const navigate = useNavigate()
 
-  const isActive = (path: string) => path === '/'
-    ? location.pathname === '/'
-    : location.pathname.startsWith(path)
+  const isActive = (path: string) =>
+    path === '/' ? location.pathname === '/' : location.pathname.startsWith(path)
 
   return (
     <>
       <nav aria-label="桌面主导航" className="desktop-nav">
-        <button type="button" className="desktop-brand" onClick={() => navigate('/')} aria-label="回到足迹首页">
+        <button
+          type="button"
+          className="desktop-brand"
+          onClick={() => navigate('/')}
+          aria-label="回到足迹首页"
+        >
           <span className="desktop-brand__mark" aria-hidden="true">
             <Heart className="h-4 w-4" fill="currentColor" />
           </span>
@@ -70,7 +74,10 @@ export function BottomNav() {
                   className={`mobile-nav__item ${active ? 'is-active' : ''} ${isPrimary ? 'is-primary' : ''}`}
                 >
                   <span className={isPrimary ? 'mobile-nav__primary-icon' : 'mobile-nav__icon'}>
-                    <Icon className={isPrimary ? 'h-6 w-6' : 'h-[22px] w-[22px]'} strokeWidth={isPrimary ? 2.4 : 2} />
+                    <Icon
+                      className={isPrimary ? 'h-6 w-6' : 'h-[22px] w-[22px]'}
+                      strokeWidth={isPrimary ? 2.4 : 2}
+                    />
                   </span>
                   <span>{label}</span>
                 </button>

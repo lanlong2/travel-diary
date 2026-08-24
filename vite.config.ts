@@ -1,8 +1,22 @@
-import { defineConfig } from 'vite'
+import { copyFileSync } from 'node:fs'
+import { resolve } from 'node:path'
+import { defineConfig, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
+function githubPagesSpaFallback(): Plugin {
+  return {
+    name: 'github-pages-spa-fallback',
+    apply: 'build',
+    closeBundle() {
+      const outputDirectory = resolve(import.meta.dirname, 'dist')
+      copyFileSync(resolve(outputDirectory, 'index.html'), resolve(outputDirectory, '404.html'))
+    },
+  }
+}
+
 export default defineConfig({
+  base: '/',
   plugins: [
     react(),
     VitePWA({
@@ -79,8 +93,19 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+        cleanupOutdatedCaches: true,
+        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+        globIgnores: ['**/screenshot-*.*', '**/*.{woff,woff2,ttf,otf}'],
         runtimeCaching: [
+          {
+            urlPattern: /\/assets\/.*\.(?:woff2?|ttf|otf)(?:\?.*)?$/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'static-font-cache',
+              expiration: { maxEntries: 20, maxAgeSeconds: 60 * 60 * 24 * 365 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
           {
             urlPattern: /^https:\/\/webapi\.amap\.com\/.*/i,
             handler: 'StaleWhileRevalidate',
@@ -90,19 +115,13 @@ export default defineConfig({
             },
           },
           {
-            urlPattern: /^https:\/\/[^/]+\/storage\/v1\/object\/sign\/photos\/.*/i,
+            // Cache only public, same-origin assets. Private Supabase signed URLs must
+            // never survive a user session in Cache Storage.
+            urlPattern: ({ sameOrigin, url }) =>
+              sameOrigin && /\.(?:png|jpg|jpeg|svg|gif|webp|avif)$/i.test(url.pathname),
             handler: 'CacheFirst',
             options: {
-              cacheName: 'private-photo-cache',
-              expiration: { maxEntries: 100, maxAgeSeconds: 60 * 60 * 24 * 30 },
-              cacheableResponse: { statuses: [0, 200] },
-            },
-          },
-          {
-            urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp|avif)(?:\?.*)?$/i,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'image-cache',
+              cacheName: 'public-image-cache-v2',
               expiration: { maxEntries: 100, maxAgeSeconds: 60 * 60 * 24 * 30 },
               cacheableResponse: { statuses: [0, 200] },
             },
@@ -110,5 +129,6 @@ export default defineConfig({
         ],
       },
     }),
+    githubPagesSpaFallback(),
   ],
 })

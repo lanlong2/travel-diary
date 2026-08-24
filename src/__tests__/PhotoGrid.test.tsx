@@ -34,14 +34,7 @@ describe('PhotoGrid', () => {
 
   it('offers a retry action when loading fails', () => {
     const onRetry = vi.fn()
-    render(
-      <PhotoGrid
-        photos={[]}
-        error="网络不可用"
-        onRetry={onRetry}
-        onPhotoClick={vi.fn()}
-      />,
-    )
+    render(<PhotoGrid photos={[]} error="网络不可用" onRetry={onRetry} onPhotoClick={vi.fn()} />)
 
     fireEvent.click(screen.getByRole('button', { name: /重新加载/ }))
     expect(onRetry).toHaveBeenCalledTimes(1)

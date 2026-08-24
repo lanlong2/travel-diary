@@ -1,6 +1,10 @@
 node_modules/
 .superpowers/
 dist/
+coverage/
+playwright-report/
+test-results/
+*.tsbuildinfo
 .env
 .DS_Store
 

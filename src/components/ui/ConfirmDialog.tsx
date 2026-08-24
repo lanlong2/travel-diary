@@ -1,6 +1,7 @@
 import { useId, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import { AlertTriangle } from 'lucide-react'
-import { useDialogAccessibility } from './Modal'
+import { useDialogAccessibility } from './dialogAccessibility'
 
 interface ConfirmDialogProps {
   title: string
@@ -32,7 +33,7 @@ export function ConfirmDialog({
     closeOnEscape: !loading,
   })
 
-  return (
+  return createPortal(
     <div
       className="fixed inset-0 z-[60] flex items-center justify-center p-4"
       style={{
@@ -89,7 +90,10 @@ export function ConfirmDialog({
           >
             {loading ? (
               <>
-                <span aria-hidden="true" className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                <span
+                  aria-hidden="true"
+                  className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white"
+                />
                 {'\u5220\u9664\u4e2d'}
               </>
             ) : (
@@ -98,6 +102,7 @@ export function ConfirmDialog({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   )
 }

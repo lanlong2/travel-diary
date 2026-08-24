@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react'
 
 type ParticleType = 'heart' | 'sparkle' | 'dust'
-type LightType = 'orb' | 'flash'
 
 interface Particle {
   x: number
@@ -41,64 +40,104 @@ interface FlashLight {
   hue: number
 }
 
-const HEART_PATH = 'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'
+const HEART_PATH =
+  'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'
 
 const isMobile = () =>
   typeof window !== 'undefined' &&
-  (window.matchMedia('(max-width: 768px)').matches ||
+  ((typeof window.matchMedia === 'function' && window.matchMedia('(max-width: 768px)').matches) ||
     (navigator.maxTouchPoints ?? 0) > 1)
 
 export function Particles() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
+    const canvasElement = canvasRef.current
+    if (!canvasElement) return
+    const canvas = canvasElement
 
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (reducedMotion) return
+    const reducedMotion =
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reducedMotion) {
+      canvas.hidden = true
+      return () => {
+        canvas.hidden = false
+      }
+    }
 
-    const ctx = canvas.getContext('2d')!
+    const drawingContext = canvas.getContext('2d')
+    if (!drawingContext) return
+    const ctx: CanvasRenderingContext2D = drawingContext
+
     let animId = 0
-    let particles: Particle[] = []
-    let orbs: LightOrb[] = []
-    let flashes: FlashLight[] = []
+    let resizeFrame = 0
+    let lastFrameTime = 0
     let lastFlashTime = 0
+    let running = !document.hidden
+    const mobile = isMobile()
+    const frameInterval = mobile ? 1000 / 30 : 1000 / 60
+    const viewport = { width: 0, height: 0, dpr: 1 }
+    const particles: Particle[] = []
+    const orbs: LightOrb[] = []
+    let flashes: FlashLight[] = []
     let nextFlashDelay = 5000 + Math.random() * 5000
 
-    const mobile = isMobile()
     // 减少粒子量，加重光斑 — 更"黄昏"
     const PARTICLE_COUNT = mobile ? 18 : 38
     const ORB_COUNT = mobile ? 3 : 5
+    const heartPath = typeof Path2D === 'undefined' ? null : new Path2D(HEART_PATH)
 
     function resize() {
-      canvas!.width = window.innerWidth
-      canvas!.height = window.innerHeight
+      resizeFrame = 0
+      const width = Math.max(1, window.innerWidth)
+      const height = Math.max(1, window.innerHeight)
+      const dpr = Math.min(window.devicePixelRatio || 1, 2)
+
+      viewport.width = width
+      viewport.height = height
+      viewport.dpr = dpr
+      canvas.style.width = `${width}px`
+      canvas.style.height = `${height}px`
+      canvas.width = Math.floor(width * dpr)
+      canvas.height = Math.floor(height * dpr)
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
     }
+
+    function scheduleResize() {
+      if (resizeFrame) return
+      resizeFrame = window.requestAnimationFrame(resize)
+    }
+
     resize()
-    window.addEventListener('resize', resize)
+    window.addEventListener('resize', scheduleResize, { passive: true })
+    window.visualViewport?.addEventListener('resize', scheduleResize, { passive: true })
 
     function createParticle(randomY: boolean): Particle {
       const typeRoll = Math.random()
-      const type: ParticleType = typeRoll < 0.3 ? 'heart'
-        : typeRoll < 0.65 ? 'sparkle'
-        : 'dust'
+      const type: ParticleType = typeRoll < 0.3 ? 'heart' : typeRoll < 0.65 ? 'sparkle' : 'dust'
 
       return {
-        x: Math.random() * canvas!.width,
-        y: randomY ? Math.random() * canvas!.height : canvas!.height + 20,
-        size: type === 'heart' ? 4 + Math.random() * 8
-          : type === 'sparkle' ? 1.5 + Math.random() * 3
-          : 0.8 + Math.random() * 1.8,
+        x: Math.random() * viewport.width,
+        y: randomY ? Math.random() * viewport.height : viewport.height + 20,
+        size:
+          type === 'heart'
+            ? 4 + Math.random() * 8
+            : type === 'sparkle'
+              ? 1.5 + Math.random() * 3
+              : 0.8 + Math.random() * 1.8,
         speed: 0.06 + Math.random() * 0.2,
         opacity: 0.08 + Math.random() * 0.14,
         rotation: Math.random() * 360,
         rotationSpeed: (Math.random() - 0.5) * 0.3,
         type,
         // 暮色琥珀色板 — 暖色 hue 18-45
-        hue: type === 'heart' ? 18 + Math.random() * 10
-          : type === 'sparkle' ? 30 + Math.random() * 15
-          : 25 + Math.random() * 20,
+        hue:
+          type === 'heart'
+            ? 18 + Math.random() * 10
+            : type === 'sparkle'
+              ? 30 + Math.random() * 15
+              : 25 + Math.random() * 20,
         wobble: Math.random() * Math.PI * 2,
         wobbleSpeed: 0.006 + Math.random() * 0.018,
         pulsePhase: Math.random() * Math.PI * 2,
@@ -111,8 +150,8 @@ export function Particles() {
       // 大光斑偏暖橙
       const hues = [18, 28, 22, 38, 35]
       return {
-        x: Math.random() * canvas!.width,
-        y: Math.random() * canvas!.height,
+        x: Math.random() * viewport.width,
+        y: Math.random() * viewport.height,
         radius: 140 + Math.random() * 240,
         hue: hues[Math.floor(Math.random() * hues.length)],
         opacity: 0.05 + Math.random() * 0.05,
@@ -130,16 +169,22 @@ export function Particles() {
       orbs.push(createOrb())
     }
 
-    function drawHeart(x: number, y: number, size: number, opacity: number, hue: number, rotation: number) {
+    function drawHeart(
+      x: number,
+      y: number,
+      size: number,
+      opacity: number,
+      hue: number,
+      rotation: number,
+    ) {
       ctx.save()
       ctx.translate(x, y)
       ctx.rotate((rotation * Math.PI) / 180)
       ctx.globalAlpha = opacity
       ctx.fillStyle = `hsl(${hue}, 65%, 68%)`
-      const path = new Path2D(HEART_PATH)
       const scale = size / 24
       ctx.scale(scale, scale)
-      ctx.fill(path)
+      if (heartPath) ctx.fill(heartPath)
       ctx.restore()
     }
 
@@ -205,8 +250,8 @@ export function Particles() {
     function maybeSpawnFlash(time: number) {
       if (time - lastFlashTime > nextFlashDelay) {
         flashes.push({
-          x: Math.random() * canvas!.width,
-          y: Math.random() * canvas!.height * 0.8 + canvas!.height * 0.1,
+          x: Math.random() * viewport.width,
+          y: Math.random() * viewport.height * 0.8 + viewport.height * 0.1,
           life: 0,
           maxLife: 1800,
           size: 50 + Math.random() * 80,
@@ -218,7 +263,17 @@ export function Particles() {
     }
 
     function animate(time: number) {
-      ctx.clearRect(0, 0, canvas!.width, canvas!.height)
+      if (!running) return
+
+      if (lastFrameTime && time - lastFrameTime < frameInterval) {
+        animId = requestAnimationFrame(animate)
+        return
+      }
+
+      const delta = lastFrameTime ? Math.min(50, time - lastFrameTime) : 16.67
+      const frameScale = delta / 16.67
+      lastFrameTime = time
+      ctx.clearRect(0, 0, viewport.width, viewport.height)
 
       // 底层 — 大光斑（更明显的黄昏天光）
       ctx.globalCompositeOperation = 'screen'
@@ -231,7 +286,7 @@ export function Particles() {
       flashes = flashes.filter((f) => f.life < f.maxLife)
       flashes.forEach((flash) => {
         drawFlash(flash)
-        flash.life += 16
+        flash.life += delta
       })
       ctx.globalCompositeOperation = 'source-over'
 
@@ -239,11 +294,11 @@ export function Particles() {
       ctx.globalCompositeOperation = 'screen'
       for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i]
-        p.y -= p.speed
-        p.rotation += p.rotationSpeed
-        p.wobble += p.wobbleSpeed
-        p.pulsePhase += 0.025
-        p.twinklePhase += p.twinkleSpeed
+        p.y -= p.speed * frameScale
+        p.rotation += p.rotationSpeed * frameScale
+        p.wobble += p.wobbleSpeed * frameScale
+        p.pulsePhase += 0.025 * frameScale
+        p.twinklePhase += p.twinkleSpeed * frameScale
 
         const pulse = 1 + Math.sin(p.pulsePhase) * 0.2
         const twinkle = 0.55 + Math.sin(p.twinklePhase) * 0.35
@@ -253,8 +308,8 @@ export function Particles() {
         let opacity = p.opacity
         if (p.y < fadeZone) {
           opacity = p.opacity * (p.y / fadeZone)
-        } else if (p.y > canvas!.height - fadeZone) {
-          opacity = p.opacity * ((canvas!.height - p.y) / fadeZone)
+        } else if (p.y > viewport.height - fadeZone) {
+          opacity = p.opacity * ((viewport.height - p.y) / fadeZone)
         }
         if (p.type === 'sparkle') opacity *= twinkle
 
@@ -281,11 +336,26 @@ export function Particles() {
       animId = requestAnimationFrame(animate)
     }
 
-    animId = requestAnimationFrame(animate)
+    const handleVisibilityChange = () => {
+      running = !document.hidden
+      if (running) {
+        lastFrameTime = 0
+        cancelAnimationFrame(animId)
+        animId = requestAnimationFrame(animate)
+      } else {
+        cancelAnimationFrame(animId)
+      }
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    if (running) animId = requestAnimationFrame(animate)
 
     return () => {
       cancelAnimationFrame(animId)
-      window.removeEventListener('resize', resize)
+      if (resizeFrame) cancelAnimationFrame(resizeFrame)
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+      window.removeEventListener('resize', scheduleResize)
+      window.visualViewport?.removeEventListener('resize', scheduleResize)
     }
   }, [])
 

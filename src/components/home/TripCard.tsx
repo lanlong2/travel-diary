@@ -18,9 +18,11 @@ export function TripCard({ trip, cityCount, onClick, onDelete, index = 0 }: Trip
   const [deleting, setDeleting] = useState(false)
   const [deleteError, setDeleteError] = useState<string | null>(null)
 
-  const duration = Math.ceil(
-    (parseDateOnly(trip.end_date).getTime() - parseDateOnly(trip.start_date).getTime()) / (1000 * 60 * 60 * 24)
-  ) + 1
+  const duration =
+    Math.ceil(
+      (parseDateOnly(trip.end_date).getTime() - parseDateOnly(trip.start_date).getTime()) /
+        (1000 * 60 * 60 * 24),
+    ) + 1
 
   const handleDelete = async () => {
     setDeleting(true)
@@ -45,89 +47,100 @@ export function TripCard({ trip, cityCount, onClick, onDelete, index = 0 }: Trip
         className={`trip-card snap-item min-w-[220px] glass-card overflow-hidden hover-lift active:brightness-95 transition-all duration-300 flex-shrink-0 relative group ${staggerClass}`}
         style={{ opacity: 0 }}
       >
-        <button type="button" onClick={onClick} aria-label={`查看旅行：${trip.title}`} className="block w-full text-left">
+        <button
+          type="button"
+          onClick={onClick}
+          aria-label={`查看旅行：${trip.title}`}
+          className="block w-full text-left"
+        >
           <div className="relative h-36 overflow-hidden">
             {trip.cover_photo ? (
-            <img
-              src={trip.cover_photo}
-              alt={trip.title}
-              className="absolute inset-0 w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-110 animate-ken-burns"
-              loading="lazy"
-            />
-          ) : (
-            // 无封面：星座连线背景
-            <div className="absolute inset-0 bg-gradient-to-br from-dusk-500 via-dusk-700 to-dusk-800 flex items-center justify-center">
-              <svg
-                className="absolute inset-0 w-full h-full opacity-30"
-                viewBox="0 0 220 144"
-                preserveAspectRatio="none"
-                aria-hidden="true"
-              >
-                <g stroke="#c4735a" strokeWidth="0.5" fill="#c4735a">
-                  <line x1="30" y1="40" x2="80" y2="60" />
-                  <line x1="80" y1="60" x2="140" y2="35" />
-                  <line x1="140" y1="35" x2="180" y2="80" />
-                  <line x1="180" y1="80" x2="100" y2="110" />
-                  <line x1="100" y1="110" x2="40" y2="95" />
-                  <line x1="40" y1="95" x2="30" y2="40" />
-                  <circle cx="30" cy="40" r="1.8" />
-                  <circle cx="80" cy="60" r="2.2" />
-                  <circle cx="140" cy="35" r="1.6" />
-                  <circle cx="180" cy="80" r="2" />
-                  <circle cx="100" cy="110" r="2.4" />
-                  <circle cx="40" cy="95" r="1.8" />
-                </g>
-              </svg>
-              <span className="display-hero italic text-3xl text-amber/85 tracking-[0.04em] relative">
-                {trip.title.slice(0, 2)}
-              </span>
-            </div>
+              <img
+                src={trip.cover_photo}
+                alt={trip.title}
+                className="absolute inset-0 w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-110 animate-ken-burns"
+                loading="lazy"
+              />
+            ) : (
+              // 无封面：星座连线背景
+              <div className="absolute inset-0 bg-gradient-to-br from-dusk-500 via-dusk-700 to-dusk-800 flex items-center justify-center">
+                <svg
+                  className="absolute inset-0 w-full h-full opacity-30"
+                  viewBox="0 0 220 144"
+                  preserveAspectRatio="none"
+                  aria-hidden="true"
+                >
+                  <g stroke="#c4735a" strokeWidth="0.5" fill="#c4735a">
+                    <line x1="30" y1="40" x2="80" y2="60" />
+                    <line x1="80" y1="60" x2="140" y2="35" />
+                    <line x1="140" y1="35" x2="180" y2="80" />
+                    <line x1="180" y1="80" x2="100" y2="110" />
+                    <line x1="100" y1="110" x2="40" y2="95" />
+                    <line x1="40" y1="95" x2="30" y2="40" />
+                    <circle cx="30" cy="40" r="1.8" />
+                    <circle cx="80" cy="60" r="2.2" />
+                    <circle cx="140" cy="35" r="1.6" />
+                    <circle cx="180" cy="80" r="2" />
+                    <circle cx="100" cy="110" r="2.4" />
+                    <circle cx="40" cy="95" r="1.8" />
+                  </g>
+                </svg>
+                <span className="display-hero italic text-3xl text-amber/85 tracking-[0.04em] relative">
+                  {trip.title.slice(0, 2)}
+                </span>
+              </div>
             )}
 
             {/* 底部渐变 */}
-          <div className="absolute inset-0 bg-gradient-to-t from-dusk-950/85 via-dusk-900/15 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-dusk-950/85 via-dusk-900/15 to-transparent" />
 
-          {/* 暖色叠加 */}
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{ background: 'rgba(196, 115, 90, 0.06)' }}
-          />
-          {/* 标题底部 */}
-          <div className="absolute bottom-3 left-3.5 right-3.5">
-            <h4 className="font-serif font-semibold text-[17px] text-dusk-50 leading-tight tracking-[0.03em] text-balance drop-shadow-lg">
-              {trip.title}
-            </h4>
+            {/* 暖色叠加 */}
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{ background: 'rgba(196, 115, 90, 0.06)' }}
+            />
+            {/* 标题底部 */}
+            <div className="absolute bottom-3 left-3.5 right-3.5">
+              <h4 className="font-serif font-semibold text-[17px] text-dusk-50 leading-tight tracking-[0.03em] text-balance drop-shadow-lg">
+                {trip.title}
+              </h4>
+            </div>
+
+            {/* 年月邮戳 — 左上印戳 */}
+            <div className="absolute top-3 left-3.5">
+              <span
+                className="font-mono text-[10px] text-dusk-50/95 px-2.5 py-1 rounded-[4px] bg-black/40 backdrop-blur-md tracking-[0.12em] inline-flex items-center gap-1.5"
+                style={{
+                  transform: 'rotate(-3deg)',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.3), inset 0 0 0 1px oklch(96% 0.02 70 / 0.18)',
+                  border: '1px solid oklch(52% 0.14 25 / 0.35)',
+                }}
+              >
+                <Calendar className="w-2.5 h-2.5" />
+                {startYear}.{startMonth}
+              </span>
+            </div>
           </div>
-
-          {/* 年月邮戳 — 左上印戳 */}
-          <div className="absolute top-3 left-3.5">
-            <span
-              className="font-mono text-[10px] text-dusk-50/95 px-2.5 py-1 rounded-[4px] bg-black/40 backdrop-blur-md tracking-[0.12em] inline-flex items-center gap-1.5"
-              style={{
-                transform: 'rotate(-3deg)',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.3), inset 0 0 0 1px oklch(96% 0.02 70 / 0.18)',
-                border: '1px solid oklch(52% 0.14 25 / 0.35)',
-              }}
-            >
-              <Calendar className="w-2.5 h-2.5" />
-              {startYear}.{startMonth}
-            </span>
-          </div>
-        </div>
-
         </button>
 
         <button
-            type="button"
-          onClick={() => { setDeleteError(null); setShowDelete(true) }}
-            className="absolute top-2 right-2 w-11 h-11 rounded-[10px] bg-black/35 backdrop-blur-md flex items-center justify-center hover:bg-red-500/50 hover:text-white text-dusk-50/80 z-10 transition-colors duration-200 max-sm:opacity-100 sm:opacity-0 sm:group-hover:opacity-100 active:scale-90"
-            aria-label={`删除旅行：${trip.title}`}
-          >
-            <Trash2 className="w-4 h-4" />
+          type="button"
+          onClick={() => {
+            setDeleteError(null)
+            setShowDelete(true)
+          }}
+          className="absolute top-2 right-2 w-11 h-11 rounded-[10px] bg-black/35 backdrop-blur-md flex items-center justify-center hover:bg-red-500/50 hover:text-white text-dusk-50/80 z-10 transition-colors duration-200 max-sm:opacity-100 sm:opacity-0 sm:group-hover:opacity-100 active:scale-90"
+          aria-label={`删除旅行：${trip.title}`}
+        >
+          <Trash2 className="w-4 h-4" />
         </button>
 
         {/* 底部信息条 — 双圆点分隔 */}
-        <button type="button" onClick={onClick} className="w-full px-4 py-3 flex text-left items-center gap-3 text-[11px] text-dusk-100/65 tracking-[0.03em] font-mono">
+        <button
+          type="button"
+          onClick={onClick}
+          className="w-full px-4 py-3 flex text-left items-center gap-3 text-[11px] text-dusk-100/65 tracking-[0.03em] font-mono"
+        >
           <span className="text-amber font-bold">{cityCount} 城</span>
           <span className="w-1 h-1 rounded-full bg-amber/60" />
           <span className="text-amber font-bold">{duration} 天</span>
@@ -141,9 +154,15 @@ export function TripCard({ trip, cityCount, onClick, onDelete, index = 0 }: Trip
       {showDelete && (
         <ConfirmDialog
           title="删除旅行"
-          message={deleteError ? `删除失败：${deleteError}` : `确定要删除「${trip.title}」吗？这次旅行的所有照片也会被删除，此操作无法撤销。`}
+          message={
+            deleteError
+              ? `删除失败：${deleteError}`
+              : `确定要删除「${trip.title}」吗？这次旅行的所有照片也会被删除，此操作无法撤销。`
+          }
           confirmLabel={deleteError ? '重试删除' : '确认删除'}
-          onConfirm={() => { void handleDelete() }}
+          onConfirm={() => {
+            void handleDelete()
+          }}
           onCancel={() => setShowDelete(false)}
           loading={deleting}
         />

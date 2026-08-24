@@ -51,9 +51,12 @@ describe('TripSelect', () => {
 
   it('locks the create action while an async request is pending', async () => {
     let resolveCreate: (() => void) | undefined
-    const onCreateTrip = vi.fn(() => new Promise<void>((resolve) => {
-      resolveCreate = resolve
-    }))
+    const onCreateTrip = vi.fn(
+      () =>
+        new Promise<void>((resolve) => {
+          resolveCreate = resolve
+        }),
+    )
     render(
       <TripSelect
         trips={emptyTrips}

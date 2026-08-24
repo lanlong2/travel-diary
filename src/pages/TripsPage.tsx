@@ -1,12 +1,13 @@
 import { useNavigate } from 'react-router-dom'
 import { PageShell } from '../components/layout/PageShell'
-import { useTrips } from '../hooks/useTrips'
-import { usePhotos } from '../hooks/usePhotos'
+import { useTripsQuery } from '../hooks/useTrips'
+import { usePhotosQuery } from '../hooks/usePhotos'
 import { useCountUp } from '../hooks/useCountUp'
 import { Spinner } from '../components/ui/Spinner'
 import { Compass, MapPin, Calendar, ChevronRight, Camera } from 'lucide-react'
 import { useMemo } from 'react'
 import { parseDateOnly } from '../lib/dates'
+import { buildTripStats } from '../data/selectors'
 
 // 三种圆角模式交替 — 编辑设计常用手法
 const RADIUS_PATTERNS = [
@@ -17,14 +18,19 @@ const RADIUS_PATTERNS = [
 
 export function TripsPage() {
   const navigate = useNavigate()
-  const { trips, loading, error: tripsError, refresh: refreshTrips } = useTrips()
-  const { photos, error: photosError, refresh: refreshPhotos } = usePhotos()
+  const tripsQuery = useTripsQuery()
+  const photosQuery = usePhotosQuery()
+  const trips = useMemo(() => tripsQuery.data ?? [], [tripsQuery.data])
+  const photos = useMemo(() => photosQuery.data ?? [], [photosQuery.data])
+  const loading = tripsQuery.isPending
+  const tripsError = tripsQuery.error instanceof Error ? tripsQuery.error.message : null
+  const photosError = photosQuery.error instanceof Error ? photosQuery.error.message : null
 
-  const photoCountByTrip = useMemo(() => {
-    const map = new Map<string, number>()
-    photos.forEach((p) => map.set(p.trip_id, (map.get(p.trip_id) || 0) + 1))
-    return map
-  }, [photos])
+  const tripStats = useMemo(() => buildTripStats(trips, photos), [trips, photos])
+  const photoCount = useMemo(
+    () => photos.filter((record) => record.entry_type === 'photo' && record.image_url).length,
+    [photos],
+  )
 
   const uniqueCityCount = useMemo(() => {
     const set = new Set<string>()
@@ -33,7 +39,7 @@ export function TripsPage() {
   }, [trips])
 
   const animatedTrips = useCountUp(trips.length, 1000)
-  const animatedPhotos = useCountUp(photos.length, 1200)
+  const animatedPhotos = useCountUp(photoCount, 1200)
   const animatedCities = useCountUp(uniqueCityCount, 900)
 
   if (loading) {
@@ -52,7 +58,9 @@ export function TripsPage() {
           <p className="mt-2 max-w-sm text-[13px] leading-5 text-dusk-100/60">{tripsError}</p>
           <button
             type="button"
-            onClick={() => { void refreshTrips() }}
+            onClick={() => {
+              void tripsQuery.refetch()
+            }}
             className="mt-5 min-h-11 rounded-full border border-amber/30 bg-amber/10 px-5 py-2 text-[12px] font-medium text-amber transition-colors hover:bg-amber/20 active:scale-95"
           >
             重试
@@ -74,7 +82,9 @@ export function TripsPage() {
         <h1 className="display-hero text-[28px] text-dusk-50 tracking-[0.04em] animate-fade-in-down flex items-center gap-3">
           <Compass className="w-6 h-6 text-amber" />
           <span className="italic">Journeys</span>
-          <span className="font-serif text-[14px] text-dusk-100/60 not-italic font-normal tracking-[0.15em]">旅行</span>
+          <span className="font-serif text-[14px] text-dusk-100/60 not-italic font-normal tracking-[0.15em]">
+            旅行
+          </span>
         </h1>
 
         {/* 统计数据 — 编辑式三段 */}
@@ -97,9 +107,18 @@ export function TripsPage() {
       </div>
 
       {photosError && (
-        <div className="page-mx mt-3 flex items-center justify-between gap-3 rounded-xl border border-red-400/25 bg-red-500/10 px-4 py-3 text-[12px] text-red-200" role="alert">
+        <div
+          className="page-mx mt-3 flex items-center justify-between gap-3 rounded-xl border border-red-400/25 bg-red-500/10 px-4 py-3 text-[12px] text-red-200"
+          role="alert"
+        >
           <span>照片统计加载失败：{photosError}</span>
-          <button type="button" onClick={() => { void refreshPhotos() }} className="min-h-11 flex-shrink-0 rounded-lg px-3 text-amber hover:bg-amber/10">
+          <button
+            type="button"
+            onClick={() => {
+              void photosQuery.refetch()
+            }}
+            className="min-h-11 flex-shrink-0 rounded-lg px-3 text-amber hover:bg-amber/10"
+          >
             重试
           </button>
         </div>
@@ -107,21 +126,29 @@ export function TripsPage() {
 
       {trips.length === 0 ? (
         <div className="page-mx mt-8 glass-card p-12 text-center">
-          <p className="font-serif text-[15px] text-dusk-50/85 tracking-[0.04em]">暂无旅行 · 等待第一次出发</p>
+          <p className="font-serif text-[15px] text-dusk-50/85 tracking-[0.04em]">
+            暂无旅行 · 等待第一次出发
+          </p>
         </div>
       ) : (
         <div className="journey-grid page-px py-5">
           {trips.map((trip, i) => {
-            const photoCount = photoCountByTrip.get(trip.id) || 0
+            const photoCount = tripStats.get(trip.id)?.photoCount ?? 0
             const startStr = parseDateOnly(trip.start_date).toLocaleDateString('zh-CN', {
-              year: 'numeric', month: 'long', day: 'numeric',
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
             })
             const endStr = parseDateOnly(trip.end_date).toLocaleDateString('zh-CN', {
-              month: 'long', day: 'numeric',
+              month: 'long',
+              day: 'numeric',
             })
-            const duration = Math.ceil(
-              (parseDateOnly(trip.end_date).getTime() - parseDateOnly(trip.start_date).getTime()) / (1000 * 60 * 60 * 24)
-            ) + 1
+            const duration =
+              Math.ceil(
+                (parseDateOnly(trip.end_date).getTime() -
+                  parseDateOnly(trip.start_date).getTime()) /
+                  (1000 * 60 * 60 * 24),
+              ) + 1
 
             const radiusClass = RADIUS_PATTERNS[i % 3]
             const coverLeft = i % 2 === 0
@@ -140,7 +167,8 @@ export function TripsPage() {
                     style={{
                       left: '40%',
                       width: '20%',
-                      background: 'linear-gradient(90deg, transparent, oklch(58% 0.13 40 / 0.5), transparent)',
+                      background:
+                        'linear-gradient(90deg, transparent, oklch(58% 0.13 40 / 0.5), transparent)',
                     }}
                   />
                 </div>

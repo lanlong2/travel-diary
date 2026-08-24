@@ -1,0 +1,285 @@
+@layer utilities {
+  .stagger-1 {
+    animation-delay: 0.05s;
+  }
+  .stagger-2 {
+    animation-delay: 0.1s;
+  }
+  .stagger-3 {
+    animation-delay: 0.15s;
+  }
+  .stagger-4 {
+    animation-delay: 0.2s;
+  }
+  .stagger-5 {
+    animation-delay: 0.25s;
+  }
+  .stagger-6 {
+    animation-delay: 0.3s;
+  }
+  .stagger-7 {
+    animation-delay: 0.35s;
+  }
+  .stagger-8 {
+    animation-delay: 0.4s;
+  }
+  .stagger-9 {
+    animation-delay: 0.45s;
+  }
+  .stagger-10 {
+    animation-delay: 0.5s;
+  }
+  .stagger-11 {
+    animation-delay: 0.55s;
+  }
+  .stagger-12 {
+    animation-delay: 0.6s;
+  }
+  .stagger-13 {
+    animation-delay: 0.65s;
+  }
+  .stagger-14 {
+    animation-delay: 0.7s;
+  }
+  .stagger-15 {
+    animation-delay: 0.75s;
+  }
+
+  /* PageShell 在挂载后给 html 加 reveal-enabled；未启用 JS 时内容保持可见。 */
+  .reveal,
+  .reveal-left,
+  .reveal-right,
+  .reveal-scale {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity var(--motion-reveal) var(--ease-editorial),
+      transform var(--motion-reveal) var(--ease-editorial);
+  }
+
+  .reveal.visible,
+  .reveal-left.visible,
+  .reveal-right.visible,
+  .reveal-scale.visible {
+    opacity: 1;
+    transform: translate(0) scale(1);
+  }
+
+  .reveal-enabled .reveal:not(.visible) {
+    opacity: 0;
+    transform: translateY(24px) scale(0.98);
+  }
+
+  .reveal-enabled .reveal-left:not(.visible) {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+
+  .reveal-enabled .reveal-right:not(.visible) {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+
+  .reveal-enabled .reveal-scale:not(.visible) {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+
+  .img-skeleton {
+    position: relative;
+    overflow: hidden;
+    background: oklch(36% 0.04 55 / 0.5);
+  }
+
+  .img-skeleton::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      oklch(58% 0.13 40 / 0.15) 50%,
+      transparent 100%
+    );
+    transform: translateX(-100%);
+    animation: imgShimmer 2s ease-in-out infinite;
+  }
+
+  @keyframes imgShimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  .page-wrapper {
+    animation: pageFade 0.28s ease-out both;
+  }
+
+  @keyframes pageFade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .hover-lift {
+    transition:
+      transform var(--motion-base) var(--ease-editorial),
+      box-shadow var(--motion-base) var(--ease-editorial),
+      border-color var(--motion-base) var(--ease-editorial);
+  }
+
+  .text-balance {
+    text-wrap: pretty;
+  }
+
+  .animate-breathe {
+    animation: breathe 3s ease-in-out infinite;
+  }
+
+  .animate-draw-line {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: drawLine 1.5s ease-out forwards;
+  }
+
+  .animate-float-soft {
+    animation: floatUpDown 4s ease-in-out infinite;
+  }
+
+  .parallax-slow {
+    transform: translateY(calc(var(--scroll-y, 0) * -0.15));
+    will-change: transform;
+  }
+
+  @keyframes markerBreathe {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.15);
+    }
+  }
+
+  @keyframes markerRipple {
+    0% {
+      transform: scale(1);
+      opacity: 0.65;
+    }
+    100% {
+      transform: scale(3.2);
+      opacity: 0;
+    }
+  }
+
+  @keyframes mapSkeletonShimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  @keyframes routeMarkerIn {
+    from {
+      opacity: 0;
+      transform: scale(0.3);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes routeMarkerHalo {
+    0% {
+      transform: scale(1);
+      opacity: 0.45;
+    }
+    100% {
+      transform: scale(2.6);
+      opacity: 0;
+    }
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 16px 48px oklch(15% 0.02 40 / 0.5),
+      0 0 0 1px oklch(80% 0.14 60 / 0.35),
+      inset 0 1px 0 oklch(96% 0.02 70 / 0.15);
+    border-color: oklch(80% 0.14 60 / 0.4);
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: oklch(58% 0.13 40 / 0.25);
+    border-radius: 9999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: oklch(58% 0.13 40 / 0.45);
+  }
+
+  .scrollbar-amber::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .scrollbar-amber::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-amber::-webkit-scrollbar-thumb {
+    background: oklch(58% 0.13 40 / 0.25);
+    border-radius: 9999px;
+  }
+  .scrollbar-amber::-webkit-scrollbar-thumb:hover {
+    background: oklch(58% 0.13 40 / 0.45);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal,
+  .reveal-left,
+  .reveal-right,
+  .reveal-scale,
+  .reveal-enabled .reveal:not(.visible),
+  .reveal-enabled .reveal-left:not(.visible),
+  .reveal-enabled .reveal-right:not(.visible),
+  .reveal-enabled .reveal-scale:not(.visible) {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .route-marker {
+    opacity: 1;
+  }
+}

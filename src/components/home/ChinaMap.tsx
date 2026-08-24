@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
-import { loadAMap } from '../../lib/amap'
+import { loadAMap, type AMapMap, type AMapOverlay } from '../../lib/amap'
 import { CityPopup } from './CityPopup'
 import type { CitySummary, Photo } from '../../types'
 
@@ -19,7 +19,11 @@ function createCityMarkerContent(cityName: string, phase: number): HTMLDivElemen
   const root = document.createElement('div')
   root.className = 'map-marker-wrap'
 
-  for (const className of ['map-marker-ripple', 'map-marker-ripple delay-1', 'map-marker-ripple delay-2']) {
+  for (const className of [
+    'map-marker-ripple',
+    'map-marker-ripple delay-1',
+    'map-marker-ripple delay-2',
+  ]) {
     const ripple = document.createElement('span')
     ripple.className = className
     root.appendChild(ripple)
@@ -54,8 +58,8 @@ function createCityMarkerContent(cityName: string, phase: number): HTMLDivElemen
 
 export function ChinaMap({ cities, photos, onCityClick }: ChinaMapProps) {
   const containerRef = useRef<HTMLDivElement>(null)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const mapRef = useRef<any>(null)
+  const mapRef = useRef<AMapMap | null>(null)
+  const markersRef = useRef<AMapOverlay[]>([])
   const [hoveredCity, setHoveredCity] = useState<HoveredCity | null>(null)
   const [status, setStatus] = useState<'loading' | 'loaded' | 'error'>('loading')
   const [errorMsg, setErrorMsg] = useState('')
@@ -67,6 +71,8 @@ export function ChinaMap({ cities, photos, onCityClick }: ChinaMapProps) {
       const AMap = await loadAMap()
       const map = mapRef.current
       if (!map) return
+      markersRef.current.forEach((marker) => marker.setMap?.(null))
+      markersRef.current = []
       map.clearMap()
       if (cities.length === 0) return
 
@@ -74,12 +80,10 @@ export function ChinaMap({ cities, photos, onCityClick }: ChinaMapProps) {
         const phase = (idx % 4) * 0.6
         const el = createCityMarkerContent(city.city_name, phase)
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const marker = new (AMap as any).Marker({
+        const marker = new AMap.Marker({
           position: [city.lng, city.lat],
           content: el,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          offset: new (AMap as any).Pixel(-8, -8),
+          offset: new AMap.Pixel(-8, -8),
         })
 
         const showTooltip = () => {
@@ -94,7 +98,8 @@ export function ChinaMap({ cities, photos, onCityClick }: ChinaMapProps) {
           }
           const currentMap = mapRef.current
           if (!currentMap) return
-          const pixel = currentMap.lngLatToContainer([city.lng, city.lat])
+          const pixel = currentMap.lngLatToContainer?.([city.lng, city.lat])
+          if (!pixel || pixel.x === undefined || pixel.y === undefined) return
           setHoveredCity({ city, x: pixel.x, y: pixel.y })
         }
 
@@ -107,13 +112,13 @@ export function ChinaMap({ cities, photos, onCityClick }: ChinaMapProps) {
           hoverTimerRef.current = setTimeout(() => setHoveredCity(null), 150)
         }
 
-        marker.on('mouseover', showTooltip)
-        marker.on('mouseout', hideTooltip)
-        marker.on('touchstart', (e: Event) => {
-          e.preventDefault()
+        marker.on?.('mouseover', showTooltip)
+        marker.on?.('mouseout', hideTooltip)
+        marker.on?.('touchstart', (event) => {
+          event?.preventDefault()
           showTooltip()
         })
-        marker.on('touchend', () => {
+        marker.on?.('touchend', () => {
           if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current)
           hoverTimerRef.current = setTimeout(() => {
             const dot = el.querySelector('.map-marker-dot') as HTMLElement | null
@@ -125,14 +130,15 @@ export function ChinaMap({ cities, photos, onCityClick }: ChinaMapProps) {
           }, 2000)
         })
 
-        marker.on('click', () => {
+        marker.on?.('click', () => {
           onCityClick(city)
         })
 
         return marker
       })
 
-      markers.forEach((m: unknown) => map.add(m))
+      markersRef.current = markers
+      map.add(markers)
       map.setFitView(markers, false, [100, 100, 100, 100])
     } catch {
       // 标记更新失败，静默处理
@@ -148,8 +154,7 @@ export function ChinaMap({ cities, photos, onCityClick }: ChinaMapProps) {
       .then((AMap) => {
         if (cancelled || !containerRef.current) return
         try {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const map = new (AMap as any).Map(containerRef.current, {
+          const map = new AMap.Map(containerRef.current, {
             zoom: 4.5,
             center: [104.0, 35.0],
             mapStyle: 'amap://styles/dark',
@@ -175,7 +180,13 @@ export function ChinaMap({ cities, photos, onCityClick }: ChinaMapProps) {
       cancelled = true
       if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current)
       if (mapRef.current) {
-        try { mapRef.current.destroy() } catch { /* ignore */ }
+        markersRef.current.forEach((marker) => marker.setMap?.(null))
+        markersRef.current = []
+        try {
+          mapRef.current.destroy()
+        } catch {
+          /* ignore */
+        }
         mapRef.current = null
       }
     }
@@ -190,9 +201,7 @@ export function ChinaMap({ cities, photos, onCityClick }: ChinaMapProps) {
       <div className="map-frame page-mx mt-4 glass-card flex flex-col items-center justify-center px-6 text-center">
         <p className="text-[13px] text-amber font-medium tracking-[0.04em] mb-2">地图加载失败</p>
         <p className="text-[11px] text-dusk-100/50 mb-3">{errorMsg}</p>
-        <p className="text-[11px] text-dusk-100/40">
-          请确认高德 Key 已开通「Web端 JS API」服务
-        </p>
+        <p className="text-[11px] text-dusk-100/40">请确认高德 Key 已开通「Web端 JS API」服务</p>
       </div>
     )
   }
@@ -209,9 +218,7 @@ export function ChinaMap({ cities, photos, onCityClick }: ChinaMapProps) {
         <span className="flex-1 h-px bg-gradient-to-r from-amber/35 to-transparent" />
       </div>
 
-      <div
-        className="map-frame page-mx rounded-[8px] overflow-hidden border border-dusk-300/30 shadow-lg shadow-black/30 relative"
-      >
+      <div className="map-frame page-mx rounded-[8px] overflow-hidden border border-dusk-300/30 shadow-lg shadow-black/30 relative">
         <div ref={containerRef} className="w-full h-full" />
 
         {/* 地图右下角邮戳 */}
@@ -221,14 +228,21 @@ export function ChinaMap({ cities, photos, onCityClick }: ChinaMapProps) {
             style={{ transform: 'rotate(-4deg)' }}
             aria-hidden="true"
           >
-            <span className="font-mono text-[8px] tracking-[0.12em] text-stamp-dim leading-none">VISITED</span>
-            <span className="font-mono text-[12px] font-bold tracking-[0.04em] text-stamp-ink leading-tight">{cities.length} CITIES</span>
+            <span className="font-mono text-[8px] tracking-[0.12em] text-stamp-dim leading-none">
+              VISITED
+            </span>
+            <span className="font-mono text-[12px] font-bold tracking-[0.04em] text-stamp-ink leading-tight">
+              {cities.length} CITIES
+            </span>
           </div>
         )}
 
         {status === 'loading' && (
           <div className="absolute inset-0 z-10 pointer-events-none flex flex-col items-center justify-center map-skeleton">
-            <div className="absolute inset-0 bg-dusk-950/75 backdrop-blur-[2px]" aria-hidden="true" />
+            <div
+              className="absolute inset-0 bg-dusk-950/75 backdrop-blur-[2px]"
+              aria-hidden="true"
+            />
             <div className="relative flex flex-col items-center justify-center">
               <svg
                 width="180"
@@ -257,12 +271,7 @@ export function ChinaMap({ cities, photos, onCityClick }: ChinaMapProps) {
         )}
 
         {hoveredCity && status === 'loaded' && (
-          <CityPopup
-            city={hoveredCity.city}
-            photos={photos}
-            x={hoveredCity.x}
-            y={hoveredCity.y}
-          />
+          <CityPopup city={hoveredCity.city} photos={photos} x={hoveredCity.x} y={hoveredCity.y} />
         )}
       </div>
     </div>

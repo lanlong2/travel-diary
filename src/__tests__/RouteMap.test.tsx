@@ -15,10 +15,18 @@ const fakeMap = {
 }
 
 const fakeAMap = {
-  Map: vi.fn(function mapConstructor() { return fakeMap }),
-  Marker: vi.fn(function markerConstructor() { return {} }),
-  Pixel: vi.fn(function pixelConstructor() { return {} }),
-  Polyline: vi.fn(function polylineConstructor() { return { setOptions: vi.fn() } }),
+  Map: vi.fn(function mapConstructor() {
+    return fakeMap
+  }),
+  Marker: vi.fn(function markerConstructor() {
+    return {}
+  }),
+  Pixel: vi.fn(function pixelConstructor() {
+    return {}
+  }),
+  Polyline: vi.fn(function polylineConstructor() {
+    return { setOptions: vi.fn() }
+  }),
 }
 
 describe('RouteMap', () => {
@@ -28,14 +36,16 @@ describe('RouteMap', () => {
     const { rerender } = render(<RouteMap cities={[]} />)
     rerender(
       <RouteMap
-        cities={[{
-          id: 'city-1',
-          trip_id: 'trip-1',
-          city_name: '杭州',
-          lat: 30.2741,
-          lng: 120.1551,
-          sort_order: 0,
-        }]}
+        cities={[
+          {
+            id: 'city-1',
+            trip_id: 'trip-1',
+            city_name: '杭州',
+            lat: 30.2741,
+            lng: 120.1551,
+            sort_order: 0,
+          },
+        ]}
       />,
     )
 

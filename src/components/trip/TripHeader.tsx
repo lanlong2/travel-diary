@@ -17,14 +17,20 @@ export function TripHeader({ trip, onDelete, onEdit }: TripHeaderProps) {
   const [deleting, setDeleting] = useState(false)
   const [deleteError, setDeleteError] = useState<string | null>(null)
   const startStr = parseDateOnly(trip.start_date).toLocaleDateString('zh-CN', {
-    year: 'numeric', month: 'long', day: 'numeric'
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
   })
   const endStr = parseDateOnly(trip.end_date).toLocaleDateString('zh-CN', {
-    year: 'numeric', month: 'long', day: 'numeric'
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
   })
-  const duration = Math.ceil(
-    (parseDateOnly(trip.end_date).getTime() - parseDateOnly(trip.start_date).getTime()) / (1000 * 60 * 60 * 24)
-  ) + 1
+  const duration =
+    Math.ceil(
+      (parseDateOnly(trip.end_date).getTime() - parseDateOnly(trip.start_date).getTime()) /
+        (1000 * 60 * 60 * 24),
+    ) + 1
 
   const startDate = parseDateOnly(trip.start_date)
   const startYear = startDate.getFullYear()
@@ -68,7 +74,10 @@ export function TripHeader({ trip, onDelete, onEdit }: TripHeaderProps) {
             )}
             {onDelete && (
               <button
-                onClick={() => { setDeleteError(null); setShowDelete(true) }}
+                onClick={() => {
+                  setDeleteError(null)
+                  setShowDelete(true)
+                }}
                 className="w-11 h-11 glass-nav rounded-full flex items-center justify-center hover:bg-red-500/40 transition-all active:scale-90 duration-200"
                 aria-label="删除"
               >
@@ -94,7 +103,8 @@ export function TripHeader({ trip, onDelete, onEdit }: TripHeaderProps) {
             <div
               className="absolute inset-0"
               style={{
-                background: 'linear-gradient(180deg, oklch(20% 0.03 40 / 0.55) 0%, oklch(20% 0.03 40 / 0.10) 50%, oklch(22% 0.035 45 / 0.95) 100%)',
+                background:
+                  'linear-gradient(180deg, oklch(20% 0.03 40 / 0.55) 0%, oklch(20% 0.03 40 / 0.10) 50%, oklch(22% 0.035 45 / 0.95) 100%)',
               }}
             />
             {/* 暖色叠加 */}
@@ -109,8 +119,12 @@ export function TripHeader({ trip, onDelete, onEdit }: TripHeaderProps) {
               style={{ transform: 'rotate(-5deg)' }}
               aria-hidden="true"
             >
-              <span className="font-mono text-[8px] tracking-[0.12em] text-stamp-dim leading-none">JOURNEY</span>
-              <span className="font-mono text-[14px] font-bold tracking-[0.04em] text-stamp-ink leading-tight">{startYear}.{startMonth}</span>
+              <span className="font-mono text-[8px] tracking-[0.12em] text-stamp-dim leading-none">
+                JOURNEY
+              </span>
+              <span className="font-mono text-[14px] font-bold tracking-[0.04em] text-stamp-ink leading-tight">
+                {startYear}.{startMonth}
+              </span>
             </div>
 
             {/* 底部柔和光晕 */}
@@ -126,7 +140,10 @@ export function TripHeader({ trip, onDelete, onEdit }: TripHeaderProps) {
             {/* 无封面 — 首字母大卡片 */}
             <div
               className="w-[120px] h-[120px] rounded-[16px] bg-gradient-to-br from-amber/25 via-amber/15 to-amber-ember/10 border border-amber/30 flex items-center justify-center mb-5"
-              style={{ boxShadow: '0 12px 36px oklch(68% 0.17 40 / 0.25), inset 0 1px 0 oklch(96% 0.02 70 / 0.15)' }}
+              style={{
+                boxShadow:
+                  '0 12px 36px oklch(68% 0.17 40 / 0.25), inset 0 1px 0 oklch(96% 0.02 70 / 0.15)',
+              }}
             >
               <span className="display-hero italic font-bold text-3xl text-amber tracking-[0.04em]">
                 {trip.title.slice(0, 1)}
@@ -155,9 +172,15 @@ export function TripHeader({ trip, onDelete, onEdit }: TripHeaderProps) {
       {showDelete && (
         <ConfirmDialog
           title="删除旅行"
-          message={deleteError ? `删除失败：${deleteError}` : `确定要删除「${trip.title}」吗？所有照片也会被一并删除。`}
+          message={
+            deleteError
+              ? `删除失败：${deleteError}`
+              : `确定要删除「${trip.title}」吗？所有照片也会被一并删除。`
+          }
           confirmLabel={deleteError ? '重试删除' : '确认删除'}
-          onConfirm={() => { void handleDelete() }}
+          onConfirm={() => {
+            void handleDelete()
+          }}
           onCancel={() => setShowDelete(false)}
           loading={deleting}
         />

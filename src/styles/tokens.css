@@ -1,0 +1,26 @@
+/* === 黄昏手账 tokens ===
+   暮色琥珀 × 拍立得信纸 × 编辑设计感
+   颜色数值保持现有视觉契约，变量只集中管理高频设计参数。
+*/
+:root {
+  --page-gutter: clamp(16px, 4vw, 32px);
+  --timeline-axis: 18px;
+
+  --color-night: oklch(17% 0.009 56);
+  --color-ink: oklch(96% 0.02 70);
+  --color-amber: oklch(68% 0.17 40);
+  --color-amber-soft: oklch(58% 0.13 40);
+  --color-paper: oklch(94% 0.012 80);
+  --color-focus: oklch(84% 0.13 74);
+
+  --surface-glass: oklch(46% 0.035 50 / 0.48);
+  --surface-glass-strong: oklch(46% 0.035 50 / 0.55);
+  --surface-glass-popup: oklch(46% 0.035 50 / 0.72);
+  --border-glass: oklch(75% 0.08 55 / 0.2);
+
+  --ease-editorial: cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-fast: 180ms;
+  --motion-base: 400ms;
+  --motion-reveal: 700ms;
+  --touch-target: 44px;
+}

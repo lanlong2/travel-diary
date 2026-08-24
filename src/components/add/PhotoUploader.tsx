@@ -57,7 +57,11 @@ export function PhotoUploader({ onFileSelect }: PhotoUploaderProps) {
           </div>
           <button
             type="button"
-            onClick={(e) => { e.stopPropagation(); resetInput(); inputRef.current?.click() }}
+            onClick={(e) => {
+              e.stopPropagation()
+              resetInput()
+              inputRef.current?.click()
+            }}
             className="absolute -bottom-1 right-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber/15 border border-amber/30 backdrop-blur-md text-[12px] text-amber font-medium tracking-[0.04em] hover:bg-amber/25 transition-colors active:scale-95 duration-200"
           >
             <RefreshCw className="w-3 h-3" />
@@ -68,7 +72,10 @@ export function PhotoUploader({ onFileSelect }: PhotoUploaderProps) {
         <button
           type="button"
           onClick={() => inputRef.current?.click()}
-          onDragOver={(e) => { e.preventDefault(); setDragging(true) }}
+          onDragOver={(e) => {
+            e.preventDefault()
+            setDragging(true)
+          }}
           onDragLeave={() => setDragging(false)}
           onDrop={(e) => {
             e.preventDefault()
@@ -83,18 +90,28 @@ export function PhotoUploader({ onFileSelect }: PhotoUploaderProps) {
           }`}
         >
           {/* 装饰角 — 编辑式四角小标 */}
-          <span className="absolute top-2 left-2 w-3 h-3 border-l border-t border-amber/40" aria-hidden="true" />
-          <span className="absolute top-2 right-2 w-3 h-3 border-r border-t border-amber/40" aria-hidden="true" />
-          <span className="absolute bottom-2 left-2 w-3 h-3 border-l border-b border-amber/40" aria-hidden="true" />
-          <span className="absolute bottom-2 right-2 w-3 h-3 border-r border-b border-amber/40" aria-hidden="true" />
+          <span
+            className="absolute top-2 left-2 w-3 h-3 border-l border-t border-amber/40"
+            aria-hidden="true"
+          />
+          <span
+            className="absolute top-2 right-2 w-3 h-3 border-r border-t border-amber/40"
+            aria-hidden="true"
+          />
+          <span
+            className="absolute bottom-2 left-2 w-3 h-3 border-l border-b border-amber/40"
+            aria-hidden="true"
+          />
+          <span
+            className="absolute bottom-2 right-2 w-3 h-3 border-r border-b border-amber/40"
+            aria-hidden="true"
+          />
 
           <div className="relative">
             <div className="w-14 h-14 mx-auto mb-4 flex items-center justify-center rounded-full bg-amber/10 border border-amber/25">
               <Camera className="w-7 h-7 text-amber/75" />
             </div>
-            <p className="text-[15px] text-dusk-50/85 font-medium tracking-[0.05em]">
-              选择照片
-            </p>
+            <p className="text-[15px] text-dusk-50/85 font-medium tracking-[0.05em]">选择照片</p>
             <p className="text-[11px] text-dusk-100/45 mt-1 tracking-[0.04em] font-mono">
               或拖拽到此处
             </p>

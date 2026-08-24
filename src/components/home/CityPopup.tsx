@@ -1,5 +1,6 @@
 import { MapPin, ImageOff, ChevronRight } from 'lucide-react'
 import type { CitySummary, Photo } from '../../types'
+import { sortRecords } from '../../data/selectors'
 
 interface CityTooltipProps {
   city: CitySummary
@@ -9,13 +10,12 @@ interface CityTooltipProps {
 }
 
 export function CityPopup({ city, photos, x, y }: CityTooltipProps) {
-  const cityPhotos = photos
-    .filter((p) => p.city_name === city.city_name)
+  const cityRecords = sortRecords(photos.filter((record) => record.city_name === city.city_name))
+  const cityPhotos = cityRecords
+    .filter((record) => record.entry_type === 'photo' && record.image_url)
     .slice(0, 4)
 
-  const latestNote = photos
-    .filter((p) => p.city_name === city.city_name && p.note)
-    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0]?.note
+  const latestNote = cityRecords.find((record) => record.note)?.note
 
   return (
     <div
@@ -28,7 +28,14 @@ export function CityPopup({ city, photos, x, y }: CityTooltipProps) {
     >
       <div className="city-popup__arrow absolute left-1/2 -bottom-[6px] -translate-x-1/2 w-3 h-3 bg-glass-popup rotate-45 border-r border-b border-dusk-300/30" />
 
-      <div className="city-popup__panel glass-popup w-[290px] overflow-hidden animate-scale-in" style={{ animationDuration: '0.2s', boxShadow: '0 24px 64px oklch(15% 0.02 40 / 0.6), 0 0 0 1px oklch(80% 0.14 60 / 0.2), inset 0 1px 0 oklch(96% 0.02 70 / 0.12)' }}>
+      <div
+        className="city-popup__panel glass-popup w-[290px] overflow-hidden animate-scale-in"
+        style={{
+          animationDuration: '0.2s',
+          boxShadow:
+            '0 24px 64px oklch(15% 0.02 40 / 0.6), 0 0 0 1px oklch(80% 0.14 60 / 0.2), inset 0 1px 0 oklch(96% 0.02 70 / 0.12)',
+        }}
+      >
         {/* 顶部折光线 */}
         <div className="absolute top-0 left-5 right-5 h-px bg-gradient-to-r from-transparent via-amber/40 to-transparent" />
         <div className="p-4">
@@ -62,7 +69,9 @@ export function CityPopup({ city, photos, x, y }: CityTooltipProps) {
               ))}
               {city.photo_count > 4 && (
                 <div className="aspect-[4/3] rounded-[6px] bg-amber/10 border border-amber/25 flex items-center justify-center">
-                  <span className="text-[13px] text-amber font-semibold tabular-nums">+{city.photo_count - 4}</span>
+                  <span className="text-[13px] text-amber font-semibold tabular-nums">
+                    +{city.photo_count - 4}
+                  </span>
                 </div>
               )}
             </div>

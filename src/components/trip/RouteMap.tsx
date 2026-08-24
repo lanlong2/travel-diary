@@ -6,6 +6,61 @@ interface RouteMapProps {
   cities: TripCity[]
 }
 
+type AMapCoordinate = [number, number]
+
+interface AMapOverlay {
+  setMap?: (map: AMapMap | null) => void
+  setOptions?: (options: { strokeDasharray?: [number, number] }) => void
+}
+
+interface AMapMap {
+  destroy: () => void
+  add: (overlay: AMapOverlay) => void
+  clearMap: () => void
+  setFitView: (
+    overlayList?: undefined,
+    immediately?: boolean,
+    avoid?: [number, number, number, number],
+  ) => void
+  resize?: () => void
+}
+
+interface AMapApi {
+  Map: new (
+    container: HTMLElement,
+    options: {
+      zoom: number
+      center: AMapCoordinate
+      mapStyle: string
+      resizeEnable: boolean
+      dragEnable: boolean
+      zoomEnable: boolean
+      scrollWheel: boolean
+    },
+  ) => AMapMap
+  Marker: new (options: {
+    position: AMapCoordinate
+    content: HTMLElement
+    offset: AMapPixel
+  }) => AMapOverlay
+  Pixel: new (x: number, y: number) => AMapPixel
+  Polyline: new (options: {
+    path: AMapCoordinate[]
+    strokeColor: string
+    strokeWeight: number
+    strokeStyle: string
+    lineJoin: string
+    strokeOpacity: number
+    showDir: boolean
+    strokeDasharray: [number, number]
+  }) => AMapOverlay
+}
+
+interface AMapPixel {
+  x?: number
+  y?: number
+}
+
 function approxPathLength(cities: TripCity[]): number {
   let total = 0
   for (let i = 1; i < cities.length; i++) {
@@ -18,10 +73,16 @@ function approxPathLength(cities: TripCity[]): number {
 
 export function RouteMap({ cities }: RouteMapProps) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const mapRef = useRef<{ destroy: () => void; add: (o: unknown) => void; setFitView: (...a: unknown[]) => void; clearMap: () => void } | null>(null)
+  const mapRef = useRef<AMapMap | null>(null)
+  const overlaysRef = useRef<AMapOverlay[]>([])
   const initializedRef = useRef(false)
+  const citiesRef = useRef(cities)
+  citiesRef.current = cities
   const [loaded, setLoaded] = useState(false)
   const hasCities = cities.length > 0
+  const cityKey = cities
+    .map((city) => `${city.id}:${city.city_name}:${city.lat}:${city.lng}`)
+    .join('|')
 
   useEffect(() => {
     if (!hasCities || !containerRef.current || initializedRef.current) return
@@ -33,9 +94,11 @@ export function RouteMap({ cities }: RouteMapProps) {
       .then((AMap) => {
         if (cancelled || !containerRef.current) return
 
-        const map = new AMap.Map(containerRef.current, {
+        const firstCity = citiesRef.current[0]
+        if (!firstCity) return
+        const map = new (AMap as unknown as AMapApi).Map(containerRef.current, {
           zoom: 8,
-          center: [cities[0].lng, cities[0].lat],
+          center: [firstCity.lng, firstCity.lat],
           mapStyle: 'amap://styles/dark',
           resizeEnable: true,
           dragEnable: true,
@@ -54,31 +117,40 @@ export function RouteMap({ cities }: RouteMapProps) {
 
     return () => {
       cancelled = true
+      initializedRef.current = false
       if (mapRef.current) {
+        overlaysRef.current.forEach((overlay) => overlay.setMap?.(null))
+        overlaysRef.current = []
         mapRef.current.destroy()
         mapRef.current = null
-        initializedRef.current = false
       }
       setLoaded(false)
     }
   }, [hasCities])
 
   useEffect(() => {
-    if (!mapRef.current || !loaded || cities.length === 0) return
+    const currentCities = citiesRef.current
+    if (!mapRef.current || !loaded || currentCities.length === 0) return
 
     let cancelled = false
     let activeInterval: ReturnType<typeof setInterval> | null = null
 
     const drawRoute = async () => {
-      const AMap = await loadAMap()
+      const AMap = (await loadAMap()) as unknown as AMapApi
       if (cancelled || !mapRef.current) return
-      const map = mapRef.current as { clearMap: () => void; add: (o: unknown) => void; setFitView: (...a: unknown[]) => void }
+      const map = mapRef.current
 
-      try { map.clearMap() } catch { /* ignore */ }
+      try {
+        map.clearMap()
+      } catch {
+        /* ignore */
+      }
+      overlaysRef.current.forEach((overlay) => overlay.setMap?.(null))
+      overlaysRef.current = []
 
-      if (cities.length > 1) {
-        const path = cities.map((c) => [c.lng, c.lat] as [number, number])
-        const pathLength = approxPathLength(cities)
+      if (currentCities.length > 1) {
+        const path = currentCities.map((c) => [c.lng, c.lat] as [number, number])
+        const pathLength = approxPathLength(currentCities)
 
         const polyline = new AMap.Polyline({
           path,
@@ -91,6 +163,7 @@ export function RouteMap({ cities }: RouteMapProps) {
           strokeDasharray: [pathLength, pathLength * 2],
         })
         map.add(polyline)
+        overlaysRef.current.push(polyline)
 
         let progress = 0
         const totalSteps = 45
@@ -99,22 +172,26 @@ export function RouteMap({ cities }: RouteMapProps) {
           if (progress >= totalSteps) {
             if (activeInterval) clearInterval(activeInterval)
             try {
-              polyline.setOptions({
+              polyline.setOptions?.({
                 strokeDasharray: [pathLength, 0],
               })
-            } catch { /* ignore */ }
+            } catch {
+              /* ignore */
+            }
             return
           }
           const remaining = (1 - progress / totalSteps) * pathLength
           try {
-            polyline.setOptions({
+            polyline.setOptions?.({
               strokeDasharray: [pathLength, remaining],
             })
-          } catch { /* ignore */ }
+          } catch {
+            /* ignore */
+          }
         }, 50)
       }
 
-      cities.forEach((city, i) => {
+      currentCities.forEach((city, i) => {
         const el = document.createElement('div')
         el.className = 'route-marker'
         el.style.animationDelay = `${i * 0.5}s`
@@ -139,6 +216,7 @@ export function RouteMap({ cities }: RouteMapProps) {
           offset: new AMap.Pixel(-14, -14),
         })
         map.add(marker)
+        overlaysRef.current.push(marker)
       })
 
       map.setFitView(undefined, false, [80, 80, 80, 80])
@@ -148,8 +226,10 @@ export function RouteMap({ cities }: RouteMapProps) {
     return () => {
       cancelled = true
       if (activeInterval) clearInterval(activeInterval)
+      overlaysRef.current.forEach((overlay) => overlay.setMap?.(null))
+      overlaysRef.current = []
     }
-  }, [cities, loaded])
+  }, [cityKey, loaded])
 
   if (cities.length === 0) {
     return (
@@ -175,9 +255,7 @@ export function RouteMap({ cities }: RouteMapProps) {
       <div className="snap-row flex gap-2 mb-3 overflow-x-auto scrollbar-hide pb-1 items-center">
         {cities.map((city, i) => (
           <div key={city.id} className="snap-item flex items-center gap-2 flex-shrink-0">
-            <span
-              className="inline-flex items-center gap-1.5 text-[11px] px-2.5 py-1.5 bg-white/8 border border-dusk-300/20 rounded-[6px] text-dusk-100/85 font-medium tracking-[0.04em] flex-shrink-0"
-            >
+            <span className="inline-flex items-center gap-1.5 text-[11px] px-2.5 py-1.5 bg-white/8 border border-dusk-300/20 rounded-[6px] text-dusk-100/85 font-medium tracking-[0.04em] flex-shrink-0">
               <span className="w-4 h-4 rounded-full bg-gradient-to-br from-amber to-amber-ember text-white text-[10px] flex items-center justify-center font-bold">
                 {i + 1}
               </span>
@@ -193,73 +271,10 @@ export function RouteMap({ cities }: RouteMapProps) {
       <div
         ref={containerRef}
         className="route-map-canvas w-full rounded-[8px] overflow-hidden border border-dusk-300/30 shadow-lg shadow-black/30"
-        style={{ boxShadow: '0 8px 32px oklch(15% 0.02 40 / 0.4), 0 0 0 1px oklch(80% 0.14 60 / 0.12)' }}
+        style={{
+          boxShadow: '0 8px 32px oklch(15% 0.02 40 / 0.4), 0 0 0 1px oklch(80% 0.14 60 / 0.12)',
+        }}
       />
-
-      <style>{`
-        .route-marker {
-          position: relative;
-          width: 28px;
-          height: 28px;
-          opacity: 0;
-          animation: routeMarkerIn 0.5s ease-out forwards;
-        }
-        .route-marker-inner {
-          position: relative;
-          z-index: 2;
-          width: 28px;
-          height: 28px;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 13px;
-          font-weight: bold;
-          color: #fff;
-          background: linear-gradient(135deg, #c4735a, #a85a44);
-          border: 2px solid rgba(255, 255, 255, 0.3);
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-          font-family: system-ui, sans-serif;
-        }
-        .route-marker-halo {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          width: 28px;
-          height: 28px;
-          margin: -14px 0 0 -14px;
-          border-radius: 50%;
-          border: 1.5px solid oklch(58% 0.13 40 / 0.5);
-          animation: routeMarkerHalo 2s ease-out infinite;
-          pointer-events: none;
-          z-index: 1;
-        }
-        .route-marker-label {
-          position: absolute;
-          top: -20px;
-          left: 50%;
-          transform: translateX(-50%);
-          background: oklch(24% 0.03 45 / 0.9);
-          backdrop-filter: blur(12px);
-          padding: 2px 8px;
-          border-radius: 8px;
-          font-size: 10px;
-          color: oklch(96% 0.02 70);
-          white-space: nowrap;
-          font-weight: 600;
-          pointer-events: none;
-          letter-spacing: 0.05em;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-        }
-        @keyframes routeMarkerIn {
-          from { opacity: 0; transform: scale(0.3); }
-          to { opacity: 1; transform: scale(1); }
-        }
-        @keyframes routeMarkerHalo {
-          0% { transform: scale(1); opacity: 0.45; }
-          100% { transform: scale(2.6); opacity: 0; }
-        }
-      `}</style>
     </div>
   )
 }

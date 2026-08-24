@@ -32,13 +32,26 @@ export function CitySelector({ onCitySelect, selectedCity }: CitySelectorProps) 
     }
     try {
       const AMap = await loadAMap()
+      if (!AMap.plugin || !AMap.AutoComplete) throw new Error('城市搜索插件不可用')
+      const AutoComplete = AMap.AutoComplete
       AMap.plugin('AMap.AutoComplete', () => {
-        const auto = new AMap.AutoComplete({ citylimit: false })
-        auto.search(keyword, (_status: string, result: { tips: { name: string; location: { lat: number; lng: number } }[] }) => {
+        const auto = new AutoComplete({ citylimit: false })
+        auto.search(keyword, (_status, result) => {
           if (requestId !== searchRequestRef.current) return
-          const cities = (result?.tips || [])
-            .filter((t) => t.location)
-            .map((t) => ({ name: t.name, lat: t.location.lat, lng: t.location.lng }))
+          const cities = (result.tips || [])
+            .filter(
+              (
+                tip,
+              ): tip is {
+                name: string
+                location: { lat: number; lng: number }
+              } => Boolean(tip.location),
+            )
+            .map((tip) => ({
+              name: tip.name,
+              lat: tip.location.lat,
+              lng: tip.location.lng,
+            }))
           setSuggestions(cities)
           setSearchError(null)
         })
@@ -54,7 +67,9 @@ export function CitySelector({ onCitySelect, selectedCity }: CitySelectorProps) 
     searchRequestRef.current += 1
     if (timeoutRef.current) clearTimeout(timeoutRef.current)
     timeoutRef.current = setTimeout(() => searchCity(query), 400)
-    return () => { if (timeoutRef.current) clearTimeout(timeoutRef.current) }
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    }
   }, [query])
 
   const locateMe = () => {
@@ -66,10 +81,12 @@ export function CitySelector({ onCitySelect, selectedCity }: CitySelectorProps) 
           const { latitude, longitude } = pos.coords
           try {
             const AMap = await loadAMap()
+            if (!AMap.plugin || !AMap.Geocoder) throw new Error('逆地理编码插件不可用')
+            const Geocoder = AMap.Geocoder
             AMap.plugin('AMap.Geocoder', () => {
-              const geocoder = new AMap.Geocoder()
-              geocoder.getAddress([longitude, latitude], (_status: string, result: { regeocode: { addressComponent: { city: string } } }) => {
-                const cityName = result?.regeocode?.addressComponent?.city
+              const geocoder = new Geocoder()
+              geocoder.getAddress([longitude, latitude], (_status, result) => {
+                const cityName = result.regeocode?.addressComponent?.city
                 if (!cityName) {
                   setLocating(false)
                   setLocationError('无法识别当前位置，请手动搜索城市')
@@ -88,7 +105,7 @@ export function CitySelector({ onCitySelect, selectedCity }: CitySelectorProps) 
           setLocating(false)
           setLocationError('无法获取当前位置，请检查浏览器定位权限')
         },
-        { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 }
+        { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 },
       )
     } else {
       setLocating(false)
@@ -136,7 +153,13 @@ export function CitySelector({ onCitySelect, selectedCity }: CitySelectorProps) 
         <>
           <div className="flex gap-2.5">
             <div className="flex-1">
-              <Input aria-label="搜索城市" icon={Search} placeholder="搜索城市" value={query} onChange={(e) => setQuery(e.target.value)} />
+              <Input
+                aria-label="搜索城市"
+                icon={Search}
+                placeholder="搜索城市"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+              />
             </div>
             <button
               type="button"
@@ -146,7 +169,9 @@ export function CitySelector({ onCitySelect, selectedCity }: CitySelectorProps) 
               aria-label="自动定位"
               aria-busy={locating}
             >
-              <Navigation className={`w-6 h-6 ${locating ? 'animate-pulse' : 'group-hover:scale-110 transition-transform'}`} />
+              <Navigation
+                className={`w-6 h-6 ${locating ? 'animate-pulse' : 'group-hover:scale-110 transition-transform'}`}
+              />
             </button>
           </div>
 
@@ -156,32 +181,46 @@ export function CitySelector({ onCitySelect, selectedCity }: CitySelectorProps) 
                 <button
                   key={i}
                   type="button"
-                  onClick={() => { onCitySelect(s); setQuery(''); setSuggestions([]) }}
+                  onClick={() => {
+                    onCitySelect(s)
+                    setQuery('')
+                    setSuggestions([])
+                  }}
                   className="w-full px-5 py-3.5 flex items-center gap-3 text-left hover:bg-white/8 transition-colors border-b border-dusk-300/15 last:border-0 active:bg-white/12"
                 >
                   <span className="w-8 h-8 rounded-[8px] bg-amber/12 border border-amber/20 flex items-center justify-center flex-shrink-0">
                     <MapPin className="w-4 h-4 text-amber" />
                   </span>
-                  <span className="text-[13px] text-dusk-50 font-medium tracking-[0.04em]">{s.name}</span>
+                  <span className="text-[13px] text-dusk-50 font-medium tracking-[0.04em]">
+                    {s.name}
+                  </span>
                 </button>
               ))}
             </div>
           )}
 
           {locationError && (
-            <p role="alert" className="mt-2 text-center text-[11px] text-red-300/80 py-3 tracking-[0.04em]">
+            <p
+              role="alert"
+              className="mt-2 text-center text-[11px] text-red-300/80 py-3 tracking-[0.04em]"
+            >
               {locationError}
             </p>
           )}
 
           {searchError && (
-            <p role="alert" className="mt-2 text-center text-[11px] text-red-300/80 py-3 tracking-[0.04em]">
+            <p
+              role="alert"
+              className="mt-2 text-center text-[11px] text-red-300/80 py-3 tracking-[0.04em]"
+            >
               {searchError}
             </p>
           )}
 
           {query && suggestions.length === 0 && !searchError && (
-            <p className="mt-2 text-center text-[11px] text-dusk-100/40 py-3 tracking-[0.04em]">未找到匹配的城市</p>
+            <p className="mt-2 text-center text-[11px] text-dusk-100/40 py-3 tracking-[0.04em]">
+              未找到匹配的城市
+            </p>
           )}
         </>
       )}

@@ -7,7 +7,9 @@ describe('getErrorMessage', () => {
   })
 
   it('extracts messages from Supabase-style plain error objects', () => {
-    expect(getErrorMessage({ code: '42703', message: 'column does not exist' })).toBe('column does not exist')
+    expect(getErrorMessage({ code: '42703', message: 'column does not exist' })).toBe(
+      'column does not exist',
+    )
   })
 
   it('uses a fallback when the error has no message', () => {

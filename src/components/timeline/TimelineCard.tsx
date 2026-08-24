@@ -9,9 +9,16 @@ interface TimelineCardProps {
   onClick: () => void
 }
 
-export function TimelineCard({ record, index, isFirstInMonth = false, onClick }: TimelineCardProps) {
+export function TimelineCard({
+  record,
+  index,
+  isFirstInMonth = false,
+  onClick,
+}: TimelineCardProps) {
   const dateStr = formatRecordDate(record.record_date, record.created_at, {
-    month: 'long', day: 'numeric', weekday: 'short',
+    month: 'long',
+    day: 'numeric',
+    weekday: 'short',
   })
 
   const hasPhoto = !!record.image_url
@@ -44,8 +51,11 @@ export function TimelineCard({ record, index, isFirstInMonth = false, onClick }:
                 loading="lazy"
               />
               {/* hover 彩色叠加 */}
-              <div className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                style={{ background: 'linear-gradient(135deg, oklch(68% 0.17 40 / 0.08), transparent 50%)' }}
+              <div
+                className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                style={{
+                  background: 'linear-gradient(135deg, oklch(68% 0.17 40 / 0.08), transparent 50%)',
+                }}
               />
             </div>
             {record.note && (
@@ -60,7 +70,9 @@ export function TimelineCard({ record, index, isFirstInMonth = false, onClick }:
                 <MapPin className="w-3 h-3" />
                 {record.city_name}
               </span>
-              <span className="text-[10px] text-dusk-900/55 font-mono tracking-[0.04em]">{dateStr}</span>
+              <span className="text-[10px] text-dusk-900/55 font-mono tracking-[0.04em]">
+                {dateStr}
+              </span>
             </div>
           </div>
         ) : (
@@ -81,7 +93,9 @@ export function TimelineCard({ record, index, isFirstInMonth = false, onClick }:
                 <MapPin className="w-3 h-3" />
                 <span className="truncate max-w-[5em]">{record.city_name}</span>
               </span>
-              <span className="text-[10px] sm:text-[11px] text-dusk-100/55 font-mono tracking-[0.04em]">{dateStr}</span>
+              <span className="text-[10px] sm:text-[11px] text-dusk-100/55 font-mono tracking-[0.04em]">
+                {dateStr}
+              </span>
             </div>
           </div>
         )}

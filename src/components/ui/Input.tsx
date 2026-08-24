@@ -24,17 +24,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     const generatedId = useId()
     const inputId = id ?? `input-${generatedId}`
     const errorId = `${inputId}-error`
-    const describedBy = [ariaDescribedBy, error ? errorId : undefined]
-      .filter(Boolean)
-      .join(' ') || undefined
+    const describedBy =
+      [ariaDescribedBy, error ? errorId : undefined].filter(Boolean).join(' ') || undefined
 
     return (
       <div className="w-full">
         {label && (
-          <label
-            htmlFor={inputId}
-            className="mb-2 block text-sm font-medium text-dusk-100/85"
-          >
+          <label htmlFor={inputId} className="mb-2 block text-sm font-medium text-dusk-100/85">
             {label}
           </label>
         )}
@@ -61,11 +57,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           />
         </div>
         {error && (
-          <p
-            id={errorId}
-            role="alert"
-            className="mt-2 text-[13px] leading-5 text-red-300"
-          >
+          <p id={errorId} role="alert" className="mt-2 text-[13px] leading-5 text-red-300">
             {error}
           </p>
         )}

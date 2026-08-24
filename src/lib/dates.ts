@@ -15,7 +15,10 @@ export function formatDateOnly(value: string, options: Intl.DateTimeFormatOption
   return parseDateOnly(value).toLocaleDateString('zh-CN', options)
 }
 
-export function getRecordTimestamp(recordDate: string | null | undefined, createdAt: string): number {
+export function getRecordTimestamp(
+  recordDate: string | null | undefined,
+  createdAt: string,
+): number {
   return recordDate ? parseDateOnly(recordDate).getTime() : new Date(createdAt).getTime()
 }
 

@@ -8,11 +8,10 @@ import { AuthorSelect } from '../components/add/AuthorSelect'
 import { NoteInput } from '../components/add/NoteInput'
 import { Button } from '../components/ui/Button'
 import { Toast } from '../components/ui/Toast'
-import { useTrips } from '../hooks/useTrips'
-import { usePhotos } from '../hooks/usePhotos'
+import { useTripMutations, useTripsQuery } from '../hooks/useTrips'
+import { usePhotoMutations } from '../hooks/usePhotos'
 import { getLocalDateString } from '../lib/dates'
 import { getErrorMessage } from '../lib/errors'
-import { completeRecordSetup } from '../lib/recordWorkflow'
 import type { Author } from '../types'
 import { ArrowLeft, Camera, FileText } from 'lucide-react'
 
@@ -29,8 +28,10 @@ export function AddRecordPage() {
   const [searchParams] = useSearchParams()
   const preSelectedTripId = searchParams.get('trip')
 
-  const { trips, createTrip } = useTrips()
-  const { uploadPhoto, deletePhoto } = usePhotos()
+  const tripsQuery = useTripsQuery()
+  const { createTrip } = useTripMutations()
+  const { createRecord } = usePhotoMutations()
+  const trips = tripsQuery.data ?? []
 
   const [file, setFile] = useState<File | null>(null)
   const [city, setCity] = useState<SelectedCity | null>(null)
@@ -42,9 +43,8 @@ export function AddRecordPage() {
   const [submitting, setSubmitting] = useState(false)
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null)
 
-  const isComplete = entryType === 'photo'
-    ? !!(file && city && tripId)
-    : !!(city && tripId && note.trim())
+  const isComplete =
+    entryType === 'photo' ? !!(file && city && tripId) : !!(city && tripId && note.trim())
 
   const stepDone = [
     true,
@@ -66,36 +66,22 @@ export function AddRecordPage() {
     }
 
     setSubmitting(true)
-    let savedPhotoId: string | null = null
     try {
-      const savedPhoto = await uploadPhoto(
-        entryType === 'photo' ? file : null,
+      await createRecord({
+        file: entryType === 'photo' ? file : null,
         tripId,
-        city.name,
+        cityName: city.name,
+        lat: city.lat,
+        lng: city.lng,
         note,
         author,
         entryType,
-        recordDate
-      )
-      savedPhotoId = savedPhoto?.id ?? null
-
-      await completeRecordSetup({
-        tripId,
-        city: { city_name: city.name, lat: city.lat, lng: city.lng },
-        coverPhotoPath: entryType === 'photo' ? savedPhoto?.image_url : null,
+        recordDate,
       })
 
       setToast({ message: '已保存', type: 'success' })
       setTimeout(() => navigate(`/trip/${tripId}`), 800)
     } catch (err) {
-      if (savedPhotoId) {
-        try {
-          await deletePhoto(savedPhotoId)
-        } catch (cleanupError) {
-          console.warn('保存失败后的记录清理失败:', cleanupError)
-        }
-      }
-      // eslint-disable-next-line no-console
       console.error('保存失败:', err)
       const msg = getErrorMessage(err)
       setToast({ message: `保存失败：${msg}`, type: 'error' })
@@ -114,12 +100,11 @@ export function AddRecordPage() {
           end_date: endDate,
           created_by: author,
         },
-        city ? [{ city_name: city.name, lat: city.lat, lng: city.lng, sort_order: 0 }] : []
+        city ? [{ city_name: city.name, lat: city.lat, lng: city.lng, sort_order: 0 }] : [],
       )
       setTripId(newTrip.id)
       setToast({ message: '新旅行已创建', type: 'success' })
     } catch (err) {
-      // eslint-disable-next-line no-console
       console.error('创建旅行失败:', err)
       const msg = getErrorMessage(err)
       setToast({ message: `创建旅行失败：${msg}`, type: 'error' })
@@ -139,7 +124,9 @@ export function AddRecordPage() {
         </button>
         <div>
           <h1 className="display-hero text-[20px] text-dusk-50 tracking-[0.04em] italic">Record</h1>
-          <p className="text-[10px] text-dusk-100/50 tracking-[0.15em] font-mono">记录 · CHAPTER I</p>
+          <p className="text-[10px] text-dusk-100/50 tracking-[0.15em] font-mono">
+            记录 · CHAPTER I
+          </p>
         </div>
       </div>
 
@@ -168,7 +155,11 @@ export function AddRecordPage() {
             <span className="w-1 h-1 rounded-full bg-amber/60" />
             类型
           </label>
-          <div role="group" aria-label="记录类型" className="relative inline-flex p-1 rounded-full bg-dusk-600/40 border border-dusk-300/25">
+          <div
+            role="group"
+            aria-label="记录类型"
+            className="relative inline-flex p-1 rounded-full bg-dusk-600/40 border border-dusk-300/25"
+          >
             <div
               className="absolute top-1 bottom-1 rounded-full bg-gradient-to-r from-amber to-amber-ember transition-transform duration-300"
               style={{
@@ -180,7 +171,10 @@ export function AddRecordPage() {
             <button
               type="button"
               aria-pressed={entryType === 'photo'}
-              onClick={() => { setEntryType('photo'); setFile(null) }}
+              onClick={() => {
+                setEntryType('photo')
+                setFile(null)
+              }}
               className={`relative z-10 px-6 py-2 text-[13px] font-medium tracking-[0.04em] transition-colors ${
                 entryType === 'photo' ? 'text-white' : 'text-dusk-100/65'
               }`}
@@ -190,7 +184,10 @@ export function AddRecordPage() {
             <button
               type="button"
               aria-pressed={entryType === 'note'}
-              onClick={() => { setEntryType('note'); setFile(null) }}
+              onClick={() => {
+                setEntryType('note')
+                setFile(null)
+              }}
               className={`relative z-10 px-6 py-2 text-[13px] font-medium tracking-[0.04em] transition-colors ${
                 entryType === 'note' ? 'text-white' : 'text-dusk-100/65'
               }`}
@@ -200,9 +197,7 @@ export function AddRecordPage() {
           </div>
         </div>
 
-        {entryType === 'photo' && (
-          <PhotoUploader onFileSelect={setFile} />
-        )}
+        {entryType === 'photo' && <PhotoUploader onFileSelect={setFile} />}
         <AuthorSelect value={author} onChange={setAuthor} />
         <CitySelector onCitySelect={setCity} selectedCity={city} />
         <TripSelect
@@ -212,14 +207,13 @@ export function AddRecordPage() {
           onCreateTrip={handleCreateTrip}
         />
 
-        <NoteInput
-          value={note}
-          onChange={setNote}
-          rows={entryType === 'note' ? 8 : 5}
-        />
+        <NoteInput value={note} onChange={setNote} rows={entryType === 'note' ? 8 : 5} />
 
         <div className="page-mx">
-          <label htmlFor="record-date" className="block text-[13px] font-medium text-dusk-100/80 mb-3 tracking-[0.04em] flex items-center gap-2">
+          <label
+            htmlFor="record-date"
+            className="block text-[13px] font-medium text-dusk-100/80 mb-3 tracking-[0.04em] flex items-center gap-2"
+          >
             <span className="w-1 h-1 rounded-full bg-amber/60" />
             日期
           </label>
@@ -246,7 +240,11 @@ export function AddRecordPage() {
               </span>
             ) : (
               <span className="flex items-center gap-2">
-                {entryType === 'photo' ? <Camera className="w-4 h-4" /> : <FileText className="w-4 h-4" />}
+                {entryType === 'photo' ? (
+                  <Camera className="w-4 h-4" />
+                ) : (
+                  <FileText className="w-4 h-4" />
+                )}
                 保存
               </span>
             )}

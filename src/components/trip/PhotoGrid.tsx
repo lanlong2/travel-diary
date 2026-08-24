@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import type { Photo } from '../../types'
 import { Camera, MapPin, RefreshCw, Trash2 } from 'lucide-react'
 import { ConfirmDialog } from '../ui/ConfirmDialog'
+import { reportPrivatePhotoLoadError } from '../../lib/privatePhotoEvents'
 
 interface PhotoGridProps {
   photos: Photo[]
@@ -25,9 +26,7 @@ function SectionHeading({ count }: { count?: number }) {
       <h3 className="font-serif text-[15px] font-semibold text-dusk-50 tracking-[0.05em]">
         回忆碎片
       </h3>
-      <span className="font-mono text-[11px] text-amber/70 tabular-nums">
-        {count ?? '—'}
-      </span>
+      <span className="font-mono text-[11px] text-amber/70 tabular-nums">{count ?? '—'}</span>
       <span className="flex-1 h-px bg-gradient-to-r from-amber/35 to-transparent" />
     </div>
   )
@@ -60,7 +59,10 @@ function PhotoImage({ photo, eager = false }: { photo: Photo; eager?: boolean })
       className="h-full w-full object-contain transition-transform duration-700 group-hover:scale-105"
       loading={eager ? 'eager' : 'lazy'}
       decoding="async"
-      onError={() => setImageError(true)}
+      onError={() => {
+        if (photo.image_url) reportPrivatePhotoLoadError(photo.image_url)
+        setImageError(true)
+      }}
     />
   )
 }
@@ -117,7 +119,12 @@ function PhotoCard({
               aria-hidden="true"
             />
             <div className="mb-2 flex items-start gap-1.5">
-              <span className="-mt-1 font-serif text-xl leading-none text-amber/65" aria-hidden="true">&quot;</span>
+              <span
+                className="-mt-1 font-serif text-xl leading-none text-amber/65"
+                aria-hidden="true"
+              >
+                &quot;
+              </span>
               <p className="line-clamp-[10] flex-1 whitespace-pre-wrap pt-0.5 font-serif text-[13px] italic leading-relaxed text-dusk-50/90">
                 {photo.note}
               </p>
@@ -173,7 +180,9 @@ function PhotoGridSkeleton() {
       <div className="photo-grid">
         {[0, 1, 2, 3].map((item) => (
           <div key={item} className="break-inside-avoid animate-pulse">
-            <div className={`rounded-[6px] bg-dusk-600/45 ${item % 2 === 0 ? 'aspect-[4/3]' : 'h-40'}`} />
+            <div
+              className={`rounded-[6px] bg-dusk-600/45 ${item % 2 === 0 ? 'aspect-[4/3]' : 'h-40'}`}
+            />
             <div className="mx-auto mt-3 h-2.5 w-2/3 rounded-full bg-dusk-600/35" />
           </div>
         ))}
@@ -257,10 +266,14 @@ export function PhotoGrid({
               photo={photo}
               index={index}
               onPhotoClick={onPhotoClick}
-              onDelete={onDeletePhoto ? (target) => {
-                setDeleteError(null)
-                setDeleteTarget(target)
-              } : undefined}
+              onDelete={
+                onDeletePhoto
+                  ? (target) => {
+                      setDeleteError(null)
+                      setDeleteTarget(target)
+                    }
+                  : undefined
+              }
             />
           ))}
         </div>
@@ -269,11 +282,12 @@ export function PhotoGrid({
       {deleteTarget && (
         <ConfirmDialog
           title="删除照片"
-          message={deleteError
-            ? `删除失败：${deleteError}`
-            : deleteTarget.note
-              ? `确定要删除「${deleteTarget.note}」这张照片吗？`
-              : '确定要删除这张照片吗？'
+          message={
+            deleteError
+              ? `删除失败：${deleteError}`
+              : deleteTarget.note
+                ? `确定要删除「${deleteTarget.note}」这张照片吗？`
+                : '确定要删除这张照片吗？'
           }
           confirmLabel={deleteError ? '重试删除' : '确认删除'}
           onConfirm={handleDelete}

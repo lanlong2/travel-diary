@@ -10,23 +10,23 @@ import { Input } from '../components/ui/Input'
 import { Spinner } from '../components/ui/Spinner'
 import { Toast } from '../components/ui/Toast'
 import { CitySelector } from '../components/add/CitySelector'
-import { useTrip, useTrips } from '../hooks/useTrips'
-import { usePhotos } from '../hooks/usePhotos'
+import { useTripMutations, useTripQuery } from '../hooks/useTrips'
+import { usePhotoMutations, usePhotosQuery } from '../hooks/usePhotos'
 import { Camera, X } from 'lucide-react'
 
 export function TripDetailPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const { trip, loading, error: tripError, refresh } = useTrip(id!)
-  const {
-    photos,
-    loading: photosLoading,
-    error: photosError,
-    refresh: refreshPhotos,
-    updatePhoto,
-    deletePhoto,
-  } = usePhotos(id)
-  const { deleteTrip, updateTrip, addCity, removeCity } = useTrips()
+  const tripQuery = useTripQuery(id ?? '')
+  const photosQuery = usePhotosQuery(id)
+  const { updatePhoto, deletePhoto } = usePhotoMutations(id)
+  const trip = tripQuery.data ?? null
+  const photos = photosQuery.data ?? []
+  const loading = tripQuery.isPending
+  const photosLoading = photosQuery.isPending
+  const tripError = tripQuery.error instanceof Error ? tripQuery.error.message : null
+  const photosError = photosQuery.error instanceof Error ? photosQuery.error.message : null
+  const { deleteTrip, updateTrip, addCity, removeCity } = useTripMutations()
   const [selectedPhotoId, setSelectedPhotoId] = useState<string | null>(null)
   const [editing, setEditing] = useState(false)
   const [editTitle, setEditTitle] = useState(trip?.title || '')
@@ -34,11 +34,15 @@ export function TripDetailPage() {
   const [editEndDate, setEditEndDate] = useState(trip?.end_date || '')
   const [operationError, setOperationError] = useState<string | null>(null)
   const selectedPhoto = selectedPhotoId
-    ? photos.find((photo) => photo.id === selectedPhotoId) ?? null
+    ? (photos.find((photo) => photo.id === selectedPhotoId) ?? null)
     : null
 
   if (loading) {
-    return <PageShell><Spinner className="min-h-dvh" /></PageShell>
+    return (
+      <PageShell>
+        <Spinner className="min-h-dvh" />
+      </PageShell>
+    )
   }
 
   if (!trip) {
@@ -50,13 +54,24 @@ export function TripDetailPage() {
               {tripError ? '旅行加载失败' : '找不到这次旅行'}
             </p>
             {tripError && (
-              <p className="mb-4 max-w-xs text-center text-xs leading-5 text-dusk-100/55">{tripError}</p>
+              <p className="mb-4 max-w-xs text-center text-xs leading-5 text-dusk-100/55">
+                {tripError}
+              </p>
             )}
             <div className="flex items-center justify-center gap-2">
               {tripError && (
-                <Button variant="ghost" onClick={() => { void refresh() }}>重试</Button>
+                <Button
+                  variant="ghost"
+                  onClick={() => {
+                    void tripQuery.refetch()
+                  }}
+                >
+                  重试
+                </Button>
               )}
-              <Button variant="ghost" onClick={() => navigate('/')}>返回首页</Button>
+              <Button variant="ghost" onClick={() => navigate('/')}>
+                返回首页
+              </Button>
             </div>
           </div>
         </div>
@@ -68,7 +83,9 @@ export function TripDetailPage() {
     <PageShell>
       <TripHeader
         trip={trip}
-        onDelete={async () => { await deleteTrip(trip.id) }}
+        onDelete={async () => {
+          await deleteTrip(trip.id)
+        }}
         onEdit={() => {
           setEditTitle(trip.title)
           setEditStartDate(trip.start_date)
@@ -135,9 +152,11 @@ export function TripDetailPage() {
                           setOperationError(null)
                           try {
                             await removeCity(city.id)
-                            await refresh()
+                            await tripQuery.refetch()
                           } catch (error) {
-                            setOperationError(error instanceof Error ? error.message : '移除城市失败，请稍后重试')
+                            setOperationError(
+                              error instanceof Error ? error.message : '移除城市失败，请稍后重试',
+                            )
                           }
                         }}
                         className="w-11 h-11 rounded-full bg-white/8 hover:bg-red-500/40 flex items-center justify-center transition-colors active:scale-90 duration-200"
@@ -160,9 +179,11 @@ export function TripDetailPage() {
                       lng: city.lng,
                       sort_order: trip.cities.length,
                     })
-                    await refresh()
+                    await tripQuery.refetch()
                   } catch (error) {
-                    setOperationError(error instanceof Error ? error.message : '添加城市失败，请稍后重试')
+                    setOperationError(
+                      error instanceof Error ? error.message : '添加城市失败，请稍后重试',
+                    )
                   }
                 }}
                 selectedCity={null}
@@ -179,10 +200,12 @@ export function TripDetailPage() {
                     start_date: editStartDate,
                     end_date: editEndDate,
                   })
-                  await refresh()
+                  await tripQuery.refetch()
                   setEditing(false)
                 } catch (error) {
-                  setOperationError(error instanceof Error ? error.message : '保存旅行失败，请稍后重试')
+                  setOperationError(
+                    error instanceof Error ? error.message : '保存旅行失败，请稍后重试',
+                  )
                 }
               }}
               disabled={!editTitle.trim()}
@@ -208,7 +231,9 @@ export function TripDetailPage() {
         <div className="page-mx mt-6">
           <div className="flex items-center gap-2.5 text-xs text-dusk-100/65 glass-card rounded-2xl px-5 py-3 tracking-[0.05em]">
             <Camera className="w-4 h-4 text-amber" />
-            <span>共 <span className="text-amber font-bold tabular-nums">{photos.length}</span> 条记录</span>
+            <span>
+              共 <span className="text-amber font-bold tabular-nums">{photos.length}</span> 条记录
+            </span>
           </div>
         </div>
       )}
@@ -218,7 +243,9 @@ export function TripDetailPage() {
           photos={photos}
           loading={photosLoading}
           error={photosError}
-          onRetry={refreshPhotos}
+          onRetry={async () => {
+            await photosQuery.refetch()
+          }}
           onPhotoClick={(photo) => setSelectedPhotoId(photo.id)}
           onDeletePhoto={deletePhoto}
         />

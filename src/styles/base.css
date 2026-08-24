@@ -1,0 +1,113 @@
+@layer base {
+  html {
+    height: 100dvh;
+    overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
+    overscroll-behavior-y: none;
+  }
+
+  body {
+    background-color: var(--color-night);
+    color: var(--color-ink);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-family:
+      'Inter',
+      'PingFang SC',
+      'Microsoft YaHei',
+      system-ui,
+      -apple-system,
+      sans-serif;
+    font-size: 16px;
+    min-height: 100dvh;
+    padding-bottom: env(safe-area-inset-bottom);
+    touch-action: manipulation;
+    color-scheme: dark;
+  }
+
+  /* 暮色光斑层 — 多色 radial gradient 模拟黄昏天光 */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      radial-gradient(ellipse 60% 45% at 15% 5%, oklch(52% 0.09 48 / 0.16) 0%, transparent 64%),
+      radial-gradient(ellipse 48% 42% at 88% 88%, oklch(38% 0.05 220 / 0.1) 0%, transparent 60%);
+  }
+
+  /* 纸张颗粒 — SVG feTurbulence 模拟胶片颗粒 + 微细划痕 */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.95 0 0 0 0 0.7 0 0 0 0 0.4 0 0 0 1 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    mix-blend-mode: overlay;
+  }
+
+  ::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+    border-radius: 0;
+  }
+
+  ::selection {
+    background: oklch(68% 0.17 40 / 0.32);
+    color: var(--color-ink);
+  }
+}
+
+/* 全局可见焦点，兼容已有页面的 utility focus 样式。 */
+button,
+a,
+input,
+textarea,
+select,
+[tabindex]:not([tabindex='-1']) {
+  outline: none;
+}
+
+button,
+[role='button'] {
+  touch-action: manipulation;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .pb-safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 16px);
+  }
+}
+
+@media (forced-colors: active) {
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline-color: Highlight;
+  }
+}

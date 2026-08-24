@@ -18,11 +18,13 @@ describe('date helpers', () => {
 
   it('formats local dates without using UTC conversion', () => {
     expect(getLocalDateString(new Date(2026, 6, 9))).toBe('2026-07-09')
-    expect(formatRecordDate('2026-07-09', '2026-01-01T00:00:00.000Z', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-    })).toContain('09')
+    expect(
+      formatRecordDate('2026-07-09', '2026-01-01T00:00:00.000Z', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      }),
+    ).toContain('09')
   })
 
   it('sorts custom record dates before creation timestamps', () => {
