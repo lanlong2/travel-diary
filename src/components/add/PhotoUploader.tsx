@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Camera, RefreshCw } from 'lucide-react'
+import { Images, RefreshCw } from 'lucide-react'
 
 interface PhotoUploaderProps {
   onFileSelect: (file: File | null) => void
@@ -37,7 +37,6 @@ export function PhotoUploader({ onFileSelect }: PhotoUploaderProps) {
         ref={inputRef}
         type="file"
         accept="image/*"
-        capture="environment"
         aria-label="选择照片"
         className="hidden"
         onChange={(e) => {
@@ -109,9 +108,9 @@ export function PhotoUploader({ onFileSelect }: PhotoUploaderProps) {
 
           <div className="relative">
             <div className="w-14 h-14 mx-auto mb-4 flex items-center justify-center rounded-full bg-amber/10 border border-amber/25">
-              <Camera className="w-7 h-7 text-amber/75" />
+              <Images className="w-7 h-7 text-amber/75" />
             </div>
-            <p className="text-[15px] text-dusk-50/85 font-medium tracking-[0.05em]">选择照片</p>
+            <p className="text-[15px] text-dusk-50/85 font-medium tracking-[0.05em]">从相册选择</p>
             <p className="text-[11px] text-dusk-100/45 mt-1 tracking-[0.04em] font-mono">
               或拖拽到此处
             </p>

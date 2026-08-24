@@ -7,7 +7,7 @@ describe('PhotoUploader', () => {
     vi.unstubAllGlobals()
   })
 
-  it('supports camera capture, preview, and cancel-safe replacement on touch devices', () => {
+  it('opens the image picker without forcing the camera and supports cancel-safe replacement', () => {
     const createObjectURL = vi.fn(() => 'blob:preview')
     const revokeObjectURL = vi.fn()
     vi.stubGlobal('URL', { createObjectURL, revokeObjectURL })
@@ -18,7 +18,8 @@ describe('PhotoUploader', () => {
 
     const input = screen.getByLabelText('选择照片') as HTMLInputElement
     expect(input).toHaveAttribute('accept', 'image/*')
-    expect(input).toHaveAttribute('capture', 'environment')
+    expect(input).not.toHaveAttribute('capture')
+    expect(screen.getByRole('button', { name: /从相册选择/ })).toBeInTheDocument()
 
     fireEvent.change(input, { target: { files: [file] } })
     expect(onFileSelect).toHaveBeenLastCalledWith(file)
