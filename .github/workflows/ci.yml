@@ -29,7 +29,12 @@ jobs:
           supabase db reset --local --yes
           supabase db lint --local --schema public --level warning
           supabase test db --local
-          supabase status -o env >> "$GITHUB_ENV"
+          eval "$(supabase status -o env)"
+          {
+            echo "API_URL=$API_URL"
+            echo "PUBLISHABLE_KEY=$PUBLISHABLE_KEY"
+            echo "SERVICE_ROLE_KEY=$SERVICE_ROLE_KEY"
+          } >> "$GITHUB_ENV"
       - run: npm run format:check
       - run: npm run lint
       - run: npm run typecheck
